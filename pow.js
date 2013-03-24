@@ -47,7 +47,9 @@ function find_x(difficulty, seed){
 function find_xs(problems, difficulty){
 	var res = [];
 	for(var i = 0; i < problems.length; i++){
-		var temp = {Seed: problems[i].Seed, Solution: find_x(difficulty, problems[i].Seed)};
+		var temp = {	Seed: problems[i].Seed,
+				   		Solution: find_x(difficulty, problems[i].Seed)
+				   };
 		res.push(temp);
 	}
 	return res;
