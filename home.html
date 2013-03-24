@@ -4,48 +4,7 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js"></script>
 <script type="text/javascript" src="pow.js"></script>
-<script type="text/javascript">
 
-//     $(function() {
-
-//     var conn;
-//     var msg = $("#msg");
-//     var log = $("#log");
-
-//     function appendLog(msg) {
-//         var d = log[0]
-//         var doScroll = d.scrollTop == d.scrollHeight - d.clientHeight;
-//         msg.appendTo(log)
-//         if (doScroll) {
-//             d.scrollTop = d.scrollHeight - d.clientHeight;
-//         }
-//     }
-
-//     $("#form").submit(function() {
-//         if (!conn) {
-//             return false;
-//         }
-//         if (!msg.val()) {
-//             return false;
-//         }
-//         conn.send(msg.val());
-//         msg.val("");
-//         return false
-//     });
-
-//     if (window["WebSocket"]) {
-//         conn = new WebSocket("ws://{{$}}/ws");
-//         conn.onclose = function(evt) {
-//             appendLog($("<div><b>Connection closed.</b></div>"))
-//         }
-//         conn.onmessage = function(evt) {
-//             appendLog($("<div/>").text(evt.data))
-//         }
-//     } else {
-//         appendLog($("<div><b>Your browser does not support WebSockets.</b></div>"))
-//     }
-//     });
- </script>
 <style type="text/css">
 html {
     overflow: hidden;
@@ -81,7 +40,14 @@ body {
     width: 100%;
     overflow: hidden;
 }
-
+#content {
+    width: 80em;
+    padding: 1em;
+    min-height: 95%;
+    background-color: white; 
+    margin: 1em auto 1em auto;
+    box-shadow: 0px 0px 10px black;
+}
 </style>
 </head>
 <!-- <body>
@@ -92,18 +58,17 @@ body {
 </form>
 </body> -->
 <body>
-    <h2>Proof of Work</h2>
-    This search function is protected by proof of work.<br/>
-    The puzzle to solve is the Reverse compute hash puzzle given in<br/> 
-    Christian Hellman and Felix Leopoldo Rios - <i>Proof of Work</i>. May 2010 <br/>
-    All code is available for download <a href="pow.zip" title="Proof of Work">here</a>. <br/><br/>
-   
-    Here the difficulty is {{.Difficulty}}.
-    <br/><br/>
-    <input type="text" id="search_field">
-    
-    <input type="button" name="search" value="search" id="search"/>
-    <div id="result"></div><br/>
-    <div id="msg"></div><br/>
+    <div id="content">
+        <h2>Proof of Work</h2>
+        This search function is protected by proof of work.<br/>
+           
+        Here the difficulty is {{.Difficulty}}.
+        <br/><br/>
+        <input type="text" id="search_field">
+        
+        <input type="button" name="search" value="search" id="search"/>
+        <div id="result"></div><br/>
+        <div id="msg"></div><br/>
+    </div>
   </body>
 </html>
