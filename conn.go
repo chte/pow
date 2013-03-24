@@ -17,14 +17,10 @@ const NUMBER_OF_PROBLEMS int = 16
 type connection struct {
 	// The websocket connection.
 	ws *websocket.Conn
-	// json_out         *json.Encoder
-	// json_in          *json.Decoder
+
 	ha         hash.Hash
 	difficulty int
 	problems   []problem
-
-	// Buffered channel of outbound messages.
-	// send chan string
 }
 
 type problem struct {
@@ -56,7 +52,7 @@ func (c *connection) reader() {
 	for {
 		var msg message
 		err := websocket.JSON.Receive(c.ws, &msg)
-		// fmt.Printf("test: %v, ERR: %v\n", msg, err)
+		// fmt.Printf("Received: %v, ERR: %v\n", msg, err)
 		if err != nil {
 			break
 		}
@@ -71,7 +67,6 @@ func (c *connection) reader() {
 			}
 			response.Opcode = 1
 			response.Query = msg.Query
-			// c.json_out.Encode(response)
 		} else {
 			ok := true
 			var sha string
@@ -79,8 +74,6 @@ func (c *connection) reader() {
 				c.ha.Reset()
 				c.ha.Write([]byte(strconv.Itoa(msg.Problems[i].Solution)))
 				c.ha.Write([]byte(strconv.Itoa(c.problems[i].Seed)))
-				// has := make([]byte, c.ha.Size())
-				// has = c.ha.Sum(has)
 				sha = hex.EncodeToString(c.ha.Sum(nil))
 				fmt.Printf("Response solution: %v\n Calc Solution: %v\n", msg.Problems[i].Solution, sha)
 				if init_zeroes(sha) < c.difficulty {
@@ -89,11 +82,10 @@ func (c *connection) reader() {
 				}
 			}
 			if ok {
-				// response.Result = strconv.Itoa(msg.Solution)
 				response.Query = strings.Join([]string{"Your query, \"", msg.Query, "\" has been served since you solved the puzzle."}, "")
-				response.Hash = sha //string(has)
+				response.Hash = sha
 			} else {
-				// response.Result = strings.Join([]string{"Incorrect hash!: ", strconv.Itoa(msg.Problems.Solution)}, "")
+				response.Result = "Incorrect hash!"
 				response.Query = "Your query was ignored since you did not solve the puzzle."
 			}
 		}

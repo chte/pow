@@ -52,13 +52,16 @@ function find_xs(problems, difficulty){
 	}
 	return res;
 }
+function log(msg){
+	 $("#msg").append("<br/><b>"+msg+"</b><br/>");
+}
 
 $(document).ready(function(){
 	if (window["WebSocket"]) {
         conn = new WebSocket("ws://{{$}}/ws");
-        // conn.onclose = function(evt) {
-        //    //alert("Connection closed.");
-        // };
+        conn.onclose = function(evt) {	
+           log("Connection closed.");
+        };
         conn.onmessage = function(evt) {
         	// alert("Got response: " + evt.data);
         	var response = JSON.parse(evt.data);
