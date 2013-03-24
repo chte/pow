@@ -55,6 +55,9 @@ function find_xs(problems, difficulty){
 function log(msg){
 	 $("#msg").append("<br/><b>"+msg+"</b><br/>");
 }
+function append_result(str){
+	$("#result").append(str);
+}
 
 $(document).ready(function(){
 	if (window["WebSocket"]) {
@@ -77,13 +80,13 @@ $(document).ready(function(){
 	    	} else {
 	            var endTime = Number(new Date().getTime()); // returns the number of MS since the epoch	
 				$("#result").html("<br/><b>Result from server</b><br/>");
-				$("#result").append(response["Query"]+"<br/>");
-				$("#result").append("<br/><b>Time for solving the puzzle</b><br/>");
-				$("#result").append((endTime - startTime)+" ms <br/>");
-				$("#result").append("<br/><b>The solution was</b><br/>");
-				$("#result").append('"'+response["Result"]+'" <br/>');
-				$("#result").append("<br/><b>The hash value was</b><br/>");
-				$("#result").append(response["Hash"]+" <br/>");
+				append_result(response["Query"]+"<br/>");
+				append_result("<br/><b>Time for solving the puzzle</b><br/>");
+				append_result((endTime - startTime)+" ms <br/>");
+				append_result("<br/><b>The solution was</b><br/>");
+				append_result('"'+response["Result"]+'" <br/>');
+				append_result("<br/><b>The hash value was</b><br/>");
+				append_result(response["Hash"]+" <br/>");
 	    	}
         }
     } else {
