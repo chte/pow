@@ -29,7 +29,6 @@ function find_x(difficulty, seed){
 	cmp+='0';
     }
     var x=0;
-    $("#result").append("<br/><b>cmp is:"+cmp+"<br/>");
 
     while (true){
 	str = x + "" + seed;
@@ -100,7 +99,7 @@ $(document).ready(function(){
     $("#search").click(function(){
 		startTime = Number(new Date().getTime());
 	    var request = {"Opcode": 0, "Query": $('#search_field').val()};
-	    // alert("Sending " + JSON.stringify(request));
+	    log("Sending " + JSON.stringify(request));
 	    conn.send(JSON.stringify(request));  
     });
 });
