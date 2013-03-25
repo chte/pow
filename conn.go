@@ -3,11 +3,12 @@ package main
 import (
 	"code.google.com/p/go.net/websocket"
 	"crypto/sha256"
-	// "encoding/json"
 	"encoding/hex"
 	"fmt"
 	"hash"
+	"log"
 	"math/rand"
+	// "os/exec"
 	"strconv"
 	"strings"
 )
@@ -49,6 +50,14 @@ func init_zeroes(s string) (num int) {
 
 func (c *connection) reader() {
 	fmt.Printf("Client connected\n")
+	// cmd := exec.Command("top", "-n", "0", "-stats", "cpu", "-l", "1")
+	// // cmd.Start()
+	// cmd.Wait()
+	// o, err := cmd.Output()
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+	// fmt.Printf("Output: %s", o)
 	for {
 		var msg message
 		err := websocket.JSON.Receive(c.ws, &msg)
@@ -56,7 +65,7 @@ func (c *connection) reader() {
 		if err != nil {
 			break
 		}
-		fmt.Printf("Got query: %v\n", msg)
+		log.Printf("Got query: %v\n", msg)
 		var response message
 		if msg.Opcode == 0 {
 			c.difficulty, response.Difficulty = defaultParam.Difficulty, defaultParam.Difficulty
