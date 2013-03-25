@@ -3,11 +3,15 @@
 <title>Proof of Work</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js"></script>
-<script src="http://www.highcharts.com/highslide/highslide-full.min.js"></script>
+<!-- <script src="http://www.highcharts.com/highslide/highslide-full.min.js"></script> -->
+<script type="text/javascript" src="highcharts.js"></script>
+<script type="text/javascript" src="exporting.js"></script>
+
 <script type="text/javascript">
     function log(msg){
          $("#msg").append("<br/><b>"+msg+"</b><br/>");
     }
+var chart;
 
     $(function () {
     $(document).ready(function() {
@@ -17,40 +21,36 @@
             }
         });
     
-        var chart;
-        $('#container').highcharts({
+                chart = new Highcharts.Chart({
             chart: {
+                renderTo: 'container',
                 type: 'spline',
                 marginRight: 10,
                 events: {
                     load: function() {
-    
+                        chart = this;
                         // set up the updating of the chart each second
                         var series = this.series[0];
-                        setInterval(function() {
-                            var x = (new Date()).getTime(), // current time
-                                y = Math.random();
-                            series.addPoint([x, y], true, true);
-                        }, 1000);
+                        // setInterval(function() {
+                        //     var x = (new Date()).getTime(), // current time
+                        //         y = Math.random();
+                        //     series.addPoint([x, y], true, true);
+                        // }, 1000);
                     }
                 }
             },
             title: {
-                text: 'Live random data'
+                text: 'CPU utilisation (userspace)'
             },
             xAxis: {
                 type: 'datetime',
-                tickPixelInterval: 150
+                tickPixelInterval: 100
             },
             yAxis: {
                 title: {
-                    text: 'Value'
+                    text: 'CPU %'
                 },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
+                gridLineWidth: 0,
             },
             tooltip: {
                 formatter: function() {
@@ -66,28 +66,24 @@
                 enabled: false
             },
             series: [{
-                name: 'Random data',
+                name: 'CPU User',
                 data: (function() {
                     // generate an array of random data
                     var data = [],
                         time = (new Date()).getTime(),
                         i;
+                    // data.push({x:0, y:0});
     
                     for (i = -19; i <= 0; i++) {
                         data.push({
                             x: time + i * 1000,
-                            y: Math.random()
+                            y: 0
                         });
                     }
                     return data;
                 })()
             }]
         });
-    });
-    
-});
-     $(document).ready(function() {
-       
 
         if (window["WebSocket"]) {
             conn = new WebSocket("ws://{{$}}/monitor_ws");
@@ -95,11 +91,21 @@
                log("Connection closed.");
             };
             conn.onmessage = function(evt) {
-                log(evt.data);
+                // log(evt.data);
+                var x = (new Date()).getTime(), // current time
+                        y = JSON.parse(evt.data).Cpu_user;
+                        chart.series[0].addPoint([x, y], true, true);
             }
         } else {
             appendLog($("<div><b>Your browser does not support WebSockets.</b></div>"));
         }
+    });
+    
+});
+     $(document).ready(function() {
+       
+
+        
 
 });
 </script>

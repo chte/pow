@@ -15,6 +15,8 @@ var homeTempl = template.Must(template.ParseFiles("./home.html"))
 var jsTempl = template.Must(template.ParseFiles("./pow.js"))
 var monitorTempl = template.Must(template.ParseFiles("./monitor.html"))
 
+var serveStaticMap = make(map[string]*template.Template)
+
 type homeParam struct {
 	Difficulty int
 	Problems   int
@@ -25,11 +27,18 @@ var defaultParam = &homeParam{3, 256}
 func homeHandler(c http.ResponseWriter, req *http.Request) {
 	homeTempl.Execute(c, defaultParam)
 }
-func jsHandler(c http.ResponseWriter, req *http.Request) {
-	jsTempl.Execute(c, req.Host)
-}
+
+// func jsHandler(c http.ResponseWriter, req *http.Request) {
+// 	jsTempl.Execute(c, req.Host)
+// }
 func monitorHTMLHandler(c http.ResponseWriter, req *http.Request) {
 	monitorTempl.Execute(c, req.Host)
+}
+func serveStatic(file string) {
+	serveStaticMap[file] = template.Must(template.ParseFiles("./" + file))
+	http.HandleFunc("/"+file, func(c http.ResponseWriter, req *http.Request) {
+		serveStaticMap[file].Execute(c, req.Host)
+	})
 }
 
 func main() {
@@ -37,7 +46,10 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	go h.run()
 	http.HandleFunc("/", homeHandler)
-	http.HandleFunc("/pow.js", jsHandler)
+	// http.HandleFunc("/pow.js", jsHandler)
+	serveStatic("pow.js")
+	serveStatic("highcharts.js")
+	serveStatic("exporting.js")
 	http.HandleFunc("/monitor", monitorHTMLHandler)
 	http.Handle("/ws", websocket.Handler(wsHandler))
 	http.Handle("/monitor_ws", websocket.Handler(monitorHandler))
