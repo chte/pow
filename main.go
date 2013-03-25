@@ -49,6 +49,7 @@ func main() {
 	// http.HandleFunc("/pow.js", jsHandler)
 	serveStatic("pow.js")
 	serveStatic("highcharts.js")
+	serveStatic("highcharts_theme.js")
 	serveStatic("exporting.js")
 	http.HandleFunc("/monitor", monitorHTMLHandler)
 	http.Handle("/ws", websocket.Handler(wsHandler))

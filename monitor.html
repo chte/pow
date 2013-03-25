@@ -5,6 +5,8 @@
 <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js"></script>
 <!-- <script src="http://www.highcharts.com/highslide/highslide-full.min.js"></script> -->
 <script type="text/javascript" src="highcharts.js"></script>
+<script type="text/javascript" src="highcharts_theme.js"></script>
+
 <script type="text/javascript" src="exporting.js"></script>
 
 <script type="text/javascript">
@@ -82,6 +84,24 @@ var chart;
                     }
                     return data;
                 })()
+            },
+            {
+                name: 'CPU Systems',
+                data: (function() {
+                    // generate an array of random data
+                    var data = [],
+                        time = (new Date()).getTime(),
+                        i;
+                    // data.push({x:0, y:0});
+    
+                    for (i = -19; i <= 0; i++) {
+                        data.push({
+                            x: time + i * 1000,
+                            y: 0
+                        });
+                    }
+                    return data;
+                })()
             }]
         });
 
@@ -94,7 +114,9 @@ var chart;
                 // log(evt.data);
                 var x = (new Date()).getTime(), // current time
                         y = JSON.parse(evt.data).Cpu_user;
-                        chart.series[0].addPoint([x, y], true, true);
+                        y2 = JSON.parse(evt.data).Cpu_system;
+                        chart.series[0].addPoint([x, y], false, true);
+                        chart.series[1].addPoint([x, 2], true, true);
             }
         } else {
             appendLog($("<div><b>Your browser does not support WebSockets.</b></div>"));
