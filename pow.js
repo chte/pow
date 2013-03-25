@@ -72,7 +72,7 @@ $(document).ready(function(){
         	if(response["Opcode"] == 1){
         		// alert("Problems is:" + response.Problems);
 	        	var solution = find_xs(response["Problems"], response["Difficulty"]);
-	        	$("#result").append("<br/>" + solution + "<br/>");
+	        	// $("#result").append("<br/>" + solution + "<br/>");
 		    	var request = { "Problems": solution, 
 		    					"Query": response.Query,
 		    					"Hash": CryptoJS.SHA256(solution + "" + response["Seed"]).toString(CryptoJS.enc.Hex),

@@ -16,12 +16,13 @@ var jsTempl = template.Must(template.ParseFiles("./pow.js"))
 
 type homeParam struct {
 	Difficulty int
+	Problems   int
 }
 
-var defaultHomeParam = &homeParam{3}
+var defaultParam = &homeParam{2, 256}
 
 func homeHandler(c http.ResponseWriter, req *http.Request) {
-	homeTempl.Execute(c, defaultHomeParam)
+	homeTempl.Execute(c, defaultParam)
 }
 func jsHandler(c http.ResponseWriter, req *http.Request) {
 	jsTempl.Execute(c, req.Host)

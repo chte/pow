@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-const NUMBER_OF_PROBLEMS int = 16
+var NUMBER_OF_PROBLEMS = defaultParam.Problems
 
 type connection struct {
 	// The websocket connection.
@@ -59,7 +59,7 @@ func (c *connection) reader() {
 		fmt.Printf("Got query: %v\n", msg)
 		var response message
 		if msg.Opcode == 0 {
-			c.difficulty, response.Difficulty = defaultHomeParam.Difficulty, defaultHomeParam.Difficulty
+			c.difficulty, response.Difficulty = defaultParam.Difficulty, defaultParam.Difficulty
 			response.Problems = make([]problem, NUMBER_OF_PROBLEMS)
 			for i, _ := range response.Problems {
 				response.Problems[i] = Newproblem()
