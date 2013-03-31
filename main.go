@@ -35,13 +35,13 @@ func attackHandler(c http.ResponseWriter, req *http.Request) {
 	attackTempl.Execute(c, req.Host)
 }
 
-func jsAtkHandler(c http.ResponseWriter, req *http.Request) {
-	jsAtkTempl.Execute(c, req.Host)
-}
+// func jsAtkHandler(c http.ResponseWriter, req *http.Request) {
+// 	jsAtkTempl.Execute(c, req.Host)
+// }
 
-func jsAtkTaskHandler(c http.ResponseWriter, req *http.Request) {
-	jsAtkTaskTempl.Execute(c, req.Host)
-}
+// func jsAtkTaskHandler(c http.ResponseWriter, req *http.Request) {
+// 	jsAtkTaskTempl.Execute(c, req.Host)
+// }
 
 // func jsHandler(c http.ResponseWriter, req *http.Request) {
 // 	jsTempl.Execute(c, req.Host)
@@ -66,14 +66,16 @@ func main() {
 	http.HandleFunc("/", homeHandler)
 	//http.HandleFunc("/pow.js", jsHandler)
 	http.HandleFunc("/attack", attackHandler)
-	http.HandleFunc("/pow_atk.js", jsAtkHandler)
-	http.HandleFunc("/attacktask.js", jsAtkTaskHandler)
+	// http.HandleFunc("/pow_atk.js", jsAtkHandler)
+	// http.HandleFunc("/attacktask.js", jsAtkTaskHandler)
 
 	// http.HandleFunc("/pow.js", jsHandler)
 	serveStatic("pow.js")
 	serveStatic("highcharts.js")
 	serveStatic("highcharts_theme.js")
 	serveStatic("exporting.js")
+	serveStatic("pow_atk.js")
+	serveStatic("attacktask.js")
 	http.HandleFunc("/monitor", monitorHTMLHandler)
 	http.Handle("/ws", websocket.Handler(wsHandler))
 	http.Handle("/monitor_ws", websocket.Handler(monitorHandler))
