@@ -45,6 +45,7 @@ type subscriber struct {
 }
 
 func collect(ch chan information) {
+	//Collect cpu info with: top -n 0 -stats cpu -l 0
 	cmd := exec.Command("top", "-n", "0", "-stats", "cpu", "-l", "0")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -62,6 +63,7 @@ func collect(ch chan information) {
 	exp, _ := regexp.Compile("CPU usage: (.*?)% user, (.*?)% sys, (.*?)% idle")
 	for {
 		line, _, _ := rd.ReadLine()
+		// fmt.Printf("%s\n", line)
 		catch := exp.FindStringSubmatch(string(line))
 		if catch != nil {
 			// fmt.Printf("%s\n", catch[1])

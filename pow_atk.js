@@ -23,13 +23,13 @@ $(document).ready(function(){
  * Start webworkers
  */
 function startWorkerSwarm(numWorkers){
-	var conn;
+	// var conn;
 	var sockets = [];
 	// Initial setup.
 		for(var i = 0; i < numWorkers; i++){
 			(function() {
 				if (window["WebSocket"]) {
-					conn = new WebSocket("ws://{{$}}/ws");
+					var conn = new WebSocket("ws://{{$}}/ws");
 					sockets.push(conn);
 
 			        conn.onclose = function(evt) {  

@@ -18,6 +18,9 @@ var NUMBER_OF_PROBLEMS = defaultParam.Problems
 var connections = 0
 var conn_lock = new(sync.Mutex)
 
+var next_id = 0
+var id_lock = new(sync.Mutex)
+
 type connection struct {
 	// The websocket connection.
 	ws *websocket.Conn
@@ -25,6 +28,7 @@ type connection struct {
 	ha         hash.Hash
 	difficulty int
 	problems   []problem
+	id         int
 }
 
 type problem struct {
@@ -90,7 +94,7 @@ func (c *connection) reader() {
 				c.ha.Write([]byte(strconv.Itoa(msg.Problems[i].Solution)))
 				c.ha.Write([]byte(strconv.Itoa(c.problems[i].Seed)))
 				sha = hex.EncodeToString(c.ha.Sum(nil))
-				fmt.Printf("Response solution: %v\n Calc Solution: %v\n", msg.Problems[i].Solution, sha)
+				// fmt.Printf("Response solution: %v\n Calc Solution: %v\n", msg.Problems[i].Solution, sha)
 				if init_zeroes(sha) < c.difficulty {
 					ok = false
 					break
@@ -104,7 +108,7 @@ func (c *connection) reader() {
 				response.Query = "Your query was ignored since you did not solve the puzzle."
 			}
 		}
-		fmt.Printf("Sending response %v\n", response)
+		log.Printf("Sending response to %d: %v\n", c.id, response)
 		websocket.JSON.Send(c.ws, response)
 	}
 	conn_lock.Lock()
@@ -125,7 +129,11 @@ func (c *connection) reader() {
 // }
 
 func wsHandler(ws *websocket.Conn) {
-	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS)}
+	id_lock.Lock()
+	id := next_id
+	next_id++
+	id_lock.Unlock()
+	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS), id: id}
 	//h.register <- c
 	// defer func() { h.unregister <- c }()
 	// go c.writer()
