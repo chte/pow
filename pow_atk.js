@@ -57,10 +57,13 @@ function startWorkerSwarm(numWorkers){
 			                                "Opcode": 1};
 			                //alert(JSON.stringify(request))
 			                conn.send(JSON.stringify(request));
-			           		}
+			           		} 
 			           		//Send message with data to worker
 			           		w.postMessage({id: index, problems: response["Problems"], difficulty: response["Difficulty"]});
-			            } 
+			            } else {
+			           			conn.onopen();
+			           	}
+
 			        }
 			        conn.onopen = function(evt) {
 			        	var request = {"Opcode": 0, "Query": "Calle"};
