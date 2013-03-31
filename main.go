@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"runtime"
 	"text/template"
 	"time"
 )
@@ -25,7 +26,7 @@ type homeParam struct {
 	Problems   int
 }
 
-var defaultParam = homeParam{2, 16}
+var defaultParam = homeParam{3, 32}
 
 func homeHandler(c http.ResponseWriter, req *http.Request) {
 	homeTempl.Execute(c, defaultParam)
@@ -58,6 +59,8 @@ func serveStatic(file string) {
 
 func main() {
 	flag.Parse()
+	cpu := runtime.GOMAXPROCS(runtime.NumCPU())
+	log.Printf("Pow server started at %d, threads: %d -> %d\n", addr, cpu, runtime.NumCPU())
 	rand.Seed(time.Now().UTC().UnixNano())
 	go h.run()
 	http.HandleFunc("/", homeHandler)
