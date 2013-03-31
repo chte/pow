@@ -23,27 +23,18 @@ $(document).ready(function(){
  * Start webworkers
  */
 function startWorkerSwarm(numWorkers){
-	// var conn;
-	var sockets = [];
+	// var sockets = [];
 	// Initial setup.
 		for(var i = 0; i < numWorkers; i++){
 			(function() {
 				if (window["WebSocket"]) {
 					var conn = new WebSocket("ws://{{$}}/ws");
-					sockets.push(conn);
+					var w = new Worker("attacktask.js");
+					var response;
+					// sockets.push(conn);
 
-			        conn.onclose = function(evt) {  
-			           log("Connection closed.");
-			        };
-			        conn.onmessage = function(evt) {
-			            // alert("Got response: " + evt.data);
-			            var response = JSON.parse(evt.data);
-			            var index = i;
-			            if(response["Opcode"] == 1){
-
-			                // alert("Problems is:" + response.Problems);
-			                w = new Worker("attacktask.js");
-			                w.onmessage=function (e){
+					//Setup Worker
+					w.onmessage=function (e){
 								 var worker_data=e.data;
 								 var solution = e.data.solution; 
 								 // recieved data from worker
@@ -58,8 +49,20 @@ function startWorkerSwarm(numWorkers){
 			                //alert(JSON.stringify(request))
 			                conn.send(JSON.stringify(request));
 			           		} 
+
+			        conn.onclose = function(evt) {  
+			           log("Connection closed.");
+			        };
+			        conn.onmessage = function(evt) {
+			            // alert("Got response: " + §evt.data);
+			            response = JSON.parse(evt.data);
+			            
+			            if(response["Opcode"] == 1){
+
+			                // alert("Problems is:" + response.Problems);
+			                
 			           		//Send message with data to worker
-			           		w.postMessage({id: index, problems: response["Problems"], difficulty: response["Difficulty"]});
+			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"]});
 			            } else {
 			           			conn.onopen();
 			           	}
