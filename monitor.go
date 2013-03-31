@@ -33,6 +33,8 @@ var h = hub{
 
 type information struct {
 	Cpu_user, Cpu_system float64
+	Monitoring           int
+	Users                int
 }
 type subscriber struct {
 	// The websocket connection.
@@ -65,7 +67,7 @@ func collect(ch chan information) {
 			// fmt.Printf("%s\n", catch[1])
 			user, _ := strconv.ParseFloat(catch[1], 64)
 			system, _ := strconv.ParseFloat(catch[2], 64)
-			h.broadcast <- information{Cpu_user: user, Cpu_system: system}
+			h.broadcast <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections}
 		}
 
 	}

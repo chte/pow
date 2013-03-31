@@ -22,7 +22,7 @@ type homeParam struct {
 	Problems   int
 }
 
-var defaultParam = &homeParam{3, 256}
+var defaultParam = homeParam{3, 16}
 
 func homeHandler(c http.ResponseWriter, req *http.Request) {
 	homeTempl.Execute(c, defaultParam)

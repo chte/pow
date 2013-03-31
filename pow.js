@@ -80,14 +80,16 @@ $(document).ready(function(){
 		    	conn.send(JSON.stringify(request));
 	    	} else {
 	            var endTime = Number(new Date().getTime()); // returns the number of MS since the epoch	
+	            $("#search").removeAttr("disabled");
 				$("#result").html("<br/><b>Result from server</b><br/>");
 				append_result(response["Query"]+"<br/>");
-				append_result("<br/><b>Time for solving the puzzle</b><br/>");
+				append_result("<br/><b>Time for solving the puzzle: </b><bPr/>");
 				append_result((endTime - startTime)+" ms <br/>");
 				append_result("<br/><b>The solution was</b><br/>");
 				append_result('"'+response["Result"]+'" <br/>');
 				append_result("<br/><b>The hash value was</b><br/>");
 				append_result(response["Hash"]+" <br/>");
+
 	    	}
         }
     } else {
@@ -99,10 +101,13 @@ $(document).ready(function(){
      * This search function is protected by proof-of-work.
      */
     $("#search").click(function(){
-		startTime = Number(new Date().getTime());
+		
 	    var request = {"Opcode": 0, "Query": $('#search_field').val()};
-	    log("Sending " + JSON.stringify(request));
+	    // log("Sending " + JSON.stringify(request));
+	    $("#search").attr("disabled", "disabled");
+	    startTime = Number(new Date().getTime());
 	    conn.send(JSON.stringify(request));  
+	    
     });
 });
 

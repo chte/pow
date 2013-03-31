@@ -11,9 +11,12 @@ import (
 	// "os/exec"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 var NUMBER_OF_PROBLEMS = defaultParam.Problems
+var connections = 0
+var conn_lock = new(sync.Mutex)
 
 type connection struct {
 	// The websocket connection.
@@ -50,6 +53,9 @@ func init_zeroes(s string) (num int) {
 
 func (c *connection) reader() {
 	fmt.Printf("Client connected\n")
+	conn_lock.Lock()
+	connections++
+	conn_lock.Unlock()
 	// cmd := exec.Command("top", "-n", "0", "-stats", "cpu", "-l", "1")
 	// // cmd.Start()
 	// cmd.Wait()
@@ -101,6 +107,9 @@ func (c *connection) reader() {
 		fmt.Printf("Sending response %v\n", response)
 		websocket.JSON.Send(c.ws, response)
 	}
+	conn_lock.Lock()
+	connections--
+	conn_lock.Unlock()
 	fmt.Printf("Client Disconnected\n")
 	c.ws.Close()
 }
