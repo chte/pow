@@ -60,7 +60,7 @@ func serveStatic(file string) {
 func main() {
 	flag.Parse()
 	cpu := runtime.GOMAXPROCS(runtime.NumCPU())
-	log.Printf("Pow server started at %s, threads: %d -> %d\n", *addr, cpu, runtime.NumCPU())
+	log.Printf("PoW server started on %s server at %s, threads: %d -> %d\n", runtime.GOOS, *addr, cpu, runtime.NumCPU())
 	rand.Seed(time.Now().UTC().UnixNano())
 	go h.run()
 	http.HandleFunc("/", homeHandler)
