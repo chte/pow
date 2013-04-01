@@ -25,30 +25,34 @@ $(document).ready(function(){
 function startWorkerSwarm(numWorkers){
 	// var sockets = [];
 	// Initial setup.
+		log("Starting " + numWorkers + " workers.");
+
 		for(var i = 0; i < numWorkers; i++){
 			(function() {
 				if (window["WebSocket"]) {
 					var conn = new WebSocket("ws://{{$}}/ws");
 					var w = new Worker("attacktask.js");
+					log("Worker " + i + ": started on new websocket.");
+
 					var response;
 					// sockets.push(conn);
 
 					//Setup Worker
 					w.onmessage=function (e){
-								 var worker_data=e.data;
-								 var solution = e.data.solution; 
-								 // recieved data from worker
-								 // alert(worker_data);
-								//alert(JSON.stringify(solution));
-							
-			                // $("#result").append("<br/>" + solution + "<br/>");
-			                var request = { "Problems": solution, 
-			                                "Query": response.Query,
-			                                "Hash": CryptoJS.SHA256(solution + "" + response["Seed"]).toString(CryptoJS.enc.Hex),
-			                                "Opcode": 1};
-			                //alert(JSON.stringify(request))
-			                conn.send(JSON.stringify(request));
-			           		} 
+							 // var worker_data=e.data;
+						var solution = e.data.solution; 
+							 // recieved data from worker
+							 // alert(worker_data);
+							//alert(JSON.stringify(solution));
+						
+		                // $("#result").append("<br/>" + solution + "<br/>");
+		                var request = { "Problems": solution, 
+		                                "Query": response.Query,
+		                                "Hash": CryptoJS.SHA256(solution + "" + response["Seed"]).toString(CryptoJS.enc.Hex),
+		                                "Opcode": 1};
+		                //alert(JSON.stringify(request))
+		                conn.send(JSON.stringify(request));
+			        } 
 
 			        conn.onclose = function(evt) {  
 			           log("Connection closed.");
@@ -81,9 +85,6 @@ function startWorkerSwarm(numWorkers){
 
 function log(msg){
 	 $("#msg").append("<br/><b>"+msg+"</b><br/>");
-}
-function append_result(str){
-	$("#result").append(str);
 }
 
 

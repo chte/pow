@@ -49,13 +49,18 @@ body {
 }
 </style>
 </head>
-<body>
- <div id="result"></div>
-<br/><br/>
-<input type="text" id="number_of_attacker_field">
-<input type="button" name="attackbtn" value="attackbtn" id="attackbtn"/>
-<br><br>
+    <body>
+        <div id="content">
+            <h2>Proof of Work</h2>
 
-</body>
-
+            Each webworker is required to solve {{.Problems}} puzzles of difficulty {{.Difficulty}}.
+            <br/><br/>
+            Enter number of attackers: 
+            <br/>
+            <input type="text" id="number_of_attacker_field" value="4">
+            <input type="button" name="attackbtn" value="Attack" id="attackbtn"/>
+            <br/><br/>
+            <div id="msg"></div><br/>
+        </div>
+    </body>
 </html>

@@ -75,7 +75,7 @@ func collect(ch chan information) {
 	if mac {
 		exp, _ = regexp.Compile("CPU usage: (.*?)% user, (.*?)% sys, (.*?)% idle") //Mac
 	} else {
-		exp, _ = regexp.Compile("all\\s*(.*?)\\s*\\S*\\s*(.*?)")
+		exp, _ = regexp.Compile("all\\s+(\\S+)\\s+\\S+\\s+(\\S+)")
 	}
 	// exp, _ := regexp.Compile("(\\d\\.\\d{2})") //Ubuntu
 	//exp, _ := regexp.Compile("CPU usage: (.*?)% user, (.*?)% sys, (.*?)% idle") //Mac
@@ -86,9 +86,11 @@ func collect(ch chan information) {
 		// catch := exp.FindAllString(string(line), 3) //Ubuntu
 		catch := exp.FindStringSubmatch(string(line)) //Mac
 		if catch != nil {
-			// fmt.Printf("%s\n", catch[1])
+			//fmt.Printf("%s\n", catch[0])
+			//fmt.Printf("%s\n", catch[2])
+
 			// user, _ := strconv.ParseFloat(catch[0], 64) //Ubuntu
-			user, _ := strconv.ParseFloat(catch[1], 64) //Mac	
+			user, _ := strconv.ParseFloat(catch[1], 64)
 			system, _ := strconv.ParseFloat(catch[2], 64)
 			h.broadcast <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections}
 		}
