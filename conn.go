@@ -4,7 +4,6 @@ import (
 	"code.google.com/p/go.net/websocket"
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 	"hash"
 	"log"
 	"math/rand"
@@ -56,7 +55,6 @@ func init_zeroes(s string) (num int) {
 }
 
 func (c *connection) reader() {
-	fmt.Printf("Client connected\n")
 	conn_lock.Lock()
 	connections++
 	conn_lock.Unlock()
@@ -114,8 +112,6 @@ func (c *connection) reader() {
 	conn_lock.Lock()
 	connections--
 	conn_lock.Unlock()
-	fmt.Printf("Client Disconnected\n")
-	c.ws.Close()
 }
 
 // func (c *connection) writer() {
@@ -133,9 +129,12 @@ func wsHandler(ws *websocket.Conn) {
 	id := next_id
 	next_id++
 	id_lock.Unlock()
+	log.Printf("Accepted connection from %s, assigning id %d\n", ws.RemoteAddr(), id)
 	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS), id: id}
 	//h.register <- c
 	// defer func() { h.unregister <- c }()
 	// go c.writer()
 	c.reader()
+	log.Printf("Client %d disconnected from server\n", id)
+
 }
