@@ -66,7 +66,8 @@ func (c *connection) reader() {
 	// 	log.Println(err)
 	// }
 	// fmt.Printf("Output: %s", o)
-	for {
+	conn_ok := true
+	for conn_ok {
 		var msg message
 		err := websocket.JSON.Receive(c.ws, &msg)
 		// fmt.Printf("Received: %v, ERR: %v\n", msg, err)
@@ -102,12 +103,14 @@ func (c *connection) reader() {
 			if ok {
 				response.Query = strings.Join([]string{"Your query, \"", msg.Query, "\" has been served since you solved the puzzle."}, "")
 				response.Hash = sha
-				for i := 0; i < 10000000; i++ {
+				for i := 0; i < 1000000000; i++ {
 					//simulate some server load
 				}
 			} else {
+				response.Opcode = 255
 				response.Result = "Incorrect hash!"
 				response.Query = "Your query was ignored since you did not solve the puzzle."
+				conn_ok = false
 			}
 		}
 		log.Printf("Sending response to %d: %v\n", c.id, response)
@@ -133,7 +136,7 @@ func wsHandler(ws *websocket.Conn) {
 	id := next_id
 	next_id++
 	id_lock.Unlock()
-	log.Printf("Accepted connection from %s, assigning id %d\n", ws.LocalAddr(), id)
+	log.Printf("Accepted connection from %s, assigning id %d\n", ws.Request().RemoteAddr, id)
 	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS), id: id}
 	//h.register <- c
 	// defer func() { h.unregister <- c }()
