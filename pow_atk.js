@@ -12,7 +12,14 @@ $(document).ready(function(){
      * This search function is protected by proof-of-work.
      */
     table = $('#attackers');
-
+	$.ajax({
+	  url: "ip",
+	  context: document.body,
+	  success: function(response) {
+	  				// alert(response);
+				  $("#ip")[0].innerHTML = "[" + response + "]";
+				}
+	});
     $("#attackbtn").click(function(){
         var numWorkers = parseInt($('#number_of_attacker_field').val());
         startWorkerSwarm(numWorkers)
@@ -38,7 +45,10 @@ function buildRow(row){
 	row.append(getTD("remote_id"));
 	row.append(getTD("difficulty"));
 	row.append(getTD("number"));
-	row.append(getTD("abort"));
+	row.append(getTD("status"));
+}
+function set(label, value){
+	this.children("#"+label)[0].innerHTML = "" + value;
 }
 
 /*************************** Web worker logics ********************************/
@@ -59,10 +69,11 @@ function startWorkerSwarm(numWorkers){
 					var id = startid + i;
 					log("Worker " + id + ": started on new websocket.");
 					var trow = $(document.createElement('tr'));
+					trow.set = set;
 					table.append(trow);
 					buildRow(trow);
-					trow.children("#local_id")[0].innerHTML = "" + id;
-					
+					// trow.children("#local_id")[0].innerHTML = "" + id;
+					trow.set("local_id", id);
 
 
 					var response;
@@ -95,8 +106,11 @@ function startWorkerSwarm(numWorkers){
 			            if(response["Opcode"] == 1){
 
 			                // alert("Problems is:" + response.Problems);
-			                trow.children("#difficulty")[0].innerHTML = "" + response["Difficulty"];
-			                trow.children("#number")[0].innerHTML = "" + response["Problems"].length;
+			                // trow.children("#difficulty")[0].innerHTML = "" + response["Difficulty"];
+			                trow.set("difficulty", response["Difficulty"]);
+			                trow.set("number", response["Problems"].length);
+
+			                // trow.children("#number")[0].innerHTML = "" + response["Problems"].length;
 			           		//Send message with data to worker
 			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"]});
 			            } else {

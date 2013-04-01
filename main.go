@@ -34,6 +34,10 @@ func homeHandler(c http.ResponseWriter, req *http.Request) {
 func attackHandler(c http.ResponseWriter, req *http.Request) {
 	attackTempl.Execute(c, defaultParam)
 }
+func ipHandler(c http.ResponseWriter, req *http.Request) {
+	// c.WriteHeader()
+	c.Write([]byte(req.RemoteAddr))
+}
 
 // func jsAtkHandler(c http.ResponseWriter, req *http.Request) {
 // 	jsAtkTempl.Execute(c, req.Host)
@@ -78,6 +82,7 @@ func main() {
 	serveStatic("pow_atk.js")
 	serveStatic("attacktask.js")
 	http.HandleFunc("/monitor", monitorHTMLHandler)
+	http.HandleFunc("/ip", ipHandler)
 	http.Handle("/ws", websocket.Handler(wsHandler))
 	http.Handle("/monitor_ws", websocket.Handler(monitorHandler))
 	if err := http.ListenAndServe(*addr, nil); err != nil {

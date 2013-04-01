@@ -4,7 +4,7 @@ onmessage = function (e){
  //recieved data from UI
 
  var response = { id: e.data.id, 
- 				  solution: 1 //find_solution(e.data.problems, e.data.difficulty)
+ 				  solution: find_solution(e.data.problems, e.data.difficulty)
  				};
  postMessage(response); 
  //sending message to UI

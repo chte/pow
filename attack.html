@@ -57,7 +57,7 @@ body {
 </head>
     <body>
         <div id="content">
-            <h2>Proof of Work</h2>
+            <h2>Proof of Work <span id="ip"></span></h2>
 
             Each webworker is required to solve {{.Problems}} puzzles of difficulty {{.Difficulty}}.
             <br/><br/>
@@ -72,7 +72,7 @@ body {
                     <th>Remote ID</th>
                     <th>Difficulty</th>
                     <th>Number</th>
-                    <!--<th>Abort</th>-->
+                    <th>Status</th>
                 </tr>
             </table>
             <div id="msg"></div><br/>
