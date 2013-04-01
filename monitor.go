@@ -130,7 +130,7 @@ func (c *subscriber) writer() {
 }
 
 func monitorHandler(ws *websocket.Conn) {
-	log.Println("Accepted connection")
+	log.Printf("Accepted monitor connection from %s\n", ws.RemoteAddr())
 	c := &subscriber{send: make(chan information, 256), ws: ws}
 	h.register <- c
 	defer func() { h.unregister <- c }()
