@@ -32,7 +32,7 @@ func homeHandler(c http.ResponseWriter, req *http.Request) {
 	homeTempl.Execute(c, defaultParam)
 }
 func attackHandler(c http.ResponseWriter, req *http.Request) {
-	attackTempl.Execute(c, req.Host)
+	attackTempl.Execute(c, defaultParam)
 }
 
 // func jsAtkHandler(c http.ResponseWriter, req *http.Request) {

@@ -39,9 +39,9 @@ func Newproblem() problem {
 }
 
 type message struct {
-	Opcode, Difficulty  int
-	Result, Query, Hash string
-	Problems            []problem
+	Opcode, Difficulty, ConnId int
+	Result, Query, Hash        string
+	Problems                   []problem
 }
 
 func init_zeroes(s string) (num int) {
@@ -84,6 +84,7 @@ func (c *connection) reader() {
 			}
 			response.Opcode = 1
 			response.Query = msg.Query
+			response.ConnId = c.id
 		} else {
 			ok := true
 			var sha string
