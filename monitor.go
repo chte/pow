@@ -44,9 +44,13 @@ type subscriber struct {
 	send chan information
 }
 
+//Collect cpu info with: top -n 0 -stats cpu -l 0
+//cmd := exec.Command("top", "-n", "0", "-stats", "cpu", "-l", "0")
 func collect(ch chan information) {
 	//Collect cpu info with: top -n 0 -stats cpu -l 0
-	cmd := exec.Command("top", "-n", "0", "-stats", "cpu", "-l", "0")
+	//cmd := exec.Command("top", "-n", "0", "-stats", "cpu", "-l", "0") //Mac
+	cmd := exec.Command("sar", "-u", "1") //Ubuntu
+
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Println(err)
@@ -60,14 +64,18 @@ func collect(ch chan information) {
 		fmt.Println(err)
 	}
 	rd := bufio.NewReader(stdout)
-	exp, _ := regexp.Compile("CPU usage: (.*?)% user, (.*?)% sys, (.*?)% idle")
+	exp, _ := regexp.Compile("(\\d\\.\\d{2})") //Ubuntu
+	//exp, _ := regexp.Compile("CPU usage: (.*?)% user, (.*?)% sys, (.*?)% idle") //Mac
 	for {
 		line, _, _ := rd.ReadLine()
 		// fmt.Printf("%s\n", line)
-		catch := exp.FindStringSubmatch(string(line))
+
+		catch := exp.FindAllString(string(line), 3) //Ubuntu
+		//catch := exp.FindStringSubmatch(string(line)) //Mac
 		if catch != nil {
 			// fmt.Printf("%s\n", catch[1])
-			user, _ := strconv.ParseFloat(catch[1], 64)
+			user, _ := strconv.ParseFloat(catch[0], 64) //Ubuntu
+			//user, _ := strconv.ParseFloat(catch[1], 64) //Mac	
 			system, _ := strconv.ParseFloat(catch[2], 64)
 			h.broadcast <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections}
 		}
