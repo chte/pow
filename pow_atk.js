@@ -46,6 +46,7 @@ function buildRow(row){
 	row.append(getTD("difficulty"));
 	row.append(getTD("number"));
 	row.append(getTD("status"));
+	row.append(getTD("solved"));
 }
 function set(label, value){
 	this.children("#"+label)[0].innerHTML = "" + value;
@@ -67,13 +68,15 @@ function startWorkerSwarm(numWorkers){
 					var conn = new WebSocket("ws://{{$}}/ws");
 					var w = new Worker("attacktask.js");
 					var id = startid + i;
-					log("Worker " + id + ": started on new websocket.");
+					var solved = 0;
+					// log("Worker " + id + ": started on new websocket.");
 					var trow = $(document.createElement('tr'));
 					trow.set = set;
 					table.append(trow);
 					buildRow(trow);
 					// trow.children("#local_id")[0].innerHTML = "" + id;
 					trow.set("local_id", id);
+					trow.set("status", "CONNECTING");
 
 
 					var response;
@@ -81,6 +84,9 @@ function startWorkerSwarm(numWorkers){
 
 					//Setup Worker
 					w.onmessage=function (e){
+						trow.set("status", "SOLVED");
+						solved++;
+						trow.set("solved", solved);
 							 // var worker_data=e.data;
 						var solution = e.data.solution; 
 							 // recieved data from worker
@@ -97,11 +103,15 @@ function startWorkerSwarm(numWorkers){
 			        } 
 
 			        conn.onclose = function(evt) {  
-			           log("Connection closed.");
+			           // log("Connection closed.");
+			           trow.set("status", "DISCONNECTED");
 			        };
 			        conn.onmessage = function(evt) {
 			            // alert("Got response: " + §evt.data);
 			            response = JSON.parse(evt.data);
+			            if(response.SocketId ){
+			            	trow.set("remote_id", response.SocketId);
+			            }
 			            
 			            if(response["Opcode"] == 1){
 
@@ -112,6 +122,7 @@ function startWorkerSwarm(numWorkers){
 
 			                // trow.children("#number")[0].innerHTML = "" + response["Problems"].length;
 			           		//Send message with data to worker
+			           		trow.set("status", "WORKING");
 			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"]});
 			            } else {
 			           			conn.onopen();
@@ -119,6 +130,7 @@ function startWorkerSwarm(numWorkers){
 
 			        }
 			        conn.onopen = function(evt) {
+			        	trow.set("status", "CONNECTED");
 			        	var request = {"Opcode": 0, "Query": "Calle"};
 		     			this.send(JSON.stringify(request));
 			        }

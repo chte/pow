@@ -4,6 +4,7 @@ import (
 	"code.google.com/p/go.net/websocket"
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"hash"
 	"log"
 	"math/rand"
@@ -17,7 +18,7 @@ var NUMBER_OF_PROBLEMS = defaultParam.Problems
 var connections = 0
 var conn_lock = new(sync.Mutex)
 
-var next_id = 0
+var next_id = 1
 var id_lock = new(sync.Mutex)
 
 type connection struct {
@@ -39,9 +40,13 @@ func Newproblem() problem {
 }
 
 type message struct {
-	Opcode, Difficulty, ConnId int
-	Result, Query, Hash        string
-	Problems                   []problem
+	Opcode, Difficulty, SocketId int
+	Result, Query, Hash          string
+	Problems                     []problem
+}
+
+func (m message) String() string {
+	return fmt.Sprintf("Id: %d, Opcode: %d, Difficulty: %d(%d), Query: %s", m.SocketId, m.Opcode, m.Difficulty, len(m.Problems), m.Query)
 }
 
 func init_zeroes(s string) (num int) {
@@ -74,7 +79,7 @@ func (c *connection) reader() {
 		if err != nil {
 			break
 		}
-		log.Printf("Got query: %v\n", msg)
+		log.Printf("RECEIVED: %v\n", msg)
 		var response message
 		if msg.Opcode == 0 {
 			c.difficulty, response.Difficulty = defaultParam.Difficulty, defaultParam.Difficulty
@@ -85,7 +90,7 @@ func (c *connection) reader() {
 			}
 			response.Opcode = 1
 			response.Query = msg.Query
-			response.ConnId = c.id
+			response.SocketId = c.id
 		} else {
 			ok := true
 			var sha string
@@ -113,7 +118,7 @@ func (c *connection) reader() {
 				conn_ok = false
 			}
 		}
-		log.Printf("Sending response to %d: %v\n", c.id, response)
+		log.Printf(" SENDING: %v\n", response)
 		websocket.JSON.Send(c.ws, response)
 	}
 	conn_lock.Lock()
