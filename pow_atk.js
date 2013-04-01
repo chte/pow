@@ -47,9 +47,15 @@ function buildRow(row){
 	row.append(getTD("number"));
 	row.append(getTD("status"));
 	row.append(getTD("solved"));
+	row.append(getTD("close"));
+	
 }
+function get(who, what){
+	return who.children("#"+what)[0];
+}
+
 function set(label, value){
-	this.children("#"+label)[0].innerHTML = "" + value;
+	get(this, label).innerHTML = "" + value;
 }
 
 /*************************** Web worker logics ********************************/
@@ -68,6 +74,7 @@ function startWorkerSwarm(numWorkers){
 					var conn = new WebSocket("ws://{{$}}/ws");
 					var w = new Worker("attacktask.js");
 					var id = startid + i;
+					var closed = false;
 					var solved = 0;
 					// log("Worker " + id + ": started on new websocket.");
 					var trow = $(document.createElement('tr'));
@@ -78,12 +85,20 @@ function startWorkerSwarm(numWorkers){
 					trow.set("local_id", id);
 					trow.set("status", "CONNECTING");
 
+					var b = $(document.createElement('button'));
+					b.html("Close");
+					var cl = $(get(trow, "close"));
+					b.click(function(){
+						conn.close();
+					});
+					cl.append(b);
 
 					var response;
 					// sockets.push(conn);
 
 					//Setup Worker
 					w.onmessage=function (e){
+						if(closed) return;
 						trow.set("status", "SOLVED");
 						solved++;
 						trow.set("solved", solved);
@@ -104,7 +119,13 @@ function startWorkerSwarm(numWorkers){
 
 			        conn.onclose = function(evt) {  
 			           // log("Connection closed.");
+			           closed = true;
 			           trow.set("status", "DISCONNECTED");
+			        };
+			        conn.onerror = function(evt) {  
+			           // log("Connection closed.");
+			           closed = true;
+			           trow.set("status", "ERROR");
 			        };
 			        conn.onmessage = function(evt) {
 			            // alert("Got response: " + §evt.data);
