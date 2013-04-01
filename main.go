@@ -70,6 +70,7 @@ func main() {
 	// http.HandleFunc("/attacktask.js", jsAtkTaskHandler)
 
 	// http.HandleFunc("/pow.js", jsHandler)
+	serveStatic("sha256.js")
 	serveStatic("pow.js")
 	serveStatic("highcharts.js")
 	serveStatic("highcharts_theme.js")
