@@ -129,7 +129,7 @@ func wsHandler(ws *websocket.Conn) {
 	id := next_id
 	next_id++
 	id_lock.Unlock()
-	log.Printf("Accepted connection from %s, assigning id %d\n", ws.RemoteAddr(), id)
+	log.Printf("Accepted connection from %s, assigning id %d\n", ws.LocalAddr(), id)
 	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS), id: id}
 	//h.register <- c
 	// defer func() { h.unregister <- c }()

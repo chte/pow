@@ -75,7 +75,7 @@ func collect(ch chan information) {
 	if mac {
 		exp, _ = regexp.Compile("CPU usage: (.*?)% user, (.*?)% sys, (.*?)% idle") //Mac
 	} else {
-		exp, _ = regexp.Compile("all\\s*(.*?)\\s*\\S*\\s*(.*?)")
+		exp, _ = regexp.Compile("all\\s*(.+?)\\s*\\S+\\s*(.+?)")
 	}
 	// exp, _ := regexp.Compile("(\\d\\.\\d{2})") //Ubuntu
 	//exp, _ := regexp.Compile("CPU usage: (.*?)% user, (.*?)% sys, (.*?)% idle") //Mac
