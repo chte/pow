@@ -102,6 +102,9 @@ func (c *connection) reader() {
 			if ok {
 				response.Query = strings.Join([]string{"Your query, \"", msg.Query, "\" has been served since you solved the puzzle."}, "")
 				response.Hash = sha
+				for i := 0; i < 10000000; i++ {
+					//simulate some server load
+				}
 			} else {
 				response.Result = "Incorrect hash!"
 				response.Query = "Your query was ignored since you did not solve the puzzle."

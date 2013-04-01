@@ -11,12 +11,35 @@ $(document).ready(function(){
     /* 
      * This search function is protected by proof-of-work.
      */
+    table = $('#attackers');
+
     $("#attackbtn").click(function(){
         var numWorkers = parseInt($('#number_of_attacker_field').val());
         startWorkerSwarm(numWorkers)
     });
 });
 
+var table;
+var startid = 0;
+
+function getTD(id){
+	var td =  $(document.createElement('td'));
+	td.attr({'id': id});
+	return td;
+}
+
+function buildRow(row){
+	// row.append("<td>", {id: "local_id"});
+	// row.append("<td>", {id: "remote_id"});
+	// row.append("<td>", {id: "difficulty"});
+	// row.append("<td>", {id: "number"});
+	// row.append("<td>", {id: "abort"});
+	row.append(getTD("local_id"));
+	row.append(getTD("remote_id"));
+	row.append(getTD("difficulty"));
+	row.append(getTD("number"));
+	row.append(getTD("abort"));
+}
 
 /*************************** Web worker logics ********************************/
 /* 
@@ -27,12 +50,20 @@ function startWorkerSwarm(numWorkers){
 	// Initial setup.
 		log("Starting " + numWorkers + " workers.");
 
+
 		for(var i = 0; i < numWorkers; i++){
 			(function() {
 				if (window["WebSocket"]) {
 					var conn = new WebSocket("ws://{{$}}/ws");
 					var w = new Worker("attacktask.js");
-					log("Worker " + i + ": started on new websocket.");
+					var id = startid + i;
+					log("Worker " + id + ": started on new websocket.");
+					var trow = $(document.createElement('tr'));
+					table.append(trow);
+					buildRow(trow);
+					trow.children("#local_id")[0].innerHTML = "" + id;
+					
+
 
 					var response;
 					// sockets.push(conn);
@@ -64,7 +95,8 @@ function startWorkerSwarm(numWorkers){
 			            if(response["Opcode"] == 1){
 
 			                // alert("Problems is:" + response.Problems);
-			                
+			                trow.children("#difficulty")[0].innerHTML = "" + response["Difficulty"];
+			                trow.children("#number")[0].innerHTML = "" + response["Problems"].length;
 			           		//Send message with data to worker
 			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"]});
 			            } else {
@@ -80,6 +112,7 @@ function startWorkerSwarm(numWorkers){
 		    })();
 
 		}
+		startid+=numWorkers;
 }
 
 

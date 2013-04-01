@@ -47,6 +47,12 @@ body {
     margin: 1em auto 1em auto;
     box-shadow: 0px 0px 10px black;
 }
+#attackers tr td {
+    text-align: right;
+    padding: 0 0.5em;
+    margin-left: 1px solid black;
+    margin-right: 1px solid black;
+}
 </style>
 </head>
     <body>
@@ -60,6 +66,15 @@ body {
             <input type="text" id="number_of_attacker_field" value="4">
             <input type="button" name="attackbtn" value="Attack" id="attackbtn"/>
             <br/><br/>
+            <table id="attackers">
+                <tr id="header">
+                    <th>Local ID</th>
+                    <th>Remote ID</th>
+                    <th>Difficulty</th>
+                    <th>Number</th>
+                    <!--<th>Abort</th>-->
+                </tr>
+            </table>
             <div id="msg"></div><br/>
         </div>
     </body>
