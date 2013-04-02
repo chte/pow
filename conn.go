@@ -8,6 +8,7 @@ import (
 	"hash"
 	"log"
 	"math/rand"
+	"time"
 	// "os/exec"
 	"strconv"
 	"strings"
@@ -88,6 +89,7 @@ func (c *connection) reader() {
 				response.Problems[i] = Newproblem()
 				c.problems[i] = response.Problems[i]
 			}
+
 			response.Opcode = 1
 			response.Query = msg.Query
 			response.SocketId = c.id
@@ -108,9 +110,12 @@ func (c *connection) reader() {
 			if ok {
 				response.Query = strings.Join([]string{"Your query, \"", msg.Query, "\" has been served since you solved the puzzle."}, "")
 				response.Hash = sha
-				for i := 0; i < 1000000000; i++ {
-					//simulate some server load
+				before := time.Now().UTC().UnixNano()
+				for i := int64(0); i < 250000000; i++ {
+					//simulate some server load (~80 ms)
 				}
+				after := time.Now().UTC().UnixNano()
+				log.Printf("Service took %.3f ms", float64(after-before)/float64(1000000))
 			} else {
 				response.Opcode = 255
 				response.Result = "Incorrect hash!"
