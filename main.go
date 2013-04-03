@@ -26,7 +26,7 @@ type homeParam struct {
 	Problems   int
 }
 
-var defaultParam = homeParam{2, 0}
+var defaultParam = homeParam{2, 64}
 
 func homeHandler(c http.ResponseWriter, req *http.Request) {
 	homeTempl.Execute(c, defaultParam)
@@ -68,7 +68,7 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	go h.run()
 	http.HandleFunc("/", homeHandler)
-	//http.HandleFunc("/pow.js", jsHandler)
+	//http.HandleFunc("/pow.js", jsHandl	er)
 	http.HandleFunc("/attack", attackHandler)
 	// http.HandleFunc("/pow_atk.js", jsAtkHandler)
 	// http.HandleFunc("/attacktask.js", jsAtkTaskHandler)

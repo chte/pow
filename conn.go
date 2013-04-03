@@ -21,6 +21,7 @@ var conn_lock = new(sync.Mutex)
 
 var next_id = 1
 var id_lock = new(sync.Mutex)
+var deadtime, _ = time.ParseDuration("2s")
 
 type connection struct {
 	// The websocket connection.
@@ -81,6 +82,7 @@ func (c *connection) reader() {
 			break
 		}
 		log.Printf("RECEIVED: %v\n", msg)
+		// c.ws.SetDeadline(time.Now().Add(deadtime))
 		var response message
 		if msg.Opcode == 0 {
 			c.difficulty, response.Difficulty = defaultParam.Difficulty, defaultParam.Difficulty
@@ -148,6 +150,8 @@ func wsHandler(ws *websocket.Conn) {
 	id_lock.Unlock()
 	log.Printf("Accepted connection from %s, assigning id %d\n", ws.Request().RemoteAddr, id)
 	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS), id: id}
+
+	// c.ws.SetDeadline(time.Now().Add(deadtime))
 	//h.register <- c
 	// defer func() { h.unregister <- c }()
 	// go c.writer()
