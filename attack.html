@@ -73,7 +73,10 @@ body {
     position: relative;
     width: 280px;
 }
-.inner-field {
+.inner-field-upper {
+    width: 100px;
+}
+.inner-field-bottom {
     width: 100px;
 }
 
@@ -151,32 +154,28 @@ body {
         var field2 = '';
         var text1 = '';
         var text2 = '';
-        var id1 = '';
-        var id2 = '';
+        var id1 = 'val1';
+        var id2 = 'val2';
 
         if(type == "dist_uni"){
-            id1 = 'lower';
-            id2 = 'upper';
             text1 = 'Lower boundary (ms):';
             text2 = 'Upper boundary (ms):';
-            field1 = '1';
-            field2 = '100';
+            field1 = 1;
+            field2 = 100;
 
         } else if (type == "dist_stoch"){
-            id1 = 'expected_value';
-            id2 = 'variance';
             text1 = 'Expected value (ms):';
             text2 = 'Variance (ms):';
-            field1 = '50';
-            field2 = '25';
+            field1 = 50;
+            field2 = 25;
 
         }
         var upperLeftDiv = '<div class="inner-left">' +text1 + '</div>';
-        var upperRightDiv = '<div class="inner-right">' + '<input type="text" id="' + id1 + '" class="inner-field" value="' + field1 + '"> ' + '</div>';
+        var upperRightDiv = '<div class="inner-right">' + '<input type="text" id="' + id1 + '" class="inner-field-upper" value="' + field1 + '"> ' + '</div>';
         var upperFieldDiv = '<div id="delay-upper">' + upperLeftDiv + upperRightDiv + '</div><br/>';
 
         var bottomLeftDiv = '<div class="inner-left">' + text2 + '</div>';
-        var bottomRightDiv = '<div class="inner-left">' + '<input type="text" id="' + id2 + '" class="inner-field" value="' + field2 + '"> ' + '</div><br/><br/>';
+        var bottomRightDiv = '<div class="inner-left">' + '<input type="text" id="' + id2 + '" class="inner-field-bottom" value="' + field2 + '"> ' + '</div><br/><br/>';
         var bottomFieldDiv =  '<div id="delay-bottom">' + bottomLeftDiv + bottomRightDiv + '</div>';
 
 

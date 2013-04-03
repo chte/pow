@@ -21,8 +21,18 @@ $(document).ready(function(){
 				}
 	});
     $("#attackbtn").click(function(){
+    	var radio_btn = document.getElementsByClassName("rb");
+    	var dist_type;
+    	var val1 = document.getElementById("val1").value;
+    	var val2 = document.getElementById("val2").value;
+    	if(radio_btn[0].checked){
+    		dist_type = radio_btn[0].value
+    	}else{
+    		dist_type = radio_btn[1].value
+    	}
+
         var numWorkers = parseInt($('#number_of_attacker_field').val());
-        startWorkerSwarm(numWorkers)
+        startWorkerSwarm(numWorkers, dist_type, val1, val2)
     });
 });
 
@@ -58,11 +68,32 @@ function set(label, value){
 	get(this, label).innerHTML = "" + value;
 }
 
+function rnd_snd() {
+	return (Math.random()*2-1)+(Math.random()*2-1)+(Math.random()*2-1);
+}
+
+function delay(dist_type, val1, val2){
+	//alert(val1);
+	var delay = 0;
+	if(dist_type == "dist_stoch"){
+		var rand = Math.round(rnd_snd()*val2+val1)
+		if(rand < 0){
+			delay = 0;
+		}else{
+			delay = Math.round(rnd_snd()*val2+val1);
+		}
+	}else if (dist_type == "dist_uni"){
+		delay = Math.floor(Math.random() * (val2 - val1 + 1)) + val1;
+	}
+	return delay;
+}
+
+
 /*************************** Web worker logics ********************************/
 /* 
  * Start webworkers
  */
-function startWorkerSwarm(numWorkers){
+function startWorkerSwarm(numWorkers, dist_type, val1, val2){
 	// var sockets = [];
 	// Initial setup.
 		log("Starting " + numWorkers + " workers.");
@@ -104,8 +135,8 @@ function startWorkerSwarm(numWorkers){
 						trow.set("solved", solved);
 							 // var worker_data=e.data;
 						var solution = e.data.solution; 
-							 // recieved data from worker
-							 // alert(worker_data);
+							// recieved data from worker
+							// alert(worker_data);
 							//alert(JSON.stringify(solution));
 						
 		                // $("#result").append("<br/>" + solution + "<br/>");
@@ -113,6 +144,7 @@ function startWorkerSwarm(numWorkers){
 		                                "Query": response.Query,
 		                                "Hash": CryptoJS.SHA256(solution + "" + response["Seed"]).toString(CryptoJS.enc.Hex),
 		                                "Opcode": 1};
+
 		                //alert(JSON.stringify(request))
 		                conn.send(JSON.stringify(request));
 			        } 
@@ -144,7 +176,7 @@ function startWorkerSwarm(numWorkers){
 			                // trow.children("#number")[0].innerHTML = "" + response["Problems"].length;
 			           		//Send message with data to worker
 			           		trow.set("status", "WORKING");
-			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"]});
+			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"], wait: delay(dist_type, val1, val2)});
 			            } else {
 			           			conn.onopen();
 			           	}
@@ -153,7 +185,7 @@ function startWorkerSwarm(numWorkers){
 			        conn.onopen = function(evt) {
 			        	trow.set("status", "CONNECTED");
 			        	var request = {"Opcode": 0, "Query": "Calle"};
-		     			this.send(JSON.stringify(request));
+			        	this.send(JSON.stringify(request));
 			        }
 			  	}
 		    })();
