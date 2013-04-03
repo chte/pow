@@ -57,33 +57,27 @@ body {
 }
 #delay-upper {
     position: relative;
-    margin-right: 35px;
-}
-
-.upper-left {
-    float: left;
-    position: relative;
-    width: 250px;
-}
-.upper-right {
-    position: relative;
-    width: 250px;
 }
 
 #delay-bottom  {
     position: relative;
-    margin-right: 35px;
+    width: 400px;
 }
 
-.bottom-left {
+.inner-left {
     float: left;
     position: relative;
-    width: 250px;
+    width: 155px;
 }
-.bottom-right {
+.inner-right {
     position: relative;
-    width: 250px;
+    width: 280px;
 }
+.inner-field {
+    width: 100px;
+}
+
+
 </style>
 </head>
     <body>
@@ -163,26 +157,26 @@ body {
         if(type == "dist_stoch"){
             id1 = 'lower';
             id2 = 'upper';
-            text1 = 'Lower boundary';
-            text2 = 'Upper boundary';
+            text1 = 'Lower boundary (ms):';
+            text2 = 'Upper boundary (ms):';
             field1 = '1';
             field2 = '100';
 
         } else if (type == "dist_uni"){
             id1 = 'expected_value';
             id2 = 'variance';
-            text1 = 'Expected value';
-            text2 = 'Variance';
+            text1 = 'Expected value (ms):';
+            text2 = 'Variance (ms):';
             field1 = '50';
             field2 = '25';
 
         }
-        var upperLeftDiv = '<div class="upper-left">' +text1 + '</div>';
-        var upperRightDiv = '<div class="upper-right">' + '<input type="text" name="' + id1 + '" value="' + field1 + '"> (ms)' + '</div>';
+        var upperLeftDiv = '<div class="inner-left">' +text1 + '</div>';
+        var upperRightDiv = '<div class="inner-right">' + '<input type="text" id="' + id1 + '" class="inner-field" value="' + field1 + '"> ' + '</div>';
         var upperFieldDiv = '<div id="delay-upper">' + upperLeftDiv + upperRightDiv + '</div><br/>';
 
-        var bottomLeftDiv = '<div class="bottom-left">' + text2 + '</div>';
-        var bottomRightDiv = '<div class="bottom-left">' + '<input type="text" name="' + id2 + '" value="' + field2 + '"> (ms)' + '</div>';
+        var bottomLeftDiv = '<div class="inner-left">' + text2 + '</div>';
+        var bottomRightDiv = '<div class="inner-left">' + '<input type="text" id="' + id2 + '" class="inner-field" value="' + field2 + '"> ' + '</div><br/><br/>';
         var bottomFieldDiv =  '<div id="delay-bottom">' + bottomLeftDiv + bottomRightDiv + '</div>';
 
 
