@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./lib"
 	"code.google.com/p/go.net/websocket"
 	"crypto/sha256"
 	"encoding/hex"
@@ -18,6 +19,7 @@ import (
 var NUMBER_OF_PROBLEMS = defaultParam.Problems
 var connections = 0
 var conn_lock = new(sync.Mutex)
+var globalAccess *access.Access = new(access.Access)
 
 var next_id = 1
 var id_lock = new(sync.Mutex)
@@ -31,6 +33,7 @@ type connection struct {
 	difficulty int
 	problems   []problem
 	id         int
+	access     *access.Access
 }
 
 type problem struct {
@@ -91,6 +94,8 @@ func (c *connection) reader() {
 				response.Problems[i] = Newproblem()
 				c.problems[i] = response.Problems[i]
 			}
+			c.access.Touch()
+			globalAccess.Touch()
 
 			response.Opcode = 1
 			response.Query = msg.Query
@@ -149,7 +154,7 @@ func wsHandler(ws *websocket.Conn) {
 	next_id++
 	id_lock.Unlock()
 	log.Printf("Accepted connection from %s, assigning id %d\n", ws.Request().RemoteAddr, id)
-	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS), id: id}
+	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS), id: id, access: new(access.Access)}
 
 	// c.ws.SetDeadline(time.Now().Add(deadtime))
 	//h.register <- c
