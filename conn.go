@@ -19,7 +19,7 @@ import (
 var NUMBER_OF_PROBLEMS = defaultParam.Problems
 var connections = 0
 var conn_lock = new(sync.Mutex)
-var globalAccess *access.Access = new(access.Access)
+var globalAccess *access.Access = access.NewAccess()
 
 var next_id = 1
 var id_lock = new(sync.Mutex)
@@ -94,8 +94,9 @@ func (c *connection) reader() {
 				response.Problems[i] = Newproblem()
 				c.problems[i] = response.Problems[i]
 			}
-			c.access.Touch()
-			globalAccess.Touch()
+			c.access.Touch(1)
+			globalAccess.Touch(connections)
+			log.Printf("Local average: %v, Global Average: %v", c.access.ShortMean/1000000, globalAccess.ShortMean/1000000)
 
 			response.Opcode = 1
 			response.Query = msg.Query
@@ -154,7 +155,7 @@ func wsHandler(ws *websocket.Conn) {
 	next_id++
 	id_lock.Unlock()
 	log.Printf("Accepted connection from %s, assigning id %d\n", ws.Request().RemoteAddr, id)
-	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS), id: id, access: new(access.Access)}
+	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS), id: id, access: access.NewAccess()}
 
 	// c.ws.SetDeadline(time.Now().Add(deadtime))
 	//h.register <- c
