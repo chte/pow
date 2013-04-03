@@ -1,8 +1,8 @@
 <html>
 <head>
 <title>Proof of Work</title>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js"></script>
+<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
+<script type="text/javascript" src="jquery.js"></script>
 <!-- <script src="http://www.highcharts.com/highslide/highslide-full.min.js"></script> -->
 <script type="text/javascript" src="highcharts.js"></script>
 <script type="text/javascript" src="highcharts_theme.js"></script>
@@ -88,7 +88,45 @@ var chart;
                 })()
             },
             {
-                name: 'CPU Systems',
+                name: 'CPU system',
+                enableMoouseTracking: false,
+                data: (function() {
+                    // generate an array of random data
+                    var data = [],
+                        time = (new Date()).getTime(),
+                        i;
+                    // data.push({x:0, y:0});
+    
+                    for (i = -19; i <= 0; i++) {
+                        data.push({
+                            x: time + i * 1000,
+                            y: 0
+                        });
+                    }
+                    return data;
+                })()
+            },
+            {
+                name: 'Short term average access time',
+                enableMoouseTracking: false,
+                data: (function() {
+                    // generate an array of random data
+                    var data = [],
+                        time = (new Date()).getTime(),
+                        i;
+                    // data.push({x:0, y:0});
+    
+                    for (i = -19; i <= 0; i++) {
+                        data.push({
+                            x: time + i * 1000,
+                            y: 0
+                        });
+                    }
+                    return data;
+                })()
+            },
+            {
+                name: 'Long term average access time',
                 enableMoouseTracking: false,
                 data: (function() {
                     // generate an array of random data
@@ -118,9 +156,25 @@ var chart;
                 var transfer = JSON.parse(evt.data)
                 var x = (new Date()).getTime(), // current time
                         y = transfer.Cpu_user;
-                        y2 = transfer.Cpu_system;
+                        y1 = transfer.Cpu_system
+                        y3 = (transfer.LongAverageTime/1000000000);
+                        // log("y2: " + y2);
+                        // log("y3: " + y3);
                         chart.series[0].addPoint([x, y], false, true);
-                        chart.series[1].addPoint([x, 2], true, true);
+                        chart.series[1].addPoint([x, y1], false, true);
+                        y2 = Y3 = 0;
+                        if(transfer.ShortAverageTime>0){
+                                                y2 = 100/(transfer.ShortAverageTime/1000000000);
+                                                
+                        } 
+                        if(transfer.LongAverageTime>0){
+                                                y3 = 100/(transfer.LongAverageTime/1000000000);
+                                                
+                        }
+                        chart.series[2].addPoint([x, y2], false, true);
+                        chart.series[3].addPoint([x, y3], false, true);
+                        // chart.series[3].addPoint([x, y3], true, true);
+                        chart.redraw();
                 $('#monitoring').html(transfer.Monitoring);
                  $('#users').html(transfer.Users);
             }

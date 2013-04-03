@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const s_alpha, l_alpha = float64(0.05), float64(0.005)
+const s_alpha, l_alpha = float64(0.1), float64(0.01)
 
 type Access struct {
 	lastAccess time.Time
@@ -31,7 +31,7 @@ func (a *Access) Touch(average int) {
 		return
 	}
 	a.ShortMean = int64(s_alpha*(float64(int64(average)*(now.UnixNano()-a.lastAccess.UnixNano()))) + (1-s_alpha)*float64(a.ShortMean))
-	a.LongMean = int64(l_alpha*(float64(int64(average)*(now.UnixNano()-a.lastAccess.UnixNano()))) + (1-l_alpha)*float64(a.ShortMean))
+	a.LongMean = int64(l_alpha*(float64(int64(average)*(now.UnixNano()-a.lastAccess.UnixNano()))) + (1-l_alpha)*float64(a.LongMean))
 
 	a.lastAccess = now
 }

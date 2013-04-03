@@ -75,6 +75,7 @@ func main() {
 
 	// http.HandleFunc("/pow.js", jsHandler)
 	serveStatic("sha256.js")
+	serveStatic("jquery.js")
 	serveStatic("pow.js")
 	serveStatic("highcharts.js")
 	serveStatic("highcharts_theme.js")

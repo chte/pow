@@ -33,8 +33,9 @@ var h = hub{
 }
 
 type information struct {
-	Cpu_user, Cpu_system float64
-	Monitoring, Users    int
+	Cpu_user, Cpu_system              float64
+	Monitoring, Users                 int
+	ShortAverageTime, LongAverageTime int64
 }
 type subscriber struct {
 	// The websocket connection.
@@ -93,7 +94,7 @@ func collect(ch chan information) {
 			// user, _ := strconv.ParseFloat(catch[0], 64) //Ubuntu
 			user, _ := strconv.ParseFloat(catch[1], 64)
 			system, _ := strconv.ParseFloat(catch[2], 64)
-			h.broadcast <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections}
+			h.broadcast <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections, ShortAverageTime: globalAccess.ShortMean, LongAverageTime: globalAccess.LongMean}
 		}
 
 	}
