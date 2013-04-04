@@ -58,19 +58,61 @@ body {
     text-align: center;
     padding: 0 0.5em;
 }
+#delay-upper {
+    position: relative;
+}
+
+#delay-bottom  {
+    position: relative;
+    width: 400px;
+}
+
+.inner-left {
+    float: left;
+    position: relative;
+    width: 155px;
+}
+.inner-right {
+    position: relative;
+    width: 280px;
+}
+.inner-field-upper {
+    width: 100px;
+}
+.inner-field-bottom {
+    width: 100px;
+}
+
+
 </style>
 </head>
     <body>
         <div id="content">
             <h2>Proof of Work <span id="ip"></span></h2>
 
+
             Each webworker is required to solve {{.Problems}} puzzles of difficulty {{.Zeroes}}.
+
+            <h3>Population settings</h3>
+
+            <h3>Delays</h3>
+            <form>
+                <label for="type">Type: </label>
+                <input class="rb" type="radio" name="dist_type" value="dist_stoch" checked> Stochastic distribution
+                <input class="rb" type="radio" name="dist_type" value="dist_uni"> Uniform randomization<br><br>
+                <div id="radio_text"></div>
+            </form>
+
             <br/><br/>
             Enter number of attackers: 
             <br/>
             <input type="text" id="number_of_attacker_field" value="4">
             <input type="button" name="attackbtn" value="Attack" id="attackbtn"/>
             <br/><br/>
+
+
+            <br/>
+            <h3>Population status</h3>
             <table id="attackers">
                 <tr id="header">
                     <th>Local ID</th>
@@ -86,3 +128,63 @@ body {
         </div>
     </body>
 </html>
+
+
+<script language="javascript">
+    $(document).ready(function(){
+    /* 
+     * This search function is protected by proof-of-work.
+     */
+        decideRadioBtn();
+        var dist_type = $('.rb');
+        dist_type.click(function(){
+            decideRadioBtn();
+        });
+        
+    
+    });
+
+    function decideRadioBtn(){
+        var dist_type = $('.rb');
+
+        if(dist_type[0].checked){
+                document.getElementById('radio_text').innerHTML = createDistForm(dist_type[0].value); //createDelay($('#dist_type').value)
+        }else if(dist_type[1].checked){
+                document.getElementById('radio_text').innerHTML = createDistForm(dist_type[1].value); //createDelay($('#dist_type').value)
+        }
+    }
+
+    function createDistForm(type) {
+        var field1 = '';
+        var field2 = '';
+        var text1 = '';
+        var text2 = '';
+        var id1 = 'val1';
+        var id2 = 'val2';
+
+        if(type == "dist_uni"){
+            text1 = 'Lower boundary (ms):';
+            text2 = 'Upper boundary (ms):';
+            field1 = 1;
+            field2 = 100;
+
+        } else if (type == "dist_stoch"){
+            text1 = 'Expected value (ms):';
+            text2 = 'Variance (ms):';
+            field1 = 50;
+            field2 = 25;
+
+        }
+        var upperLeftDiv = '<div class="inner-left">' +text1 + '</div>';
+        var upperRightDiv = '<div class="inner-right">' + '<input type="text" id="' + id1 + '" class="inner-field-upper" value="' + field1 + '"> ' + '</div>';
+        var upperFieldDiv = '<div id="delay-upper">' + upperLeftDiv + upperRightDiv + '</div><br/>';
+
+        var bottomLeftDiv = '<div class="inner-left">' + text2 + '</div>';
+        var bottomRightDiv = '<div class="inner-left">' + '<input type="text" id="' + id2 + '" class="inner-field-bottom" value="' + field2 + '"> ' + '</div><br/><br/>';
+        var bottomFieldDiv =  '<div id="delay-bottom">' + bottomLeftDiv + bottomRightDiv + '</div>';
+
+
+        var html = upperFieldDiv + bottomFieldDiv;
+        return html
+    };
+</script>
