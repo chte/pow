@@ -144,7 +144,7 @@ function startWorkerSwarm(numWorkers){
 			                // trow.children("#number")[0].innerHTML = "" + response["Problems"].length;
 			           		//Send message with data to worker
 			           		trow.set("status", "WORKING");
-			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"]});
+			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"].Zeroes});
 			            } else {
 			           			conn.onopen();
 			           	}
