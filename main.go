@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./problem"
 	"code.google.com/p/go.net/websocket"
 	"flag"
 	"log"
@@ -21,18 +22,11 @@ var monitorTempl = template.Must(template.ParseFiles("./monitor.html"))
 
 var serveStaticMap = make(map[string]*template.Template)
 
-type homeParam struct {
-	Difficulty int
-	Problems   int
-}
-
-var defaultParam = homeParam{2, 64}
-
 func homeHandler(c http.ResponseWriter, req *http.Request) {
-	homeTempl.Execute(c, defaultParam)
+	homeTempl.Execute(c, problem.BaseDifficulty)
 }
 func attackHandler(c http.ResponseWriter, req *http.Request) {
-	attackTempl.Execute(c, defaultParam)
+	attackTempl.Execute(c, problem.BaseDifficulty)
 }
 func ipHandler(c http.ResponseWriter, req *http.Request) {
 	// c.WriteHeader()

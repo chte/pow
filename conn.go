@@ -1,67 +1,45 @@
 package main
 
 import (
-	"./lib"
+	"./access"
+	"./problem"
 	"code.google.com/p/go.net/websocket"
-	"crypto/sha256"
-	"encoding/hex"
 	"fmt"
-	"hash"
 	"log"
-	"math/rand"
 	"time"
 	// "os/exec"
-	"strconv"
 	"strings"
 	"sync"
 )
 
-var NUMBER_OF_PROBLEMS = defaultParam.Problems
 var connections = 0
 var conn_lock = new(sync.Mutex)
 var globalAccess *access.Access = access.NewAccess()
 
 var next_id = 1
 var id_lock = new(sync.Mutex)
-var deadtime, _ = time.ParseDuration("2s")
+
+// var deadtime, _ = time.ParseDuration("2s")
 
 type connection struct {
 	// The websocket connection.
 	ws *websocket.Conn
 
-	ha         hash.Hash
-	difficulty int
-	problems   []problem
+	difficulty problem.Difficulty
+	problems   []problem.Problem
 	id         int
 	access     *access.Access
 }
 
-type problem struct {
-	Seed, Solution int
-}
-
-func Newproblem() problem {
-	return problem{Seed: int(rand.Uint32())}
-}
-
 type message struct {
-	Opcode, Difficulty, SocketId int
-	Result, Query, Hash          string
-	Problems                     []problem
+	Opcode, SocketId    int
+	Result, Query, Hash string
+	Problems            []problem.Problem
+	Difficulty          problem.Difficulty
 }
 
 func (m message) String() string {
-	return fmt.Sprintf("Id: %d, Opcode: %d, Difficulty: %d(%d), Query: %s", m.SocketId, m.Opcode, m.Difficulty, len(m.Problems), m.Query)
-}
-
-func init_zeroes(s string) (num int) {
-	for _, c := range s {
-		if c != '0' {
-			return
-		}
-		num++
-	}
-	return
+	return fmt.Sprintf("Id: %d, Opcode: %d, Difficulty: %d, Query: %s", m.SocketId, m.Opcode, m.Difficulty, m.Query)
 }
 
 func (c *connection) reader() {
@@ -88,12 +66,10 @@ func (c *connection) reader() {
 		// c.ws.SetDeadline(time.Now().Add(deadtime))
 		var response message
 		if msg.Opcode == 0 {
-			c.difficulty, response.Difficulty = defaultParam.Difficulty, defaultParam.Difficulty
-			response.Problems = make([]problem, NUMBER_OF_PROBLEMS)
-			for i, _ := range response.Problems {
-				response.Problems[i] = Newproblem()
-				c.problems[i] = response.Problems[i]
-			}
+			c.difficulty = problem.GetDifficulty(c.access, globalAccess, CPU_LOAD)
+			response.Difficulty = c.difficulty
+			c.problems = problem.ConstructProblemSet(c.difficulty)
+			response.Problems = c.problems
 			c.access.Touch(1)
 			globalAccess.Touch(connections)
 			log.Printf("Local average: %v, Global Average: %v", c.access.ShortMean/1000000, globalAccess.ShortMean/1000000)
@@ -102,22 +78,8 @@ func (c *connection) reader() {
 			response.Query = msg.Query
 			response.SocketId = c.id
 		} else {
-			ok := true
-			var sha string
-			for i := 0; i < NUMBER_OF_PROBLEMS; i++ {
-				c.ha.Reset()
-				c.ha.Write([]byte(strconv.Itoa(msg.Problems[i].Solution)))
-				c.ha.Write([]byte(strconv.Itoa(c.problems[i].Seed)))
-				sha = hex.EncodeToString(c.ha.Sum(nil))
-				// fmt.Printf("Response solution: %v\n Calc Solution: %v\n", msg.Problems[i].Solution, sha)
-				if init_zeroes(sha) < c.difficulty {
-					ok = false
-					break
-				}
-			}
-			if ok {
+			if problem.Verify(c.problems, msg.Problems, c.difficulty) {
 				response.Query = strings.Join([]string{"Your query, \"", msg.Query, "\" has been served since you solved the puzzle."}, "")
-				response.Hash = sha
 				before := time.Now().UTC().UnixNano()
 				for i := int64(0); i < 250000000; i++ {
 					//simulate some server load (~80 ms)
@@ -155,7 +117,7 @@ func wsHandler(ws *websocket.Conn) {
 	next_id++
 	id_lock.Unlock()
 	log.Printf("Accepted connection from %s, assigning id %d\n", ws.Request().RemoteAddr, id)
-	c := &connection{ha: sha256.New(), ws: ws, problems: make([]problem, NUMBER_OF_PROBLEMS), id: id, access: access.NewAccess()}
+	c := &connection{ws: ws, id: id, access: access.NewAccess()}
 
 	// c.ws.SetDeadline(time.Now().Add(deadtime))
 	//h.register <- c

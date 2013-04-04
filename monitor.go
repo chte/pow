@@ -11,6 +11,8 @@ import (
 	"strconv"
 )
 
+var CPU_LOAD float64
+
 type hub struct {
 	// Registered connections.
 	connections map[*subscriber]bool
@@ -94,7 +96,8 @@ func collect(ch chan information) {
 			// user, _ := strconv.ParseFloat(catch[0], 64) //Ubuntu
 			user, _ := strconv.ParseFloat(catch[1], 64)
 			system, _ := strconv.ParseFloat(catch[2], 64)
-			h.broadcast <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections, ShortAverageTime: globalAccess.ShortMean, LongAverageTime: globalAccess.LongMean}
+			ch <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections, ShortAverageTime: globalAccess.ShortMean, LongAverageTime: globalAccess.LongMean}
+			CPU_LOAD = user
 		}
 
 	}

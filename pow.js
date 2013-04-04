@@ -71,11 +71,11 @@ $(document).ready(function(){
         	var response = JSON.parse(evt.data);
         	if(response["Opcode"] == 1){
         		// alert("Problems is:" + response.Problems);
-	        	var solution = find_xs(response["Problems"], response["Difficulty"]);
+	        	var solution = find_xs(response.Problems, response.Difficulty.Zeroes);
 	        	// $("#result").append("<br/>" + solution + "<br/>");
 		    	var request = { "Problems": solution, 
 		    					"Query": response.Query,
-		    					"Hash": CryptoJS.SHA256(solution + "" + response["Seed"]).toString(CryptoJS.enc.Hex),
+		    					// "Hash": CryptoJS.SHA256(solution + "" + response["Seed"]).toString(CryptoJS.enc.Hex),
 		    					"Opcode": 1};
 		    	conn.send(JSON.stringify(request));
 	    	} else {
