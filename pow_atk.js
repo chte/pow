@@ -23,8 +23,8 @@ $(document).ready(function(){
     $("#attackbtn").click(function(){
     	var radio_btn = document.getElementsByClassName("rb");
     	var dist_type;
-    	var val1 = document.getElementById("val1").value;
-    	var val2 = document.getElementById("val2").value;
+    	var val1 = parseInt(document.getElementById("val1").value);
+    	var val2 = parseInt(document.getElementById("val2").value);
     	if(radio_btn[0].checked){
     		dist_type = radio_btn[0].value
     	}else{
@@ -82,6 +82,7 @@ function delay(dist_type, val1, val2){
 		}else{
 			delay = Math.round(rnd_snd()*val2+val1);
 		}
+
 	}else if (dist_type == "dist_uni"){
 		delay = Math.floor(Math.random() * (val2 - val1 + 1)) + val1;
 	}
@@ -184,6 +185,8 @@ function startWorkerSwarm(numWorkers, dist_type, val1, val2){
 
 			        }
 			        conn.onopen = function(evt) {
+   						delay(dist_type, val1, val2);
+
 			        	trow.set("status", "CONNECTED");
 			        	var request = {"Opcode": 0, "Query": "Calle"};
 			        	this.send(JSON.stringify(request));

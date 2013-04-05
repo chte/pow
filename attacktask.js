@@ -6,7 +6,7 @@ onmessage = function (e){
  var response = { id: e.data.id, 
  				  solution: find_solution(e.data.problems, e.data.difficulty)
  				};
-postMessage(response)
+postMessage(response);
 
  //sending message to UI
 }
