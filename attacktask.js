@@ -6,9 +6,10 @@ onmessage = function (e){
  var response = { id: e.data.id, 
  				  solution: find_solution(e.data.problems, e.data.difficulty)
  				};
+
+//sending message to UI
 postMessage(response);
 
- //sending message to UI
 }
 
 

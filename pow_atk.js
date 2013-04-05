@@ -54,6 +54,7 @@ function buildRow(row){
 	row.append(getTD("local_id"));
 	row.append(getTD("remote_id"));
 	row.append(getTD("difficulty"));
+	row.append(getTD("number"));
 	row.append(getTD("status"));
 	row.append(getTD("solved"));
 	row.append(getTD("close"));
@@ -72,20 +73,20 @@ function rnd_snd() {
 }
 
 function delay(dist_type, val1, val2){
-		//alert(val1);
-	var wait = 0;
+	//alert(val1);
+	var delay = 0;
 	if(dist_type == "dist_stoch"){
 		var rand = Math.round(rnd_snd()*val2+val1)
 		if(rand < 0){
-			wait = 0;
+			delay = 0;
 		}else{
-			wait = Math.round(rnd_snd()*val2+val1);
+			delay = Math.round(rnd_snd()*val2+val1);
 		}
 
 	}else if (dist_type == "dist_uni"){
-		wait = Math.floor(Math.random() * (val2 - val1 + 1)) + val1;
+		delay = Math.floor(Math.random() * (val2 - val1 + 1)) + val1;
 	}
-	return wait;
+	return delay;
 }
 
 
@@ -146,13 +147,12 @@ function startWorkerSwarm(numWorkers, dist_type, val1, val2){
 		                                "Opcode": 1};
 
 		                //alert(JSON.stringify(request))
-		                //
-		                var wait = delay(dist_type, val1, val2);
+
 		                trow.set("status", "WAIT COMMIT")
 		                setTimeout(function(){
 		                	conn.send(JSON.stringify(request));
 		                },delay(dist_type, val1, val2) );
-		                
+
 			        } 
 
 			        conn.onclose = function(evt) {  
@@ -176,8 +176,8 @@ function startWorkerSwarm(numWorkers, dist_type, val1, val2){
 
 			                // alert("Problems is:" + response.Problems);
 			                // trow.children("#difficulty")[0].innerHTML = "" + response["Difficulty"];
-			                trow.set("difficulty", "{" + response.Difficulty.Zeroes + " " + response.Difficulty.Problems+ "}");
-			                // trow.set("number", response["Problems"].length);
+			                trow.set("difficulty", response["Difficulty"]);
+			                trow.set("number", response["Problems"].length);
 
 			                // trow.children("#number")[0].innerHTML = "" + response["Problems"].length;
 			           		//Send message with data to worker
