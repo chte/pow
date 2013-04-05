@@ -149,7 +149,7 @@ function startWorkerSwarm(numWorkers, dist_type, val1, val2){
 		                //
 		                var wait = delay(dist_type, val1, val2);
 		                trow.set("status", "WAIT COMMIT")
-		                window.setTimeout(function(){
+		                setTimeout(function(){
 		                	conn.send(JSON.stringify(request));
 		                },delay(dist_type, val1, val2) );
 		                
