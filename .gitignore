@@ -48,3 +48,4 @@ report/*.run.xml
 report/*.synctex.gz
 report/*.fls
 report/*log
+report/*.aux
