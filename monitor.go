@@ -59,7 +59,7 @@ func collect(ch chan information) {
 		cmd = exec.Command("top", "-n", "0", "-stats", "cpu", "-l", "0") //Mac
 	} else {
 		//cmd = exec.Command("sar", "-u", "1")
-		cmd = exec.Command("top", "-b", "-d", "0.75")
+		cmd = exec.Command("top", "-b", "-d", "0.5")
 	}
 
 	stdout, err := cmd.StdoutPipe()
