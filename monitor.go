@@ -12,6 +12,9 @@ import (
 )
 
 var CPU_LOAD float64
+var CPU_AVG float64 = 40
+
+const CPU_ALPHA = 0.01
 
 type hub struct {
 	// Registered connections.
@@ -53,6 +56,7 @@ func collect(ch chan information) {
 	//Collect cpu info with: top -n 0 -stats cpu -l 0
 	//cmd := exec.Command("top", "-n", "0", "-stats", "cpu", "-l", "0") //Mac
 	//Ubuntu
+
 	mac := runtime.GOOS == "darwin"
 	var cmd *exec.Cmd
 	if mac {
@@ -97,6 +101,7 @@ func collect(ch chan information) {
 			//log.Printf("%d", globalAccess.ShortMean)
 			ch <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections, ShortAverageTime: globalAccess.ShortMean, LongAverageTime: globalAccess.LongMean}
 			CPU_LOAD = user
+			CPU_AVG = CPU_ALPHA*CPU_LOAD + (1-CPU_ALPHA)*CPU_AVG
 		}
 
 	}

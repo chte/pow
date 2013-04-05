@@ -8,6 +8,7 @@ import (
 	"log"
 	"time"
 	// "os/exec"
+	// "math"
 	"strings"
 	"sync"
 )
@@ -66,7 +67,7 @@ func (c *connection) reader() {
 		// c.ws.SetDeadline(time.Now().Add(deadtime))
 		var response message
 		if msg.Opcode == 0 {
-			c.difficulty = problem.GetDifficulty(c.access, globalAccess, CPU_LOAD)
+			c.difficulty = problem.GetDifficulty(c.access, globalAccess, CPU_AVG) // math.Max(CPU_LOAD, CPU_AVG)
 			response.Difficulty = c.difficulty
 			c.problems = problem.ConstructProblemSet(c.difficulty)
 			response.Problems = c.problems
