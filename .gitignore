@@ -38,13 +38,13 @@ ehthumbs.db
 Thumbs.db
 
 report/report-blx.bib
-report/report.bbl
-report/report.blg
-report/report.fdb_latexmk
-report/report.fls
-report/report.out
-report/report.pyg
-report/report.run.xml
-report/report.synctex.gz
-report/texput.fls
-report/texput.log
+report/*.bbl
+report/*.blg
+report/*.fdb_latexmk
+report/*.fls
+report/*.out
+report/*.pyg
+report/*.run.xml
+report/*.synctex.gz
+report/*.fls
+report/*log
