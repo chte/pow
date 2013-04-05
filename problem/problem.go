@@ -9,6 +9,7 @@ import (
 )
 
 var BaseDifficulty = Difficulty{2, 16}
+var ZeroDifficulty = Difficulty{0, 0}
 
 type Difficulty struct {
 	Zeroes   int
@@ -40,6 +41,9 @@ func ConstructProblemSet(d Difficulty) []Problem {
 	return p
 }
 func GetDifficulty(local, global *access.Access, cpu_load float64) Difficulty {
+	if cpu_load < 0.4 {
+		return ZeroDifficulty
+	}
 	return BaseDifficulty
 }
 func Verify(local, received []Problem, d Difficulty) bool {
