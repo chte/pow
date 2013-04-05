@@ -54,7 +54,6 @@ function buildRow(row){
 	row.append(getTD("local_id"));
 	row.append(getTD("remote_id"));
 	row.append(getTD("difficulty"));
-	row.append(getTD("number"));
 	row.append(getTD("status"));
 	row.append(getTD("solved"));
 	row.append(getTD("close"));
@@ -176,8 +175,7 @@ function startWorkerSwarm(numWorkers, dist_type, val1, val2){
 
 			                // alert("Problems is:" + response.Problems);
 			                // trow.children("#difficulty")[0].innerHTML = "" + response["Difficulty"];
-			                trow.set("difficulty", response["Difficulty"]);
-			                trow.set("number", response["Problems"].length);
+			                trow.set("difficulty", "{" + response.Difficulty.Zeroes + " " + response.Difficulty.Problems + "}");
 
 			                // trow.children("#number")[0].innerHTML = "" + response["Problems"].length;
 			           		//Send message with data to worker
