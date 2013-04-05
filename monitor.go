@@ -58,7 +58,8 @@ func collect(ch chan information) {
 	if mac {
 		cmd = exec.Command("top", "-n", "0", "-stats", "cpu", "-l", "0") //Mac
 	} else {
-		cmd = exec.Command("sar", "-u", "1")
+		//cmd = exec.Command("sar", "-u", "1")
+		cmd = exec.Command("top", "-b", "-d", "1" )
 	}
 
 	stdout, err := cmd.StdoutPipe()
@@ -79,7 +80,8 @@ func collect(ch chan information) {
 		exp, _ = regexp.Compile("CPU usage: (.*?)% user, (.*?)% sys, (.*?)% idle") //Mac
 	} else {
 
-		exp, _ = regexp.Compile("all\\s+(\\S+)\\s+\\S+\\s+(\\S+)")
+		//exp, _ = regexp.Compile("all\\s+(\\S+)\\s+\\S+\\s+(\\S+)")
+		exp, _ = regexp.Compile("\\s(.*?)%us,  (.*?)%sy")
 	}
 	// exp, _ := regexp.Compile("(\\d\\.\\d{2})") //Ubuntu
 	//exp, _ := regexp.Compile("CPU usage: (.*?)% user, (.*?)% sys, (.*?)% idle") //Mac
@@ -90,12 +92,13 @@ func collect(ch chan information) {
 		// catch := exp.FindAllString(string(line), 3) //Ubuntu
 		catch := exp.FindStringSubmatch(string(line)) //Mac
 		if catch != nil {
-			//fmt.Printf("%s\n", catch[0])
-			//fmt.Printf("%s\n", catch[2])
+			
 
 			// user, _ := strconv.ParseFloat(catch[0], 64) //Ubuntu
 			user, _ := strconv.ParseFloat(catch[1], 64)
 			system, _ := strconv.ParseFloat(catch[2], 64)
+			log.Printf("%s\n", catch[0])
+			log.Printf("%f(%s) %f\n",user, catch[1], system)
 			ch <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections, ShortAverageTime: globalAccess.ShortMean, LongAverageTime: globalAccess.LongMean}
 			CPU_LOAD = user
 		}
