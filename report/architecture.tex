@@ -1,0 +1,6 @@
+Since one requirement of a Proof of Work system is that it minimises differences between a wide variety of devices appearing in the wild we needed to support both desktop and laptops with different operating systems as well as cellphones and tablets.
+In order to minimise the development effort and maximise maintainability of the code base, a multi platform solution was sought for the client part of the demo application. 
+
+A web based solution makes the perfect portable application, however the web is not stateful by default and quite badly imitates an application server which keeps a constantly open socket connection with connected clients. The advent of websockets turn the whole thing around, with the help of those nice fellas we were able to write a truly multi-platform PoW client in html and javascript which maintains the generality and plasticity of a natively written socket based application. 
+
+For the server side we choose to use Googles novel programming language go
