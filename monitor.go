@@ -12,9 +12,9 @@ import (
 	"strconv"
 )
 
-var CPU_STAT problem.CpuInfo
+var CPU_STAT problem.CpuInfo = problem.CpuInfo{0, 20}
 
-const CPU_ALPHA = 0.01
+const CPU_ALPHA = 0.3
 
 type hub struct {
 	// Registered connections.
@@ -38,7 +38,7 @@ var h = hub{
 }
 
 type information struct {
-	Cpu_user, Cpu_system              float64
+	Cpu_user, Cpu_system, Cpu_avg     float64
 	Monitoring, Users                 int
 	ShortAverageTime, LongAverageTime int64
 }
@@ -99,9 +99,10 @@ func collect(ch chan information) {
 			system, _ := strconv.ParseFloat(catch[2], 64)
 			//log.Printf("%f(%s), %f(%s)\n", user, catch[1], system, catch[2])
 			//log.Printf("%d", globalAccess.ShortMean)
-			ch <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections, ShortAverageTime: globalAccess.ShortMean, LongAverageTime: globalAccess.LongMean}
 			CPU_STAT.Load = user
 			CPU_STAT.Avg = CPU_ALPHA*CPU_STAT.Load + (1-CPU_ALPHA)*CPU_STAT.Avg
+			ch <- information{Cpu_avg: CPU_STAT.Avg, Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections, ShortAverageTime: globalAccess.ShortMean, LongAverageTime: globalAccess.LongMean}
+
 		}
 
 	}

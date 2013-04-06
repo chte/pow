@@ -33,7 +33,7 @@ type Difficulty struct {
 func (d *Difficulty) multiply(f int) *Difficulty {
 	r := *d
 	r.Problems *= f
-	log.Printf("Mulitplied %v by %v to get %v", *d, f, r)
+	// log.Printf("Mulitplied %v by %v to get %v", *d, f, r)
 	for r.Problems > 256 {
 		r.Problems /= 256
 		r.Zeroes++
@@ -67,19 +67,25 @@ func ConstructProblemSet(d Difficulty) []Problem {
 	return p
 }
 
+func max(a, b int64) int64 {
+	if a > b {
+		return a
+	}
+	return b
+}
 func firstmodel(p Param) Difficulty {
 	log.Printf("Base diff: %v", BaseDifficulty)
 	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
 		return ZeroDifficulty
 	}
-	if p.Local.ShortMean > p.Global.ShortMean {
+	if p.Local.ShortMean > max(p.Global.ShortMean, p.Global.LongMean) {
 		if p.Local.ShortMean > 5*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+0.2 {
 			return ZeroDifficulty
 		}
 		return BaseDifficulty
 	}
 	// log.Printf("Multiplying")
-	return *BaseDifficulty.multiply(1 + int((p.Cpu.Load-cpu_thres)*20*float64(int(5*p.Local.ShortMean/(p.Global.ShortMean+1)))))
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)*float64(int(5*p.Local.ShortMean/(p.Global.ShortMean+1)))))
 }
 func simpleonoff(p Param) Difficulty {
 	// log.Printf("Base diff: %v", BaseDifficulty)
