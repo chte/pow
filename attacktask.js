@@ -32,8 +32,8 @@ function find_x(difficulty, seed){
 	// $("#result").append("<br/><b>"+x+"<br/>");
 	// $("#result").append("<br/><b>Calc is "+CryptoJS.SHA256(str).toString(CryptoJS.enc.Hex)+"<br/>");
 	// $("#result").append("<br/><b>Cmp part "+CryptoJS.SHA256(str).toString(CryptoJS.enc.Hex).substr(0,difficulty)+"<br/>");
-	if(CryptoJS.SHA256(str).toString(CryptoJS.enc.Hex).substr(0, difficulty) === cmp){
-	    // alert("seed: " + seed +  "\nfound " + str +" after " +i);	    
+		if(CryptoJS.SHA256(str).toString(CryptoJS.enc.Hex).substr(0, difficulty) === cmp){
+		    // alert("seed: " + seed +  "\nfound " + str +" after " +i);	    
 	    return x;
 
 	}

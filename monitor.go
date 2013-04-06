@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./problem"
 	"bufio"
 	"code.google.com/p/go.net/websocket"
 	"fmt"
@@ -11,8 +12,7 @@ import (
 	"strconv"
 )
 
-var CPU_LOAD float64
-var CPU_AVG float64 = 40
+var CPU_STAT problem.CpuInfo
 
 const CPU_ALPHA = 0.01
 
@@ -100,8 +100,8 @@ func collect(ch chan information) {
 			//log.Printf("%f(%s), %f(%s)\n", user, catch[1], system, catch[2])
 			//log.Printf("%d", globalAccess.ShortMean)
 			ch <- information{Cpu_user: user, Cpu_system: system, Monitoring: len(h.connections), Users: connections, ShortAverageTime: globalAccess.ShortMean, LongAverageTime: globalAccess.LongMean}
-			CPU_LOAD = user
-			CPU_AVG = CPU_ALPHA*CPU_LOAD + (1-CPU_ALPHA)*CPU_AVG
+			CPU_STAT.Load = user
+			CPU_STAT.Avg = CPU_ALPHA*CPU_STAT.Load + (1-CPU_ALPHA)*CPU_STAT.Avg
 		}
 
 	}

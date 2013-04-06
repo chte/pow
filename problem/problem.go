@@ -5,9 +5,19 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"log"
+	"math"
 	"math/rand"
 	"strconv"
 )
+
+type CpuInfo struct {
+	Load, Avg float64
+}
+
+type Param struct {
+	Local, Global *access.Access
+	Cpu           CpuInfo
+}
 
 var BaseDifficulty = Difficulty{2, 16}
 var ZeroDifficulty = Difficulty{0, 0}
@@ -28,7 +38,7 @@ func (d *Difficulty) multiply(f int) *Difficulty {
 		r.Problems /= 256
 		r.Zeroes++
 	}
-	log.Printf("Mulitplied %v by %v to get %v", *d, f, r)
+	log.Printf("Multiplied %v by %v to get %v", *d, f, r)
 	return &r
 }
 
@@ -57,32 +67,32 @@ func ConstructProblemSet(d Difficulty) []Problem {
 	return p
 }
 
-func firstmodel(local, global *access.Access, cpu_load float64) Difficulty {
+func firstmodel(p Param) Difficulty {
 	log.Printf("Base diff: %v", BaseDifficulty)
-	if cpu_load < cpu_thres {
+	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
 		return ZeroDifficulty
 	}
-	if local.ShortMean > global.ShortMean {
-		if local.ShortMean > 5*global.ShortMean {
+	if p.Local.ShortMean > p.Global.ShortMean {
+		if p.Local.ShortMean > 5*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+0.2 {
 			return ZeroDifficulty
 		}
 		return BaseDifficulty
 	}
 	// log.Printf("Multiplying")
-	return *BaseDifficulty.multiply(1 + int((cpu_load-cpu_thres)*20*float64(int(5*local.ShortMean/(global.ShortMean+1)))))
+	return *BaseDifficulty.multiply(1 + int((p.Cpu.Load-cpu_thres)*20*float64(int(5*p.Local.ShortMean/(p.Global.ShortMean+1)))))
 }
-func simpleonoff(local, global *access.Access, cpu_load float64) Difficulty {
+func simpleonoff(p Param) Difficulty {
 	// log.Printf("Base diff: %v", BaseDifficulty)
 	// log.Printf("cpu load:%v", cpu_load)
-	if cpu_load < cpu_thres {
+	if p.Cpu.Load < cpu_thres {
 		return ZeroDifficulty
 	}
 	return BaseDifficulty
 }
-func base(local, global *access.Access, cpu_load float64) Difficulty {
+func base(p Param) Difficulty {
 	return BaseDifficulty
 }
-func zero(local, global *access.Access, cpu_load float64) Difficulty {
+func zero(p Param) Difficulty {
 	return ZeroDifficulty
 }
 
