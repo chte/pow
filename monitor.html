@@ -13,7 +13,6 @@
     function log(msg){
          $("#msg").append("<br/><b>"+msg+"</b><br/>");
     }
-var chart;
 
     $(function () {
     $(document).ready(function() {
@@ -23,14 +22,14 @@ var chart;
             }
         });
     
-                chart = new Highcharts.Chart({
+        var chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'container',
                 type: 'spline',
                 marginRight: 10,
                 events: {
                     load: function() {
-                        chart = this;
+                        // chart = this;
                         // set up the updating of the chart each second
                         // var series = this.series[0];
                         // setInterval(function() {
@@ -71,41 +70,22 @@ var chart;
             series: [{
                 name: 'CPU User',
                 enableMoouseTracking: false,
-                data: (function() {
-                    // generate an array of random data
-                    var data = [],
-                        time = (new Date()).getTime(),
-                        i;
-                    // data.push({x:0, y:0});
-    
-                    for (i = -19; i <= 0; i++) {
-                        data.push({
-                            x: time + i * 1000,
-                            y: 0
-                        });
-                    }
-                    return data;
-                })()
+                data: []
             },
             {
                 name: 'CPU system',
                 enableMoouseTracking: false,
-                data: (function() {
-                    // generate an array of random data
-                    var data = [],
-                        time = (new Date()).getTime(),
-                        i;
-                    // data.push({x:0, y:0});
-    
-                    for (i = -19; i <= 0; i++) {
-                        data.push({
-                            x: time + i * 1000,
-                            y: 0
-                        });
-                    }
-                    return data;
-                })()
+                data: []
             },
+            {
+                name: 'CPU average',
+                enableMoouseTracking: false,
+                data: []
+            }
+            ]
+        });
+/*
+,
             {
                 name: 'Short term average access time',
                 enableMoouseTracking: false,
@@ -143,38 +123,105 @@ var chart;
                     }
                     return data;
                 })()
+            }
+ */
+        
+        var chart2 = new Highcharts.Chart({
+            chart: {
+                renderTo: 'plot2',
+                type: 'spline',
+                marginRight: 10,
+                events: {
+                    load: function() {
+                        // chart2 = this;
+                        // set up the updating of the chart each second
+                        // var series = this.series[0];
+                        // setInterval(function() {
+                        //     var x = (new Date()).getTime(), // current time
+                        //         y = Math.random();
+                        //     series.addPoint([x, y], true, true);
+                        // }, 1000);
+                    }
+                }
+            },
+            title: {
+                text: 'Global Access time'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 100
+            },
+            yAxis: {
+                title: {
+                    text: 'Access time [ms]'
+                },
+                gridLineWidth: 0,
+            },
+            tooltip: {
+                formatter: function() {
+                        return '<b>'+ this.series.name +'</b><br/>'+
+                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'<br/>'+
+                        Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            zoomtype: 'x',
+            series: [{
+                            name: 'Short term average access time',
+                            enableMoouseTracking: false,
+                            data: []
+            },
+            {
+                name: 'Long term average access time',
+                enableMoouseTracking: false,
+                data: []
             }]
         });
+
+
 
         if (window["WebSocket"]) {
             conn = new WebSocket("ws://{{$}}/monitor_ws");
             conn.onclose = function(evt) {  
                log("Connection closed.");
             };
+             var messages = 0;
             conn.onmessage = function(evt) {
+               
+                var numbers_disp = 20;
                 // log(evt.data);
                 var transfer = JSON.parse(evt.data)
                 var x = (new Date()).getTime(), // current time
                         y = transfer.Cpu_user;
-                        y1 = transfer.Cpu_system
-                        y3 = (transfer.LongAverageTime/1000000000);
+                        y1 = transfer.Cpu_system;
+                       // y3 = (transfer.LongAverageTime/1000000000);
                         // log("y2: " + y2);
                         // log("y3: " + y3);
-                        chart.series[0].addPoint([x, y], false, true);
-                        chart.series[1].addPoint([x, y1], false, true);
-                        y2 = Y3 = 0;
+                        chart.series[0].addPoint([x, y], false, messages >= numbers_disp);
+                        chart.series[1].addPoint([x, y1], false, messages >= numbers_disp);
+                        chart.series[2].addPoint([x, transfer.Cpu_avg], false, messages >= numbers_disp);
+                        y2 = y3 = 0;
                         if(transfer.ShortAverageTime>0){
-                                                y2 = 100/(transfer.ShortAverageTime/1000000000);
+                                                y2 = (transfer.ShortAverageTime/10000000);
                                                 
                         } 
                         if(transfer.LongAverageTime>0){
-                                                y3 = 100/(transfer.LongAverageTime/1000000000);
+                                                y3 = (transfer.LongAverageTime/10000000);
                                                 
                         }
-                        chart.series[2].addPoint([x, y2], false, true);
-                        chart.series[3].addPoint([x, y3], false, true);
+                        // log("y0 "+ y);log("y1 "+ y1);log("y2 "+ y2);log("y3 "+ y3);
+
+                        chart2.series[0].addPoint([x, y2], false, messages >= numbers_disp);
+                        chart2.series[1].addPoint([x, y3], false, messages >= numbers_disp);
                         // chart.series[3].addPoint([x, y3], true, true);
                         chart.redraw();
+                        chart2.redraw();
+                        messages++;
                 $('#monitoring').html(transfer.Monitoring);
                  $('#users').html(transfer.Users);
             }
@@ -239,6 +286,7 @@ body {
     <div id="content">
         
         <div id="container"></div><br/>
+        <div id="plot2"></div><br/>
         <div id="data">
             <span><label>Monitors:</label><span id="monitoring"></span></span><br />
             <span><label>Users:</label><span id="users"></span></span>

@@ -71,6 +71,9 @@ $(document).ready(function(){
         	var response = JSON.parse(evt.data);
         	if(response["Opcode"] == 1){
         		// alert("Problems is:" + response.Problems);
+        		$('#problems')[0].innerHTML = response.Difficulty.Problems;
+        		$('#zeroes')[0].innerHTML = response.Difficulty.Zeroes;
+
 	        	var solution = find_xs(response.Problems, response.Difficulty.Zeroes);
 	        	// $("#result").append("<br/>" + solution + "<br/>");
 		    	var request = { "Problems": solution, 
