@@ -17,6 +17,14 @@
 \usepackage{csquotes}
 \usepackage[pdfborder={0 0 0}]{hyperref}
 \usepackage[doi=true,url=true]{biblatex}
+
+\newmintedfile[gocode]{go}{
+linenos=true,
+samepage=true,
+fontsize=\footnotesize
+}
+\usemintedstyle{tango}
+
 \addbibresource{bibfile.bib}
 \counterwithout{section}{chapter}
 \title{Proof of Work}
