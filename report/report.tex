@@ -18,7 +18,7 @@
 \usepackage[pdfborder={0 0 0}]{hyperref}
 \usepackage[doi=true,url=true]{biblatex}
 \addbibresource{bibfile.bib}
-
+\counterwithout{section}{chapter}
 \title{Proof of Work}
 
 \subtitle{An evaluation of proof of work as a DOS prevention method}
@@ -35,25 +35,32 @@
 \maketitle
 \selectlanguage{english}
 % \setcounter{chapter}{0}
-\chapter{Introduction}
+\section{Introduction}
 \input{introduction}
-\section{Background}
+\subsection{Background}
 \input{background}
-\section{Problem definition}
+\subsection{Problem definition}
 \input{problemdefinition}
-\section{Problem statement} %Alternatively: (Presentation of the problem)?
+\subsection{Problem statement} %Alternatively: (Presentation of the problem)?
 \input{problemstatement}
-\chapter{Purpose and method}
+\section{Purpose and method}
 \input{purpose}
-\section{Scope and delimitations}
+\subsection{Scope and delimitations}
 \input{scope}
-\section{Methodology}
+\subsection{Methodology}
 \input{methodology}
 
-\chapter{Theoretical perspective}
-
-
-
+\section{Theoretical approach}
+\input{theory}
+\section{System Architecture}
+\input{architecture}
+\section{Simulation Experiments}
+\input{experiments}
+\section{Results}
+\input{results}
+\section{Conclusions}
+\subsection{Lessons learned}
+\subsection{Suggested Directions for Future Research}
 \begin{comment}
 \begin{figure}[ht]
 \begin{center}
