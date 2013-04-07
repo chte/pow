@@ -15,7 +15,9 @@ import (
 
 var connections = 0
 var conn_lock = new(sync.Mutex)
+var glob_lock = new(sync.Mutex)
 var globalAccess *access.Access = access.NewAccess()
+var globalSolving *access.Access = access.NewAccess()
 
 var next_id = 1
 var id_lock = new(sync.Mutex)
@@ -26,10 +28,10 @@ type connection struct {
 	// The websocket connection.
 	ws *websocket.Conn
 
-	difficulty problem.Difficulty
-	problems   []problem.Problem
-	id         int
-	access     *access.Access
+	difficulty      problem.Difficulty
+	problems        []problem.Problem
+	id              int
+	access, solving *access.Access
 }
 
 type message struct {
@@ -67,12 +69,15 @@ func (c *connection) reader() {
 		// c.ws.SetDeadline(time.Now().Add(deadtime))
 		var response message
 		if msg.Opcode == 0 {
-			c.difficulty = problem.GetDifficulty(problem.Param{Local: c.access, Global: globalAccess, Cpu: CPU_STAT}) // math.Max(CPU_LOAD, CPU_AVG)
+			c.difficulty = problem.GetDifficulty(problem.Param{Local: *c.access, Global: *globalAccess, Cpu: CPU_STAT, LSolve: *c.solving, GSolve: *globalSolving}) // math.Max(CPU_LOAD, CPU_AVG)
 			response.Difficulty = c.difficulty
 			c.problems = problem.ConstructProblemSet(c.difficulty)
 			response.Problems = c.problems
 			c.access.Touch(1)
+			c.solving.Caress()
+			glob_lock.Lock()
 			globalAccess.Touch(connections)
+			glob_lock.Unlock()
 			log.Printf("Local average: %v, Global Average: %v", c.access.ShortMean/1000000, globalAccess.ShortMean/1000000)
 
 			response.Opcode = 1
@@ -80,6 +85,11 @@ func (c *connection) reader() {
 			response.SocketId = c.id
 		} else {
 			if problem.Verify(c.problems, msg.Problems, c.difficulty) {
+				diff := c.solving.Touch(1)
+				glob_lock.Lock()
+				globalSolving.AddTime(diff, connections)
+				glob_lock.Unlock()
+
 				response.Query = strings.Join([]string{"Your query, \"", msg.Query, "\" has been served since you solved the puzzle."}, "")
 				before := time.Now().UTC().UnixNano()
 				for i := int64(0); i < 250000000; i++ {
@@ -118,7 +128,7 @@ func wsHandler(ws *websocket.Conn) {
 	next_id++
 	id_lock.Unlock()
 	log.Printf("Accepted connection from %s, assigning id %d\n", ws.Request().RemoteAddr, id)
-	c := &connection{ws: ws, id: id, access: access.NewAccess()}
+	c := &connection{ws: ws, id: id, access: access.NewAccess(), solving: access.NewAccess()}
 
 	// c.ws.SetDeadline(time.Now().Add(deadtime))
 	//h.register <- c

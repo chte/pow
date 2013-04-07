@@ -180,6 +180,11 @@
                 name: 'Long term average access time',
                 enableMoouseTracking: false,
                 data: []
+            },
+            {
+                name: 'Average solution time',
+                enableMoouseTracking: false,
+                data: []
             }]
         });
 
@@ -218,6 +223,8 @@
 
                         chart2.series[0].addPoint([x, y2], false, messages >= numbers_disp);
                         chart2.series[1].addPoint([x, y3], false, messages >= numbers_disp);
+                        chart2.series[2].addPoint([x, transfer.SolveTime/10000000], false, messages >= numbers_disp);
+
                         // chart.series[3].addPoint([x, y3], true, true);
                         chart.redraw();
                         chart2.redraw();

@@ -64,17 +64,17 @@ body {
 
 #delay-bottom  {
     position: relative;
-    width: 400px;
+    width: 42em;
 }
 
 .inner-left {
     float: left;
     position: relative;
-    width: 155px;
+    width: 15em;
 }
 .inner-right {
     position: relative;
-    width: 280px;
+    width: 25em;
 }
 .inner-field-upper {
     width: 100px;
@@ -83,7 +83,9 @@ body {
     width: 100px;
 }
 
-
+form {
+    width: 35em; float: left; margin: 0.5em;
+}
 </style>
 </head>
     <body>
@@ -95,20 +97,29 @@ body {
 
             <h3>Population settings</h3>
 
-            <h3>Delays</h3>
-            <form>
+            <h3 style="margin-bottom: 0;">Delays</h3>
+            <form id="f1" class="stoch">
+                <h4 style="margin-top: 0;">Between requests</h4>
                 <label for="type">Type: </label>
-                <input class="rb" type="radio" name="dist_type" value="dist_stoch" checked> Stochastic distribution
+                <input class="rb" type="radio" name="dist_type" value="dist_stoch" checked> Normal distribution
                 <input class="rb" type="radio" name="dist_type" value="dist_uni"> Uniform randomization<br><br>
                 <div id="radio_text"></div>
             </form>
-
+            <form id="f2" class="stoch">
+                <h4 style="margin-top: 0;">B4 submission</h4>
+                <label for="type">Type: </label>
+                <input class="rb" type="radio" name="dist_type" value="dist_stoch" checked> Normal distribution
+                <input class="rb" type="radio" name="dist_type" value="dist_uni"> Uniform randomization<br><br>
+                <div id="radio_text"></div>
+            </form>
+            <br style="clear: both; "/>
+            
             <br/><br/>
             Enter number of attackers: 
             <br/>
             <input type="text" id="number_of_attacker_field" value="4">
             <input type="button" name="attackbtn" value="Attack" id="attackbtn"/>
-            <br/><br/>
+            <br/>
 
 
             <br/>
@@ -134,22 +145,37 @@ body {
     /* 
      * This search function is protected by proof-of-work.
      */
-        decideRadioBtn();
-        var dist_type = $('.rb');
-        dist_type.click(function(){
-            decideRadioBtn();
+        $('.stoch').each(function(i, form){
+            decideRadioBtn(form);
+            $(form).children('.rb').click(function(){
+                decideRadioBtn(form);
+            });
+            $(form).data("delay_param", function(){
+                var type;
+                var templ = $(form).children('.rb');
+                if(templ[0].checked){
+                        type = 'dist_stoch';
+                }else if(templ[1].checked){
+                        type = 'dist_uni';
+                }
+                // alert($(form).find('.val1').val());
+                var ret = [parseInt($(form).find('.val1').val()), parseInt($(form).find('.val2').val())];
+                ret.dtype = type;
+                return ret;
+            });
         });
+        
         
     
     });
 
-    function decideRadioBtn(){
-        var dist_type = $('.rb');
+    function decideRadioBtn(form){
+        var dist_type = $(form).children('.rb');
 
         if(dist_type[0].checked){
-                document.getElementById('radio_text').innerHTML = createDistForm(dist_type[0].value); //createDelay($('#dist_type').value)
+                $(form).children('#radio_text')[0].innerHTML = createDistForm(dist_type[0].value); //createDelay($('#dist_type').value)
         }else if(dist_type[1].checked){
-                document.getElementById('radio_text').innerHTML = createDistForm(dist_type[1].value); //createDelay($('#dist_type').value)
+                $(form).children('#radio_text')[0].innerHTML = createDistForm(dist_type[1].value); //createDelay($('#dist_type').value)
         }
     }
 
@@ -175,11 +201,11 @@ body {
 
         }
         var upperLeftDiv = '<div class="inner-left">' +text1 + '</div>';
-        var upperRightDiv = '<div class="inner-right">' + '<input type="text" id="' + id1 + '" class="inner-field-upper" value="' + field1 + '"> ' + '</div>';
+        var upperRightDiv = '<div class="inner-right">' + '<input type="text" class="' + id1 + '" class="inner-field-upper" value="' + field1 + '"> ' + '</div>';
         var upperFieldDiv = '<div id="delay-upper">' + upperLeftDiv + upperRightDiv + '</div><br/>';
 
         var bottomLeftDiv = '<div class="inner-left">' + text2 + '</div>';
-        var bottomRightDiv = '<div class="inner-left">' + '<input type="text" id="' + id2 + '" class="inner-field-bottom" value="' + field2 + '"> ' + '</div><br/><br/>';
+        var bottomRightDiv = '<div class="inner-left">' + '<input type="text" class="' + id2 + '" class="inner-field-bottom" value="' + field2 + '"> ' + '</div><br/><br/>';
         var bottomFieldDiv =  '<div id="delay-bottom">' + bottomLeftDiv + bottomRightDiv + '</div>';
 
 

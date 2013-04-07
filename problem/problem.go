@@ -15,11 +15,12 @@ type CpuInfo struct {
 }
 
 type Param struct {
-	Local, Global *access.Access
-	Cpu           CpuInfo
+	Local, Global  access.Access
+	LSolve, GSolve access.Access
+	Cpu            CpuInfo
 }
 
-var BaseDifficulty = Difficulty{1, 16}
+var BaseDifficulty = Difficulty{2, 16}
 var ZeroDifficulty = Difficulty{0, 0}
 var GetDifficulty = firstmodel
 
@@ -82,12 +83,48 @@ func firstmodel(p Param) Difficulty {
 		if p.Local.ShortMean > 3*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
 			return ZeroDifficulty
 		}
-		
+
 		return BaseDifficulty
 	}
-	// log.Printf("Multiplying")
-	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10 + float64(int(5*(p.Global.ShortMean)/p.Local.ShortMean+1))))
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10+float64(int(5*(p.Global.ShortMean)/(p.Local.ShortMean+1)))))
 }
+func secondmodel(p Param) Difficulty {
+	log.Printf("Base diff: %v", BaseDifficulty)
+	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
+		return ZeroDifficulty
+	}
+	if p.Local.LongMean > max(p.Global.ShortMean, p.Global.LongMean) {
+		if p.Local.ShortMean > 3*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
+			return ZeroDifficulty
+		}
+
+		return BaseDifficulty
+	}
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10+float64(int(5*(p.Global.LongMean)/(p.Local.LongMean+1)))))
+}
+func thirdmodel(p Param) Difficulty {
+	log.Printf("Base diff: %v", BaseDifficulty)
+	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
+		return ZeroDifficulty
+	}
+	if p.Local.LongMean > 2*max(p.Global.ShortMean, p.Global.LongMean) {
+		if p.Local.ShortMean > 3*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
+			return ZeroDifficulty
+		}
+
+		return BaseDifficulty
+	}
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10)).multiply(1 + int(5*(p.Global.LongMean)/(p.Local.LongMean+1)))
+}
+func cpu_equal(p Param) Difficulty {
+	// log.Printf("Base diff: %v", BaseDifficulty)
+	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
+		return ZeroDifficulty
+	}
+
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres) - cpu_thres)))
+}
+
 func simpleonoff(p Param) Difficulty {
 	// log.Printf("Base diff: %v", BaseDifficulty)
 	// log.Printf("cpu load:%v", cpu_load)

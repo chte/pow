@@ -21,18 +21,11 @@ $(document).ready(function(){
 				}
 	});
     $("#attackbtn").click(function(){
-    	var radio_btn = document.getElementsByClassName("rb");
-    	var dist_type;
-    	var val1 = parseInt(document.getElementById("val1").value);
-    	var val2 = parseInt(document.getElementById("val2").value);
-    	if(radio_btn[0].checked){
-    		dist_type = radio_btn[0].value
-    	}else{
-    		dist_type = radio_btn[1].value
-    	}
+    	var d1 = $('#f1').data("delay_param")();
+    	var d2 = $('#f2').data("delay_param")();
 
         var numWorkers = parseInt($('#number_of_attacker_field').val());
-        startWorkerSwarm(numWorkers, dist_type, val1, val2)
+        startWorkerSwarm(numWorkers, d1, d2);
     });
 });
 
@@ -71,8 +64,11 @@ function rnd_snd() {
 	return (Math.random()*2-1)+(Math.random()*2-1)+(Math.random()*2-1);
 }
 
-function delay(dist_type, val1, val2){
+function delay(delay_param){
 	//alert(val1);
+	//
+	var dist_type = delay_param.dtype, val1 = delay_param[0], val2 = delay_param[1]; 
+	// log("val1: "+ val1 + " val2: " + val2 + "dist type: " + dist_type);
 	var delay = 0;
 	if(dist_type == "dist_stoch"){
 		var rand = Math.round(rnd_snd()*val2+val1)
@@ -93,7 +89,7 @@ function delay(dist_type, val1, val2){
 /* 
  * Start webworkers
  */
-function startWorkerSwarm(numWorkers, dist_type, val1, val2){
+function startWorkerSwarm(numWorkers, delay1, delay2){
 	// var sockets = [];
 	// Initial setup.
 		log("Starting " + numWorkers + " workers.");
@@ -150,7 +146,7 @@ function startWorkerSwarm(numWorkers, dist_type, val1, val2){
 		                trow.set("status", "WAIT COMMIT")
 		                setTimeout(function(){
 		                	conn.send(JSON.stringify(request));
-		                },delay(dist_type, val1, val2) );
+		                },delay(delay2) );
 
 			        } 
 
@@ -181,15 +177,17 @@ function startWorkerSwarm(numWorkers, dist_type, val1, val2){
 			           		//Send message with data to worker
 			           		trow.set("status", "WORKING");
 
-			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"].Zeroes, wait: delay(dist_type, val1, val2)});
+			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"].Zeroes, wait: delay(delay2)});
 			            } else {
-			           			conn.onopen();
+			            	trow.set("status", "WAIT NEW");
+			            	setTimeout(function(){
+								conn.onopen();
+			                },delay(delay1) );
+			           			
 			           	}
 
 			        }
 			        conn.onopen = function(evt) {
-   						delay(dist_type, val1, val2);
-
 			        	trow.set("status", "CONNECTED");
 			        	var request = {"Opcode": 0, "Query": "Calle"};
 			        	this.send(JSON.stringify(request));
