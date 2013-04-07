@@ -13,16 +13,21 @@
 \usepackage{color}
 \usepackage{minted}
 \usepackage{graphicx}
-\usepackage{comment}
+\usepackage{comment} 
 \usepackage{csquotes}
 \usepackage[pdfborder={0 0 0}]{hyperref}
 \usepackage[doi=true,url=true]{biblatex}
+ \pagenumbering{arabic}
 
-\newmintedfile[gocode]{go}{
+\newmintedfile[gocode]{go}{ 
 linenos=true,
 samepage=true,
 fontsize=\footnotesize,
-xleftmargin=20pt
+xleftmargin=20pt 
+}
+\newmintedfile[jscode]{javascript}{ 
+samepage=true,
+fontsize=\scriptsize
 }
 \usemintedstyle{tango}
 
