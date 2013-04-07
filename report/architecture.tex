@@ -13,3 +13,26 @@ For the server side we choose to use Googles novel programming language go(\cite
 To further ease our programming task, we choose to communicate over the websocket with a single message type which is (de-)serialised (from) to JSON. JSON is natively supported in the Javascript client, and the golang websocket library supports JSON (de-)serialisation which makes for a nice pairing where we have to write absolutely no byte parsing for our protocol.
 \gocode[firstline=35, firstnumber=35, lastline=40]{../conn.go}
 
+
+
+\begin{tikzpicture}
+\tiny
+\matrix (m)[matrix of nodes, column  sep=1cm,row  sep=2mm, nodes={draw=none, anchor=center,text depth=0pt} ]{
+\textbf{\underline {server}} & & \textbf{client}\\[-4mm]
+& & \\
+& request for service & \\
+$function f_i:=$ $\{N,prob,nil\}$ \hfill \\
+problem set $\phi :=  \{f_1\dots f_N\} $ \hfill \\
+& send problems & \\
+& & solve each $f_i \in \phi$ \\
+& & $f_i := \{N,prob,sol\}$ \\
+& send solutions & \\
+for each $f_i \in f_i$ & & \\
+verify $sol \in f_i$ && \\ 
+& grant request & \\
+};
+\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-3-2.south east)--(m-3-2.south west);
+\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-6-2.south west)--(m-6-2.south east);
+\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-9-2.south east)--(m-9-2.south west);
+\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-12-2.south west)--(m-12-2.south east);
+\end{tikzpicture}

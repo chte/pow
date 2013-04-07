@@ -7,7 +7,7 @@
 \usepackage[swedish,english]{babel}
 \usepackage{modifications}
 \usepackage{comment}
-
+\usepackage{tikz}
 \usepackage{verbatim}
 \usepackage{listings}
 \usepackage{color}
@@ -17,7 +17,9 @@
 \usepackage{csquotes}
 \usepackage[pdfborder={0 0 0}]{hyperref}
 \usepackage[doi=true,url=true]{biblatex}
- \pagenumbering{arabic}
+\usetikzlibrary{matrix,shapes,arrows,positioning,chains, calc}
+
+\pagenumbering{arabic}
 
 \newmintedfile[gocode]{go}{ 
 linenos=true,
