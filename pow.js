@@ -29,16 +29,10 @@ function find_x(difficulty, seed){
 	cmp+='0';
     }
     var x=0;
-
     while (true){
 	str = x + "" + seed;
-	// $("#result").append("<br/><b>"+x+"<br/>");
-	// $("#result").append("<br/><b>Calc is "+CryptoJS.SHA256(str).toString(CryptoJS.enc.Hex)+"<br/>");
-	// $("#result").append("<br/><b>Cmp part "+CryptoJS.SHA256(str).toString(CryptoJS.enc.Hex).substr(0,difficulty)+"<br/>");
 	if(CryptoJS.SHA256(str).toString(CryptoJS.enc.Hex).substr(0, difficulty) === cmp){
-	    // alert("seed: " + seed +  "\nfound " + str +" after " +i);	    
 	    return x;
-
 	}
 	x++;
     }
@@ -62,39 +56,39 @@ function append_result(str){
 
 $(document).ready(function(){
 	if (window["WebSocket"]) {
-        conn = new WebSocket("ws://{{$}}/ws");
-        conn.onclose = function(evt) {	
-           log("Connection closed.");
-        };
-        conn.onmessage = function(evt) {
-        	// alert("Got response: " + evt.data);
-        	var response = JSON.parse(evt.data);
-        	if(response["Opcode"] == 1){
-        		// alert("Problems is:" + response.Problems);
-        		$('#problems')[0].innerHTML = response.Difficulty.Problems;
-        		$('#zeroes')[0].innerHTML = response.Difficulty.Zeroes;
+      conn = new WebSocket("ws://{{$}}/ws");
+      conn.onclose = function(evt) {	
+         log("Connection closed.");
+      };
+      conn.onmessage = function(evt) {
+      	// alert("Got response: " + evt.data);
+       	var response = JSON.parse(evt.data);
+       	if(response["Opcode"] == 1){
+       		// alert("Problems is:" + response.Problems);
+       		$('#problems')[0].innerHTML = response.Difficulty.Problems;
+       		$('#zeroes')[0].innerHTML = response.Difficulty.Zeroes;
 
-	        	var solution = find_xs(response.Problems, response.Difficulty.Zeroes);
-	        	// $("#result").append("<br/>" + solution + "<br/>");
-		    	var request = { "Problems": solution, 
-		    					"Query": response.Query,
-		    					// "Hash": CryptoJS.SHA256(solution + "" + response["Seed"]).toString(CryptoJS.enc.Hex),
-		    					"Opcode": 1};
-		    	conn.send(JSON.stringify(request));
-	    	} else {
-	            var endTime = Number(new Date().getTime()); // returns the number of MS since the epoch	
-	            $("#search").removeAttr("disabled");
-				$("#result").html("<br/><b>Result from server</b><br/>");
-				append_result(response["Query"]+"<br/>");
-				append_result("<br/><b>Time for solving the puzzle: </b><bPr/>");
-				append_result((endTime - startTime)+" ms <br/>");
-				append_result("<br/><b>The solution was</b><br/>");
-				append_result('"'+response["Result"]+'" <br/>');
-				append_result("<br/><b>The hash value was</b><br/>");
+	      	var solution = find_xs(response.Problems, response.Difficulty.Zeroes);
+	    	var request = { "Problems": solution, "Query": response.Query, "Opcode": 1};
+		   	conn.send(JSON.stringify(request));
+	    } else {
+	        var endTime = Number(new Date().getTime()); // returns the number of MS since the epoch	
+	        $("#search").removeAttr("disabled");
+			$("#result").html("<br/><b>Result from server</b><br/>");
+			append_result(response["Query"]+"<br/>");
+			append_result("<br/><b>Time for solving the puzzle: </b><bPr/>");
+			append_result((endTime - startTime)+" ms <br/>");
+			append_result("<br/><b>The solution was</b><br/>");
+			append_result('"'+response["Result"]+'" <br/>');
+	    }
+     }
+
+	       	// $("#result").append("<br/>" + solution + "<br/>");
+
+// "Hash": CryptoJS.SHA256(solution + "" + response["Seed"]).toString(CryptoJS.enc.Hex),
+        /*append_result("<br/><b>The hash value was</b><br/>");
 				append_result(response["Hash"]+" <br/>");
-
-	    	}
-        }
+				*/
     } else {
         appendLog($("<div><b>Your browser does not support WebSockets.</b></div>"));
     }
@@ -103,14 +97,11 @@ $(document).ready(function(){
     /* 
      * This search function is protected by proof-of-work.
      */
-    $("#search").click(function(){
-		
+    $("#search").click(function(){	
 	    var request = {"Opcode": 0, "Query": $('#search_field').val()};
-	    // log("Sending " + JSON.stringify(request));
 	    $("#search").attr("disabled", "disabled");
 	    startTime = Number(new Date().getTime());
-	    conn.send(JSON.stringify(request));  
-	    
+	    conn.send(JSON.stringify(request));  // log("Sending " + JSON.stringify(request));
     });
 });
 
