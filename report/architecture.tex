@@ -13,26 +13,54 @@ For the server side we choose to use Googles novel programming language go(\cite
 To further ease our programming task, we choose to communicate over the websocket with a single message type which is (de-)serialised (from) to JSON. JSON is natively supported in the Javascript client, and the golang websocket library supports JSON (de-)serialisation which makes for a nice pairing where we have to write absolutely no byte parsing for our protocol.
 \gocode[firstline=35, firstnumber=35, lastline=40]{../conn.go}
 
+\subsection{The Reputation Based Puzzle Protocol}
+\subsubsection{Protocol notation}
+\subsubsection{Puzzle construction and protocol parameters}
+\subsubsection{Protocol description}
+Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{P} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $\phi_i$. If the reputation system deems the server to not being under attack i.e. under normal server operation this package will be the empty set, indicating that no puzzles are being distributed. Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned. Some might say that the handshaking process with empty sets could bring unneccesary load on the server. However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.} The server will then verify the solution for $\phi_i$ and grant access to $R_i$ of protocol \textbf{P}.
 
+\begin{figure}[H]
+	\begin{center}
+		\begin{tikzpicture}
 
-\begin{tikzpicture}
-\tiny
-\matrix (m)[matrix of nodes, column  sep=1cm,row  sep=2mm, nodes={draw=none, anchor=center,text depth=0pt} ]{
-\textbf{\underline {server}} & & \textbf{client}\\[-4mm]
-& & \\
-& request for service & \\
-$function f_i:=$ $\{N,prob,nil\}$ \hfill \\
-problem set $\phi :=  \{f_1\dots f_N\} $ \hfill \\
-& send problems & \\
-& & solve each $f_i \in \phi$ \\
-& & $f_i := \{N,prob,sol\}$ \\
-& send solutions & \\
-for each $f_i \in f_i$ & & \\
-verify $sol \in f_i$ && \\ 
-& grant request & \\
-};
-\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-3-2.south east)--(m-3-2.south west);
-\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-6-2.south west)--(m-6-2.south east);
-\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-9-2.south east)--(m-9-2.south west);
-\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-12-2.south west)--(m-12-2.south east);
-\end{tikzpicture}
+		\footnotesize
+		\matrix (m)[matrix of nodes, column  sep=0mm,row  sep=4mm, nodes={draw=none, anchor=center,text depth=0pt} ]{
+		\textbf{ \underline {\normalsize server}} & & \textbf{\underline {\normalsize client}}\\[0mm]
+		& & \\
+		& Initialisation of protocol \textbf{P}& \\
+		& service request $R_i$& \\
+		$f_i:=$ $\{N,prob,nil\}$ \hfill \\
+		$\phi_i :=  \{f_1\dots f_N\} $ \hfill \\
+		& send problems & \\
+		& & solve each $f_i \in \phi$ \\
+		& & $f_i := \{N,prob,sol\}$ \\
+		& send solutions & \\
+		for each $f_i \in f_i$ & & \\
+		verify $sol \in f_i$ && \\ 
+		& grant request $R_i$& \\
+		};
+		\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-4-2.south east)--(m-4-2.south west);
+		\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-7-2.south west)--(m-7-2.south east);
+		\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-10-2.south east)--(m-10-2.south west);
+		\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-13-2.south west)--(m-13-2.south east);
+		\end{tikzpicture}
+		\vspace{10pt}
+		\caption{Diagram of Proof of Work protocol}\label{tab:protocol}
+	\end{center}
+\end{figure}
+\\
+\\
+If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
+\\
+\\
+The client behviour can generally be divided into three cases:
+\begin{itemize}
+\item the client $C_i$ behaves in a comparable manner to the general behaviour of all users and the request $R_i$ is responded with a problem difficulty suitable to server load.
+\item the client $C_i$ requests lesser resources compared to the general behaviour and the request $R_i$ is responded with a problem difficulty easier than the general difficulty.
+\item the client $C_i$ requests more resources compared to the general behaviour and the request $R_i$ is responded with a problem difficulty harder than the general difficulty.
+\end{itemize}
+
+To prevent an attacker from reusing solutions for multiple requests the problem set $\phi_i$ is stored in memory on the server.
+[lite mer information om generering av problem. Varje problem är relativt unikt för varje request osv]
+
+\subsubsection{Reputation System}
