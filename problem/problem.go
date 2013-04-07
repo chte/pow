@@ -15,15 +15,16 @@ type CpuInfo struct {
 }
 
 type Param struct {
-	Local, Global *access.Access
-	Cpu           CpuInfo
+	Local, Global  access.Access
+	LSolve, GSolve access.Access
+	Cpu            CpuInfo
 }
 
 var BaseDifficulty = Difficulty{2, 16}
 var ZeroDifficulty = Difficulty{0, 0}
 var GetDifficulty = firstmodel
 
-const cpu_thres = 40.0
+const cpu_thres = 60.0
 
 type Difficulty struct {
 	Zeroes   int
@@ -34,8 +35,8 @@ func (d *Difficulty) multiply(f int) *Difficulty {
 	r := *d
 	r.Problems *= f
 	// log.Printf("Mulitplied %v by %v to get %v", *d, f, r)
-	for r.Problems > 256 {
-		r.Problems /= 256
+	for r.Problems > 272 {
+		r.Problems %= 256
 		r.Zeroes++
 	}
 	log.Printf("Multiplied %v by %v to get %v", *d, f, r)
@@ -79,14 +80,51 @@ func firstmodel(p Param) Difficulty {
 		return ZeroDifficulty
 	}
 	if p.Local.ShortMean > max(p.Global.ShortMean, p.Global.LongMean) {
-		if p.Local.ShortMean > 5*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+0.2 {
+		if p.Local.ShortMean > 3*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
 			return ZeroDifficulty
 		}
+
 		return BaseDifficulty
 	}
-	// log.Printf("Multiplying")
-	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)*float64(int(5*p.Local.ShortMean/(p.Global.ShortMean+1)))))
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10+float64(int(5*(p.Global.ShortMean)/(p.Local.ShortMean+1)))))
 }
+func secondmodel(p Param) Difficulty {
+	log.Printf("Base diff: %v", BaseDifficulty)
+	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
+		return ZeroDifficulty
+	}
+	if p.Local.LongMean > max(p.Global.ShortMean, p.Global.LongMean) {
+		if p.Local.ShortMean > 3*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
+			return ZeroDifficulty
+		}
+
+		return BaseDifficulty
+	}
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10+float64(int(5*(p.Global.LongMean)/(p.Local.LongMean+1)))))
+}
+func thirdmodel(p Param) Difficulty {
+	log.Printf("Base diff: %v", BaseDifficulty)
+	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
+		return ZeroDifficulty
+	}
+	if p.Local.LongMean > 2*max(p.Global.ShortMean, p.Global.LongMean) {
+		if p.Local.ShortMean > 3*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
+			return ZeroDifficulty
+		}
+
+		return BaseDifficulty
+	}
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10)).multiply(1 + int(5*(p.Global.LongMean)/(p.Local.LongMean+1)))
+}
+func cpu_equal(p Param) Difficulty {
+	// log.Printf("Base diff: %v", BaseDifficulty)
+	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
+		return ZeroDifficulty
+	}
+
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres) - cpu_thres)))
+}
+
 func simpleonoff(p Param) Difficulty {
 	// log.Printf("Base diff: %v", BaseDifficulty)
 	// log.Printf("cpu load:%v", cpu_load)
