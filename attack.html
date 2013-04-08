@@ -95,7 +95,11 @@ form {
 
             Each webworker is required to solve {{.Problems}} puzzles of difficulty {{.Zeroes}}.
 
-            <h3>Population settings</h3>
+            <h2>Population settings</h2>
+            <h3>Behaviour:<h3>
+                <input id="behaviour_radio" type="radio" name="behaviour_type" value="legitimate" checked> Legitimate users
+                <input id="behaviour_radio" type="radio" name="behaviour_type" value="attacker"> Attacking users<br><br>
+                <input id="behaviour_radio" type="radio" name="behaviour_type" value="mobile"> Mobile device users<br><br>
 
             <h3 style="margin-bottom: 0;">Delays</h3>
             <form id="f1" class="stoch">
@@ -128,8 +132,9 @@ form {
                 <tr id="header">
                     <th>Local ID</th>
                     <th>Remote ID</th>
+                    <th>Behaviour</th>
                     <th>Difficulty</th>
-                    <th style="width: 10em;">Status</th>
+                    <th style="width: 8em;">Status</th>
                     <th>Solved</th>
                     <th>Requesting (ms)</th>
                     <th>Solving (ms)</th>
