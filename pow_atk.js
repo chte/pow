@@ -54,7 +54,6 @@ function buildRow(row){
 	row.append(getTD("requesting_ms")); // time for server to respond to request
 	row.append(getTD("solving_ms"));	 // time for worker/client to solve a puzzle
 	row.append(getTD("granting_ms"));	 // time for server to verify and reply
-	row.append(getTD("service_ms")); // the sum of the three above is total service time
 	row.append(getTD("close"));
 	
 }
@@ -100,14 +99,18 @@ function startWorkerSwarm(numWorkers, delay1, delay2, behaviour_type){
 	// Initial setup.
 		log("Starting " + numWorkers + " workers.");
 
+		var dataminer = new WebSocket("ws://{{$}}/dataminer");
+
 		for(var i = 0; i < numWorkers; i++){
 			(function() {
+				var requestingTime;
+				var solvingTime;
+				var grantingTime;
 				var startRequestingTime;
 				var startSolvingTime;
 				var startGrantingTime;
-				
-				if (window["WebSocket"]) {
 
+				if (window["WebSocket"]) {
 					var conn = new WebSocket("ws://{{$}}/ws");
 					var w = new Worker("attacktask.js");
 					var id = startid + i;
@@ -139,7 +142,7 @@ function startWorkerSwarm(numWorkers, delay1, delay2, behaviour_type){
 						if(closed) return;
 						
 						var endSolvingTime = Number(new Date().getTime());
-						var solvingTime = endSolvingTime - startSolvingTime;
+						solvingTime = endSolvingTime - startSolvingTime;
 						trow.set("solving_ms", solvingTime);
 						
 						trow.set("status", "SOLVED");
@@ -187,7 +190,7 @@ function startWorkerSwarm(numWorkers, delay1, delay2, behaviour_type){
 			            
 			            if(response["Opcode"] == 1){
 			            	var endRequestingTime = Number(new Date().getTime());
-							var requestingTime = endRequestingTime - startRequestingTime;
+							requestingTime = endRequestingTime - startRequestingTime;
 							trow.set("requesting_ms", requestingTime);
 
 			                // alert("Problems is:" + response.Problems);
@@ -202,9 +205,15 @@ function startWorkerSwarm(numWorkers, delay1, delay2, behaviour_type){
 			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"].Zeroes, wait: delay(delay2)});
 			            } else {
 			            	var endGrantingTime = Number(new Date().getTime());
-							var grantingTime = endGrantingTime - startGrantingTime;
+							grantingTime = endGrantingTime - startGrantingTime;
 							trow.set("granting_ms", grantingTime);
 			            	trow.set("status", "WAIT NEW");
+
+			                var datacollection = { "Behaviour": behaviour_type, 
+					                               "RequestingTime": requestingTime,
+					                               "SolvingTime": solvingTime,
+					                               "GrantingTime": grantingTime};
+
 			            	setTimeout(function(){
 								conn.onopen();
 			                },delay(delay1) );
