@@ -20,9 +20,9 @@ type Param struct {
 	Cpu            CpuInfo
 }
 
-var BaseDifficulty = Difficulty{1, 16}
+var BaseDifficulty = Difficulty{1, 64}
 var ZeroDifficulty = Difficulty{0, 0}
-var GetDifficulty = thirdmodel
+var GetDifficulty = cpu_equal
 
 const cpu_thres = 70.0
 
@@ -35,8 +35,8 @@ func (d *Difficulty) multiply(f int) *Difficulty {
 	r := *d
 	r.Problems *= f
 	// log.Printf("Mulitplied %v by %v to get %v", *d, f, r)
-	for r.Problems > 272 {
-		r.Problems %= 256
+	for r.Problems > 256 {
+		r.Problems /= 16
 		r.Zeroes++
 	}
 	log.Printf("Multiplied %v by %v to get %v", *d, f, r)
@@ -100,7 +100,7 @@ func secondmodel(p Param) Difficulty {
 
 		return BaseDifficulty
 	}
-	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10+float64(int(5*(p.Global.LongMean)/(p.Local.LongMean+1)))))
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10+float64(5*max(0, (p.Global.LongMean)/(p.Local.LongMean+1)))))
 }
 func thirdmodel(p Param) Difficulty {
 	log.Printf("Base diff: %v", BaseDifficulty)
@@ -114,11 +114,12 @@ func thirdmodel(p Param) Difficulty {
 
 		return BaseDifficulty
 	}
-	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10)).multiply(1 + int(max(0, 5*(p.Global.LongMean)/(p.Local.LongMean+1))))
+	log.Printf("global: %v, local: %v", p.Global.LongMean, p.Local.LongMean)
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres) - cpu_thres))).multiply(1 + int(5*max(0, (p.Global.LongMean)/(p.Local.LongMean+1))))
 }
 func cpu_equal(p Param) Difficulty {
 	// log.Printf("Base diff: %v", BaseDifficulty)
-	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
+	if p.Cpu.Avg < cpu_thres-30 {
 		return ZeroDifficulty
 	}
 

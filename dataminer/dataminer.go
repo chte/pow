@@ -1,14 +1,19 @@
 package dataminer
 
 import (
+	"bufio"
 	"code.google.com/p/go.net/websocket"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"text/template"
-	// "time"
+	"time"
 )
 
 var controlTempl = template.Must(template.ParseFiles("./dataminer/control.html"))
+var logging bool = false
 
 func controlHTMLHandler(c http.ResponseWriter, req *http.Request) {
 	controlTempl.Execute(c, req.Host)
@@ -20,12 +25,19 @@ func controlHTMLHandler(c http.ResponseWriter, req *http.Request) {
 //         "GrantingTime": grantingTime};
 
 type sample struct {
-	Behaviour                                    string
-	RequestingTime, SolvingingTime, GrantingTime int
+	Behaviour                                 string
+	RequestingTime, SolvingTime, GrantingTime int
+}
+
+func (s *sample) String() string {
+	// return fmt.Sprintf("%d & %d & %d & %d", s.RequestingTime, s.SolvingTime, s.GrantingTime, s.RequestingTime+s.SolvingTime+s.GrantingTime)
+	return fmt.Sprintf("%d	%d	%d	%d", s.RequestingTime, s.SolvingTime, s.GrantingTime, s.RequestingTime+s.SolvingTime+s.GrantingTime)
+
 }
 
 type ctrlMsg struct {
 	Command int
+	Name    string
 }
 
 type hub struct {
@@ -69,6 +81,43 @@ func NewData() *Data {
 
 var data *Data
 
+func getFormula(formula, who string, n int) string {
+	return "=" + formula + "(" + who + "2:" + who + strconv.Itoa(n+1) + ")"
+}
+
+func getConfidence(alpha string, who string, index_of_avg int, n int) string {
+	return "=CONFIDENCE.T(" + alpha + "," + who + strconv.Itoa(index_of_avg) + "," + strconv.Itoa(n) + ")"
+}
+
+func (ds *dataseries) WriteTo(filename string) {
+	// f, err := os.Create(filename)
+	// wd, _ := os.Getwd()
+	fil, err := os.Create(filename)
+	if err != nil {
+		panic(err)
+	}
+	// close fil on exit and check for its returned error
+	defer func() {
+		if fil.Close() != nil {
+			panic(err)
+		}
+	}()
+	w := bufio.NewWriter(fil)
+	fmt.Fprintf(w, "%s	%s	%s	%s\n", "request", "solve", "grant", "service")
+	for _, s := range ds.data {
+		fmt.Fprintf(w, "%v\n", &s)
+	}
+	n := len(ds.data)
+	formula := "STDEV.P"
+	fmt.Fprintf(w, "%s	%s	%s	%s	STDDEV\n", getFormula(formula, "A", n), getFormula(formula, "B", n), getFormula(formula, "C", n), getFormula(formula, "D", n))
+	formula = "AVERAGE"
+	fmt.Fprintf(w, "%s	%s	%s	%s	AVERAGE\n", getFormula(formula, "A", n), getFormula(formula, "B", n), getFormula(formula, "C", n), getFormula(formula, "D", n))
+	fmt.Fprintf(w, "%s	%s	%s	%s	CONFIDENCE 0.05\n", getConfidence("0.05", "A", n+2, n), getConfidence("0.05", "B", n+2, n), getConfidence("0.05", "C", n+2, n), getConfidence("0.05", "D", n+2, n))
+	fmt.Fprintf(w, "%s	%s	%s	%s	CONFIDENCE 0.01\n", getConfidence("0.01", "A", n+2, n), getConfidence("0.01", "B", n+2, n), getConfidence("0.01", "C", n+2, n), getConfidence("0.01", "D", n+2, n))
+
+	w.Flush()
+}
+
 func (h *hub) run() {
 	for {
 		select {
@@ -77,16 +126,24 @@ func (h *hub) run() {
 			case 0:
 				log.Printf("Start recording\n")
 				data = NewData()
+				logging = true
 				break
 			case 1:
-				log.Printf("Stop Recording save to file\n")
-				log.Printf("Data: %v", data)
+				log.Printf("Stop Recording series %d, saving to file\n", cmd.Name)
+				t := time.Now()
+				for k, v := range data.series {
+					v.WriteTo("./data/" + t.Format("15_04_05") + "-" + cmd.Name + "-" + k + ".pow_data")
+				}
+				logging = false
 				break
 			}
 			break
 		case smp := <-h.log:
-			log.Printf("Received sample %v\n", smp)
-			data.getSeries(smp.Behaviour).add(smp)
+			// log.Printf("Received sample %v\n", smp)
+			if logging {
+				data.getSeries(smp.Behaviour).add(smp)
+
+			}
 		}
 	}
 }

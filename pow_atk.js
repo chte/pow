@@ -214,6 +214,7 @@ function startWorkerSwarm(numWorkers, delay1, delay2, behaviour_type){
 					                               "SolvingTime": solvingTime,
 					                               "GrantingTime": grantingTime};
 
+					        dataminer.send(JSON.stringify(datacollection));
 			            	setTimeout(function(){
 								conn.onopen();
 			                },delay(delay1) );

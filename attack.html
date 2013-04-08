@@ -97,9 +97,9 @@ form {
 
             <h2>Population settings</h2>
             <h3>Behaviour:<h3>
-                <input id="behaviour_radio" type="radio" name="behaviour_type" value="legitimate" checked> Legitimate users
-                <input id="behaviour_radio" type="radio" name="behaviour_type" value="attacker"> Attacking users<br><br>
-                <input id="behaviour_radio" type="radio" name="behaviour_type" value="mobile"> Mobile device users<br><br>
+                <input class="leg" id="behaviour_leg" type="radio" name="behaviour_type" value="legitimate" checked> Legitimate users
+                <input  id="behaviour_atk" type="radio" name="behaviour_type" value="attacker"> Attacking users<br><br>
+                <input class="leg" id="behaviour_mob" type="radio" name="behaviour_type" value="mobile"> Mobile device users<br><br>
 
             <h3 style="margin-bottom: 0;">Delays</h3>
             <form id="f1" class="stoch">
@@ -121,7 +121,7 @@ form {
             <br/><br/>
             Enter number of attackers: 
             <br/>
-            <input type="text" id="number_of_attacker_field" value="4">
+            <input type="text" id="number_of_attacker_field" value="40">
             <input type="button" name="attackbtn" value="Attack" id="attackbtn"/>
             <br/>
 
@@ -150,9 +150,22 @@ form {
 
 <script language="javascript">
     $(document).ready(function(){
-    /* 
-     * This search function is protected by proof-of-work.
-     */
+        $(".leg").click(function(){
+            $('#f1 .val1').val('10000');
+            $('#f1 .val2').val('15000');
+            $('#f2 .val1').val('0');
+            $('#f2 .val2').val('0');
+            $('#number_of_attacker_field').val('40');
+        });
+        $("#behaviour_atk").click(function(){
+            $('#f1 .val1').val('0');
+            $('#f1 .val2').val('0');
+            $('#f2 .val1').val('0');
+            $('#f2 .val2').val('0');
+            $('#number_of_attacker_field').val('4');
+        });
+
+
         $('.stoch').each(function(i, form){
             decideRadioBtn(form);
             $(form).children('.rb').click(function(){
@@ -172,6 +185,7 @@ form {
                 return ret;
             });
         });
+        $("#behaviour_atk").click();
         
         
     
