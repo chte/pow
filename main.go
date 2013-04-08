@@ -1,12 +1,16 @@
 package main
 
 import (
+	"./dataminer"
 	"./problem"
 	"code.google.com/p/go.net/websocket"
 	"flag"
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
+	"os/signal"
 	"runtime"
 	"text/template"
 	"time"
@@ -61,6 +65,20 @@ func main() {
 	log.Printf("PoW server started on %s server at %s, threads: %d -> %d\n", runtime.GOOS, *addr, cpu, runtime.NumCPU())
 	rand.Seed(time.Now().UTC().UnixNano())
 	go h.run()
+	dataminer.Run()
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		defer func() {
+			fmt.Println("hallo")
+		}()
+		for sig := range c {
+			fmt.Printf("sig: %v", sig)
+			os.Exit(0)
+			// return
+			// sig is a ^C, handle it
+		}
+	}()
 	http.HandleFunc("/", homeHandler)
 	//http.HandleFunc("/pow.js", jsHandl	er)
 	http.HandleFunc("/attack", attackHandler)

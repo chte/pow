@@ -35,7 +35,7 @@ var startid = 0;
 
 function getTD(id){
 	var td =  $(document.createElement('td'));
-	td.attr({'id': id});
+	td.attr({'class': id});
 	return td;
 }
 
@@ -58,7 +58,7 @@ function buildRow(row){
 	
 }
 function get(who, what){
-	return who.children("#"+what)[0];
+	return who.children("."+what)[0];
 }
 
 function set(label, value){

@@ -107,6 +107,7 @@ func (c *connection) reader() {
 		log.Printf(" SENDING: %v\n", response)
 		websocket.JSON.Send(c.ws, response)
 	}
+	c.ws.Close()
 	conn_lock.Lock()
 	connections--
 	conn_lock.Unlock()
