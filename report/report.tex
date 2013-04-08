@@ -38,7 +38,8 @@ fontsize=\scriptsize
 \title{Proof of Work}
 
 %\subtitle{An evaluation of proof of work as a DOS prevention method}
-\subtitle{A load measure approach to cryptographic mitigation of denial-of-service attacks}
+%\subtitle{A load measure approach to cryptographic mitigation of denial-of-service attacks}
+\subtitle{A reputation based approach to cryptographic mitigation of denial-of-service attacks}
 %\foreigntitle{Lorem ipsum dolor sit amet, sed diam nonummy nibh eui
  %             mod tincidunt ut laoreet dol}
 \author{Fredrik Lilkaer, Christopher Teljstedt}
@@ -52,6 +53,8 @@ fontsize=\scriptsize
 \maketitle
 \selectlanguage{english}
 % \setcounter{chapter}{0}
+\tableofcontents
+\newpage
 \section{Introduction}
 \input{introduction}
 \subsection{Background}
@@ -71,6 +74,8 @@ fontsize=\scriptsize
 \input{theory}
 \section{System Architecture}
 \input{architecture}
+\section{Tuning the Reputation System}
+\input{tuning}
 \section{Simulation Experiments}
 \input{experiments}
 \section{Results}
