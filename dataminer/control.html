@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>Proof of Work</title>
+<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js"></script> -->
+<script type="text/javascript" src="jquery.js"></script>
+
+
+<style type="text/css">
+
+
+body {
+    overflow: auto;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: gray;
+}
+
+#log {
+    background: white;
+    margin: 0;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+    right: 0.5em;
+    bottom: 3em;
+    overflow: auto;
+}
+
+#form {
+    padding: 0 0.5em 0 0.5em;
+    margin: 0;
+    position: absolute;
+    bottom: 1em;
+    left: 0px;
+    width: 100%;
+    overflow: hidden;
+}
+#content {
+    width: 80em;
+    padding: 1em;
+    min-height: 95%;
+    background-color: white; 
+    margin: 1em auto 1em auto;
+    box-shadow: 0px 0px 10px black;
+}
+</style>
+
+<script type="text/javascript" charset="utf-8" async defer>
+    $(document).ready(function(){
+    if (window["WebSocket"]) {
+        conn = new WebSocket("ws://{{$}}/dataminer_ctrl");
+          
+        $("#record").click(function(){  
+            var request = {"Command": 0};
+            $("#record").hide();
+            conn.send(JSON.stringify(request)); 
+            $("#save").show();
+        });
+         $("#save").click(function(){  
+            var request = {"Command": 1};
+            $("#save").hide();
+            conn.send(JSON.stringify(request)); 
+            $("#record").show();
+        });
+     }
+});
+
+</script>
+</head>
+
+<body>
+    <div id="content">
+        <h2>Proof of Work</h2>
+        This controls data mining.<br/>
+        <div id="buttons">
+            <button id="record" >Record</button>
+            <button id="save" style="display:none;">Save</button>
+        </div>
+        
+    </div>
+  </body>
+</html>
