@@ -22,10 +22,11 @@ $(document).ready(function(){
 	});
     $("#attackbtn").click(function(){
     	var d1 = $('#f1').data("delay_param")();
-    	var d2 = $('#f2').data("delay_param")();
+    	var d2 = $('#f2').data("delay_param")();		
+		var behaviour_type = $('input[name=behaviour_type]').filter(':checked').val();
 
         var numWorkers = parseInt($('#number_of_attacker_field').val());
-        startWorkerSwarm(numWorkers, d1, d2);
+        startWorkerSwarm(numWorkers, d1, d2, behaviour_type);
     });
 });
 
@@ -46,6 +47,7 @@ function buildRow(row){
 	// row.append("<td>", {id: "abort"});
 	row.append(getTD("local_id"));
 	row.append(getTD("remote_id"));
+	row.append(getTD("behaviour"));
 	row.append(getTD("difficulty"));
 	row.append(getTD("status"));
 	row.append(getTD("solved"));
@@ -93,11 +95,10 @@ function delay(delay_param){
 /* 
  * Start webworkers
  */
-function startWorkerSwarm(numWorkers, delay1, delay2){
+function startWorkerSwarm(numWorkers, delay1, delay2, behaviour_type){
 	// var sockets = [];
 	// Initial setup.
 		log("Starting " + numWorkers + " workers.");
-
 
 		for(var i = 0; i < numWorkers; i++){
 			(function() {
@@ -119,6 +120,7 @@ function startWorkerSwarm(numWorkers, delay1, delay2){
 					buildRow(trow);
 					// trow.children("#local_id")[0].innerHTML = "" + id;
 					trow.set("local_id", id);
+					trow.set("behaviour", behaviour_type);
 					trow.set("status", "CONNECTING");
 
 					var b = $(document.createElement('button'));
