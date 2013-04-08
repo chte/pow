@@ -49,8 +49,10 @@ function buildRow(row){
 	row.append(getTD("difficulty"));
 	row.append(getTD("status"));
 	row.append(getTD("solved"));
-	row.append(getTD("solve"));
-	row.append(getTD("solve_mean"));
+	row.append(getTD("requesting_ms")); // time for server to respond to request
+	row.append(getTD("solving_ms"));	 // time for worker/client to solve a puzzle
+	row.append(getTD("granting_ms"));	 // time for server to verify and reply
+	row.append(getTD("service_ms")); // the sum of the three above is total service time
 	row.append(getTD("close"));
 	
 }
@@ -99,7 +101,12 @@ function startWorkerSwarm(numWorkers, delay1, delay2){
 
 		for(var i = 0; i < numWorkers; i++){
 			(function() {
+				var startRequestingTime;
+				var startSolvingTime;
+				var startGrantingTime;
+				
 				if (window["WebSocket"]) {
+
 					var conn = new WebSocket("ws://{{$}}/ws");
 					var w = new Worker("attacktask.js");
 					var id = startid + i;
@@ -128,6 +135,11 @@ function startWorkerSwarm(numWorkers, delay1, delay2){
 					//Setup Worker
 					w.onmessage=function (e){
 						if(closed) return;
+						
+						var endSolvingTime = Number(new Date().getTime());
+						var solvingTime = endSolvingTime - startSolvingTime;
+						trow.set("solving_ms", solvingTime);
+						
 						trow.set("status", "SOLVED");
 						solved++;
 						trow.set("solved", solved);
@@ -147,6 +159,7 @@ function startWorkerSwarm(numWorkers, delay1, delay2){
 
 		                trow.set("status", "WAIT COMMIT")
 		                setTimeout(function(){
+		                	startGrantingTime = Number(new Date().getTime());
 		                	conn.send(JSON.stringify(request));
 		                },delay(delay2) );
 
@@ -164,12 +177,16 @@ function startWorkerSwarm(numWorkers, delay1, delay2){
 			        };
 			        conn.onmessage = function(evt) {
 			            // alert("Got response: " + §evt.data);
+
 			            response = JSON.parse(evt.data);
 			            if(response.SocketId ){
 			            	trow.set("remote_id", response.SocketId);
 			            }
 			            
 			            if(response["Opcode"] == 1){
+			            	var endRequestingTime = Number(new Date().getTime());
+							var requestingTime = endRequestingTime - startRequestingTime;
+							trow.set("requesting_ms", requestingTime);
 
 			                // alert("Problems is:" + response.Problems);
 			                // trow.children("#difficulty")[0].innerHTML = "" + response["Difficulty"];
@@ -179,8 +196,12 @@ function startWorkerSwarm(numWorkers, delay1, delay2){
 			           		//Send message with data to worker
 			           		trow.set("status", "WORKING");
 
+			           		startSolvingTime = Number(new Date().getTime());
 			           		w.postMessage({problems: response["Problems"], difficulty: response["Difficulty"].Zeroes, wait: delay(delay2)});
 			            } else {
+			            	var endGrantingTime = Number(new Date().getTime());
+							var grantingTime = endGrantingTime - startGrantingTime;
+							trow.set("granting_ms", grantingTime);
 			            	trow.set("status", "WAIT NEW");
 			            	setTimeout(function(){
 								conn.onopen();
@@ -189,9 +210,11 @@ function startWorkerSwarm(numWorkers, delay1, delay2){
 			           	}
 
 			        }
-			        conn.onopen = function(evt) {
+			        conn.onopen = function(evt) {			        	
 			        	trow.set("status", "CONNECTED");
 			        	var request = {"Opcode": 0, "Query": "Calle"};
+
+			        	startRequestingTime = Number(new Date().getTime());
 			        	this.send(JSON.stringify(request));
 			        }
 			  	}
