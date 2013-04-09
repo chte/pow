@@ -1,20 +1,48 @@
 % Column settings for tables (array,dcolumn)
 \newcolumntype{d}{D{.}{.}{-2}}
 \newcolumntype{e}{D{.}{.}{-3}}
+  \begin{table}[H]
+    \centering
+    \tiny
+    \begin{tabular}{lcccccccc} \toprule
+      \multicolumn{1}{c}{Prot. model} & \multicolumn{3}{c}{Attackers} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
+      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
+      \multicolumn{1}{c}{} & \multicolumn{1}{c}{Pop. size} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service}  \\ \toprule
+      None & 120x7  & 0.57$\pm$0.02 &  19861.19$\pm$375.23 & 0.48$\pm$0.05 & 19965.45$\pm$1286.18 & 16.87$\pm$7.64 & 20800.60$\pm$3202.62     \\ \bottomrule
+    \end{tabular}
+
+    \caption{No protection}\label{tab:noprot}
+
+  \end{table}
 
 \subsection{Mitigation against Server Flooding}
   \begin{table}[H]
     \centering
     \tiny
-    \caption{Classical Proof of Work}\label{tab:flooding-classical}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{} & \multicolumn{2}{c}{Attackers} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
+    \begin{tabular}{lcccccccc} \toprule
+      \multicolumn{1}{c}{Prot. model} & \multicolumn{3}{c}{Attackers} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
       %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Protection type} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      Normal & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0    \\
-      RBPOW & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0   \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
+      \multicolumn{1}{c}{} & \multicolumn{1}{c}{Pop. size} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service}  \\ \toprule
+      PoW & 17x4  & 1266$\pm$9 & 1794$\pm$12 & 3129$\pm$98 & 3652$\pm$99 & 31959$\pm$4576 & 32488$\pm$4556    \\
+      RB-PoW & 17x4 & 1875$\pm$43 & 2312$\pm$43 & 267$\pm$13 & 582$\pm$22 & 2975$\pm$1031 & 3469$\pm$1103   \\ \bottomrule
     \end{tabular}
+        \caption{Results from Server Flooding}\label{tab:flooding}
+
   \end{table}
+
+
 \subsection{Mitigation against Server Draining}
+
+  \begin{table}[H]
+    \centering
+    \tiny
+    
+    \begin{tabular}{lcccccccc} \toprule
+      \multicolumn{1}{c}{Prot. model} & \multicolumn{3}{c}{Attackers} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
+      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
+      \multicolumn{1}{c}{} & \multicolumn{1}{c}{Pop. size} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service}  \\ \toprule
+      PoW &  12x40  & 12700$\pm$199 & 14377$\pm$210 & 2616$\pm$119 & 3707$\pm$145 & 59119$\pm$14150 & 61005$\pm$14175    \\
+      RB-PoW & 12x40 & 14615$\pm$380 & 15371$\pm$383 & 4555$\pm$332 & 5206$\pm$345 & 29940$\pm$13426 & 30753$\pm$13490   \\ \bottomrule
+    \end{tabular}
+    \caption{Results from Server Draining}\label{tab:draining}
+  \end{table}

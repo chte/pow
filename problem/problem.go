@@ -22,7 +22,7 @@ type Param struct {
 
 var BaseDifficulty = Difficulty{1, 64}
 var ZeroDifficulty = Difficulty{0, 0}
-var GetDifficulty = cpu_equal
+var GetDifficulty = rp_scale_model(p)
 
 const cpu_thres = 70.0
 
