@@ -1,0 +1,61 @@
+%\def\input@path{{..}}
+\documentclass[a4paper,11pt]{kth-mag}
+\nonstopmode
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[swedish,english]{babel}
+\usepackage{modifications}
+\usepackage{comment}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{comment} 
+\usepackage{csquotes}
+\usepackage[pdfborder={0 0 0}]{hyperref}
+\usepackage[doi=true,url=true]{biblatex}
+\usetikzlibrary{matrix,shapes,arrows,positioning,chains, calc}
+
+\pagenumbering{arabic}
+
+\newmintedfile[gocode]{go}{ 
+linenos=true,
+samepage=true,
+fontsize=\footnotesize,
+xleftmargin=20pt 
+}
+\newmintedfile[jscode]{javascript}{ 
+samepage=true,
+fontsize=\scriptsize
+}
+\usemintedstyle{tango}
+
+\addbibresource{bibfile.bib}
+\counterwithout{section}{chapter}
+\title{Proof of Work}
+
+%\subtitle{An evaluation of proof of work as a DOS prevention method}
+%\subtitle{A load measure approach to cryptographic mitigation of denial-of-service attacks}
+\subtitle{A reputation based approach to cryptographic mitigation of denial-of-service attacks}
+%\foreigntitle{Lorem ipsum dolor sit amet, sed diam nonummy nibh eui
+ %             mod tincidunt ut laoreet dol}
+\author{Fredrik Lilkaer, Christopher Teljstedt}
+\date{Februari 2013}
+\blurb{Bachelor's Thesis\\Supervisor: Douglas Wikström}
+\trita{} %TRITA xxx yyyy-nn
+\begin{document}
+\section{Approach}
+We present a novel approach to PoW difficulty scaling. We measure average time between requests and scale problem difficulty individually.
+Our model: 
+\gocode[firstline=105, firstnumber=105, lastline=118]{../problem/problem.go}
+Is compared to cpu\_scaling:
+\gocode[firstline=120, firstnumber=120, lastline=126]{../problem/problem.go}
+
+
+\section{Results}
+\input{results}
+\end{document}

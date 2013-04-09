@@ -102,27 +102,26 @@ func secondmodel(p Param) Difficulty {
 	}
 	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10+float64(5*max(0, (p.Global.LongMean)/(p.Local.LongMean+1)))))
 }
-func thirdmodel(p Param) Difficulty {
-	log.Printf("Base diff: %v", BaseDifficulty)
+func rp_scale_model(p Param) Difficulty {
 	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
 		return ZeroDifficulty
 	}
 	if p.Local.LongMean > 2*max(p.Global.ShortMean, p.Global.LongMean) {
-		if p.Local.ShortMean > 3*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
+		if p.Local.ShortMean > 3*p.Global.ShortMean
+		 	&& math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
 			return ZeroDifficulty
 		}
 
 		return BaseDifficulty
 	}
-	log.Printf("global: %v, local: %v", p.Global.LongMean, p.Local.LongMean)
-	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres) - cpu_thres))).multiply(1 + int(5*max(0, (p.Global.LongMean)/(p.Local.LongMean+1))))
+	diff := *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres) - cpu_thres)))
+	return diff.multiply(1 + int(5*max(0, (p.Global.LongMean)/(p.Local.LongMean+1))))
 }
+
 func cpu_equal(p Param) Difficulty {
-	// log.Printf("Base diff: %v", BaseDifficulty)
 	if p.Cpu.Avg < cpu_thres-30 {
 		return ZeroDifficulty
 	}
-
 	return *BaseDifficulty.multiply(1 + 4*int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)))
 }
 

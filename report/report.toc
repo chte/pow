@@ -51,14 +51,14 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {7}Results}{}{section.0.7}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {7.1}Mitigation against Package Dropping}{}{subsection.0.7.1}
+\contentsline {subsection}{\numberline {7.1}Mitigation against Server Flooding}{}{subsection.0.7.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {7.2}Mitigation against Server Flooding}{}{subsection.0.7.2}
-\defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {7.3}Mitigation against Server Draining}{}{subsection.0.7.3}
+\contentsline {subsection}{\numberline {7.2}Mitigation against Server Draining}{}{subsection.0.7.2}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {8}Conclusions}{}{section.0.8}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {8.1}Lessons learned}{}{subsection.0.8.1}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {8.2}Suggested Directions for Future Research}{}{subsection.0.8.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{Bibliography}{}{section*.3}

@@ -2,98 +2,19 @@
 \newcolumntype{d}{D{.}{.}{-2}}
 \newcolumntype{e}{D{.}{.}{-3}}
 
-
-
-\subsection{Mitigation against Package Dropping}
-  \begin{table}[H]
-    \centering
-    \tiny
-    \caption{Classical Proof of Work}\label{tab:dropping-classical}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
-      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0    \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0   \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
-    \end{tabular}
-  \end{table}
-
-    \begin{table}[H]
-    \centering
-    \tiny
-    \caption{Reputation based Proof of Work}\label{tab:dropping-reputation}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
-      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0     \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0     \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
-    \end{tabular}
-  \end{table}
-
 \subsection{Mitigation against Server Flooding}
-
   \begin{table}[H]
     \centering
     \tiny
     \caption{Classical Proof of Work}\label{tab:flooding-classical}
     \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
+      \multicolumn{1}{c}{} & \multicolumn{2}{c}{Attackers} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
       %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0    \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0   \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
-    \end{tabular}
-  \end{table}
-
-    \begin{table}[H]
-    \centering
-    \tiny
-    \caption{Reputation based Proof of Work}\label{tab:flooding-reputation}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
-      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0     \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0     \\
+      \multicolumn{1}{c}{Protection type} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
+      Normal & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0    \\
+      RBPOW & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0   \\
       100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
       50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
     \end{tabular}
   \end{table}
 \subsection{Mitigation against Server Draining}
-
-  \begin{table}[H]
-    \centering
-    \tiny
-    \caption{Classical Proof of Work}\label{tab:draining-classical}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
-      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0    \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0   \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
-    \end{tabular}
-  \end{table}
-
-    \begin{table}[H]
-    \centering
-    \tiny
-    \caption{Reputation based Proof of Work}\label{tab:draining-reputation}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
-      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0     \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0     \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
-    \end{tabular}
-  \end{table}
