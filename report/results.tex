@@ -2,98 +2,40 @@
 \newcolumntype{d}{D{.}{.}{-2}}
 \newcolumntype{e}{D{.}{.}{-3}}
 
+\subsection{Confidence in Test Results}
+\subsubsection{Arithmetic Averages Have a Bit of Magic}
+That bit of magic is the \emph{Central Limit Theorem}. In our case the result data will be based of samples of test data with an unknown distribution. The central limit theorem tells us that no matter how the data is distributed the sampled distribution to estimate our means will not matter if the sample size is large $(n > 30)$.
 
-
-\subsection{Mitigation against Package Dropping}
-  \begin{table}[H]
-    \centering
-    \tiny
-    \caption{Classical Proof of Work}\label{tab:dropping-classical}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
-      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0    \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0   \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
-    \end{tabular}
-  \end{table}
-
-    \begin{table}[H]
-    \centering
-    \tiny
-    \caption{Reputation based Proof of Work}\label{tab:dropping-reputation}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
-      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0     \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0     \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
-    \end{tabular}
-  \end{table}
 
 \subsection{Mitigation against Server Flooding}
 
   \begin{table}[H]
     \centering
     \tiny
-    \caption{Classical Proof of Work}\label{tab:flooding-classical}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
+    \caption{Results from Server Flooding}\label{tab:flooding}
+    \begin{tabular}{lcccccccc} \toprule
+      \multicolumn{1}{c}{Prot. model} & \multicolumn{3}{c}{Attackers} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
       %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0    \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0   \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
+      \multicolumn{1}{c}{} & \multicolumn{1}{c}{Pop. size} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service}  \\ \toprule
+      None & 0 & 0 & 0 & 0 & 0 & 0 & 0      \\
+      PoW & 17x4  & 1266$\pm$9 & 1794$\pm$12 & 3129$\pm$98 & 3652$\pm$99 & 31959$\pm$4576 & 32488$\pm$4556    \\
+      RB-PoW & 17x4 & 1875$\pm$43 & 2312$\pm$43 & 267$\pm$13 & 582$\pm$22 & 2975$\pm$1031 & 3469$\pm$1103   \\ \bottomrule
     \end{tabular}
   \end{table}
 
-    \begin{table}[H]
-    \centering
-    \tiny
-    \caption{Reputation based Proof of Work}\label{tab:flooding-reputation}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
-      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0     \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0     \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
-    \end{tabular}
-  \end{table}
+
 \subsection{Mitigation against Server Draining}
 
   \begin{table}[H]
     \centering
     \tiny
-    \caption{Classical Proof of Work}\label{tab:draining-classical}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
+    \caption{Results from Server Draining}\label{tab:flooding}
+    \begin{tabular}{lcccccccc} \toprule
+      \multicolumn{1}{c}{Prot. model} & \multicolumn{3}{c}{Attackers} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
       %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0    \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0   \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
-    \end{tabular}
-  \end{table}
-
-    \begin{table}[H]
-    \centering
-    \tiny
-    \caption{Reputation based Proof of Work}\label{tab:draining-reputation}
-    \begin{tabular}{cddeecccc} \toprule
-      \multicolumn{1}{c}{Attackers} & \multicolumn{2}{c}{Server load} & \multicolumn{2}{c}{Legitimate users} & \multicolumn{2}{c}{Mobile devices} \\
-      %\unitfrac{ml}{min} & \multicolumn{2}{c}{mS} & & & \multicolumn{2}{c}{mmHg} & \textcelsius  \\ \midrule
-      \multicolumn{1}{c}{Population size} & \multicolumn{1}{c}{CPU} & \multicolumn{1}{c}{Request rate} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time} & \multicolumn{1}{c}{Response time} & \multicolumn{1}{c}{Solving time}  \\ \toprule
-      300 & 13.87 & 6.42 & 0.465 & 0.39 & 28 & 0     \\
-      200 & 14.03 & 4.09 & 0.467 & 0.367 & 18 & 0     \\
-      100 & 13.63 & 1.75 & 0.477 & 0.345 & 13 & 0   \\
-      50 & 13.75 & 0.30 & 0.482 & 0.292 & 12 & 0    \\ \bottomrule
+      \multicolumn{1}{c}{} & \multicolumn{1}{c}{Pop. size} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service} & \multicolumn{1}{c}{Solving} & \multicolumn{1}{c}{Service}  \\ \toprule
+      None & 0 & 0 & 0 & 0 & 0 & 0 & 0      \\
+      PoW &  12x40  & 12700$\pm$199 & 14377$\pm$210 & 2616$\pm$119 & 3707$\pm$145 & 59119$\pm$14150 & 61005$\pm$14175    \\
+      RB-PoW & 12x40 & 14615$\pm$380 & 15371$\pm$383 & 4555$\pm$332 & 5206$\pm$345 & 29940$\pm$13426 & 30753$\pm$13490   \\ \bottomrule
     \end{tabular}
   \end{table}
