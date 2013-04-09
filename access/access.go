@@ -22,14 +22,14 @@ func NewAccess() *Access {
 func (a *Access) Touch(average int) int64 {
 	now := time.Now()
 	// log.Printf("Average: %v", int64(average))
-	if a.ShortMean == 0 {
-		// log.Println("Building default access time")
-		a.ShortMean = now.UnixNano() - a.lastAccess.UnixNano()
-		a.LongMean = a.ShortMean
-		// log.Printf("Now: %v, Last: %v, result: %v", now.UnixNano(), a.lastAccess.UnixNano(), a.ShortMean)
-		a.lastAccess = now
-		return 0
-	}
+	// if a.ShortMean == 0 {
+	// 	// log.Println("Building default access time")
+	// 	a.ShortMean = now.UnixNano() - a.lastAccess.UnixNano()
+	// 	a.LongMean = a.ShortMean
+	// 	// log.Printf("Now: %v, Last: %v, result: %v", now.UnixNano(), a.lastAccess.UnixNano(), a.ShortMean)
+	// 	a.lastAccess = now
+	// 	return 0
+	// }
 	diff := now.UnixNano() - a.lastAccess.UnixNano()
 	a.AddTime(diff, average)
 	// a.ShortMean = int64(s_alpha*(float64(int64(average)*diff)) + (1-s_alpha)*float64(a.ShortMean))
@@ -44,6 +44,14 @@ func (a *Access) Caress() {
 	return
 }
 func (a *Access) AddTime(diff int64, average int) {
+	if a.ShortMean == 0 {
+		// log.Println("Building default access time")
+		a.ShortMean = diff
+		a.LongMean = a.ShortMean
+		// log.Printf("Now: %v, Last: %v, result: %v", now.UnixNano(), a.lastAccess.UnixNano(), a.ShortMean)
+		a.Caress()
+		return
+	}
 	a.ShortMean = int64(s_alpha*(float64(int64(average)*diff)) + (1-s_alpha)*float64(a.ShortMean))
 	a.LongMean = int64(l_alpha*(float64(int64(average)*diff)) + (1-l_alpha)*float64(a.LongMean))
 	a.Caress()

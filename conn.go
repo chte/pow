@@ -130,6 +130,7 @@ func wsHandler(ws *websocket.Conn) {
 	id_lock.Unlock()
 	log.Printf("Accepted connection from %s, assigning id %d\n", ws.Request().RemoteAddr, id)
 	c := &connection{ws: ws, id: id, access: access.NewAccess(), solving: access.NewAccess()}
+	c.access.AddTime(globalAccess.LongMean, 1)
 
 	// c.ws.SetDeadline(time.Now().Add(deadtime))
 	//h.register <- c

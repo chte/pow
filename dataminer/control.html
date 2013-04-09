@@ -59,13 +59,19 @@ body {
             $("#record").hide();
             conn.send(JSON.stringify(request)); 
             $("#save").show();
+            $('#name').attr({disabled: false});
         });
          $("#save").click(function(){  
-            var request = {"Command": 1};
+            $('#name').attr({disabled: true});
+            var request = {"Command": 1, "Name": $('#name').val()};
             $("#save").hide();
             conn.send(JSON.stringify(request)); 
             $("#record").show();
         });
+        conn.onclose = function(){
+            $("#save").attr({disabled: 'disabled'});
+            $("#record").attr({disabled: 'disabled'});
+        }
      }
 });
 
@@ -77,6 +83,7 @@ body {
         <h2>Proof of Work</h2>
         This controls data mining.<br/>
         <div id="buttons">
+            <input id="name" disabled="disabled"/>
             <button id="record" >Record</button>
             <button id="save" style="display:none;">Save</button>
         </div>
