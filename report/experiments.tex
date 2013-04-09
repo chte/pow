@@ -1,17 +1,25 @@
+\newpage
 \subsection{Attack Model}
 In this section, we describe the attack model of our simulation experiment. We assume a server \emph{Server}, a network with clients \emph{$\{C_i\}$}, and attackers \emph{Attacker}.
 \\
 \\
-\noindent \textbf{Assumption 1} \indent \emph{Attacker} cannot ...
+\noindent \textbf{Assumption 1} \indent \emph{Attacker} cannot modify any packets sent between \emph{$C_i$} and \emph{Server}.
 \\
 \\
-Detailed information about assumption 1.
+This is necessary to assume, in particular that it cannot modify legitimate users packets. If Assumption 1 does not hold and packets can be modified then a denial-of-service attack can be initiated simply by corrupting all packages thus rendering any PoW protocol ineffective.
 \\
 \\
 \\
-\noindent \textbf{Assumption 2} \indent \emph{Attacker} cannot ...
+\noindent \textbf{Assumption 2} \indent \emph{Attacker} cannot delay any packets sent between \emph{$C_i$} and \emph{Server}.
 \\
 \\
-Detailed information about assumption 2.
+By similar reasons as Assumption 1 we must assume that the attacker cannot delay other clients' packets. If Assumption 2 does not hold and an attacker can delay packets arbitarily then the attacker can mount a denial-of-service attack without draining the resources of the server itself.
+\\
+\\
+\\
+\noindent \textbf{Assumption 3} \indent \emph{Attacker} cannot oversaturate the transfer layer\footnote{Transfer layer of the OSI model} or network layer\footnote{Network layer of the OSI model} of the \emph{Server}.
+\\
+\\
+An attacker must be able to initiate a denial-of-service attack by large amount of requests to the server. However, we must also assume that the attacker cannot bring down the server by simply oversaturating the server ports or network with sheer volume of the attackers' requests.
 
 \subsection{Faking Legitimate Users
