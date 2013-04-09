@@ -1,0 +1,7 @@
+\section{Proof of Work combined with a Reputation Function}
+We propose conceptually an extremely simple yet in practice effective reputation system. A client is rated based on historical and current behaviour. The reputation mechanism is basically a step-function; handing out proof of work problems that is scaled harder or easier depending on how well or bad the individual client is rated compared to the global behaviour of all clients. 
+
+\subsection{Behaviour model}
+In the context of our reputation system, behaviour is defined as the measured time between requests sent to the server. Furthermore, both historical data and close to real-time data are taken into account by the use of a rolling average. However, there is two fundamental differences in the way that global behaviour is computed in comparesion to the individual behaviour of a client. The first and most important difference is that the individual client behaviour is rated based on it's own frequency of requests, while the global behaviour is based on the frequency between the requests of all clients. 
+
+A perhaps a more subtile difference is how much weight the historical behaviour should have. The weight of historical behaviour impacts the rate of change. Thus a higher weight gives a more stable and slower moving measurement of the behaviour. Hence, more fitting for the defining the general behaviour of clients on the server. While a lower weight tend to be closer to real-time measurement thus befitting the individual behaviour of a client.
