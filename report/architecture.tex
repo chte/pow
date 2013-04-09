@@ -1,22 +1,6 @@
-Since one requirement of a Proof of Work system is that it minimises differences between a wide variety of devices appearing in the wild we needed to support both desktop and laptops with different operating systems as well as cellphones and tablets.
-In order to minimise the development effort and maximise maintainability of the code base, a multi platform solution was sought for the client part of the demo application. 
+The architecture of the testing framework may be described in terms of data flow (protocol) and control flow (software). On the following pages both data flow and control flow of the application will be thoroughly explained.
 
-A web based solution makes the perfect portable application, however the web is not inherently stateful and quite badly imitates an application server which keeps a constantly open socket connection with connected clients. The advent of websockets turn the whole thing around, with the help of DoS nice fellas we were able to write a truly multi-platform PoW client in html and javascript which maintains the generality and plasticity of a natively written socket based application. The javascript implementation for handling th protocol is quite simple:
-\jscode[firstline=57, firstnumber=57, lastline=84]{../pow.js}
-The solution finding part also need to be present:
-\jscode[firstline=26, firstnumber=26, lastline=49]{../pow.js}
-To trigger a request to be sent to the server we build the following function which is then registered to the onclick event of a button in the web gui:
-\jscode[firstline=100, firstnumber=100, lastline=105]{../pow.js}
-
-For the server side we choose to use Googles novel programming language go(\citeurl{golang}). The real strengths of golang in this context is actually not performance nor simplicity\footnote{But the expressiveness, clarity and performance of go programs is not to be dismissed.} but rather it's standard libraries, which in other contexts may appear immature. Golang actually has standard libraries for both http template generation, web serving as well as websockets. This package makes for an ideal platform for an application that needs to deliver the client application\footnote{HTML, CSS, Javascript and all that magic that make stuff happen in the browser} to potential clients as well as servicing clients requests in the model application reachable through the websocket interface. 
-
-To further ease our programming task, we choose to communicate over the websocket with a single message type which is (de-)serialised (from) to JSON. JSON is natively supported in the Javascript client, and the golang websocket library supports JSON (de-)serialisation which makes for a nice pairing where we have to write absolutely no byte parsing for our protocol.
-\gocode[firstline=35, firstnumber=35, lastline=40]{../conn.go}
-
-\subsection{The Reputation Based Puzzle Protocol}
-\subsubsection{Protocol notation}
-\subsubsection{Puzzle construction and protocol parameters}
-\subsubsection{Protocol description}
+\subsection{Protocol}
 Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{P} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $\phi_i$. If the reputation system deems the server to not being under attack i.e. under normal server operation this package will be the empty set, indicating that no puzzles are being distributed. Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned. Some might say that the handshaking process with empty sets could bring unneccesary load on the server. However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.} The server will then verify the solution for $\phi_i$ and grant access to $R_i$ of protocol \textbf{P}.
 
 \begin{figure}[H]
@@ -49,9 +33,7 @@ Now let us describe the details of our proposed reputation based puzzle protocol
 	\end{center}
 \end{figure}
 \\
-\\
 If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
-\\
 \\
 The client behviour can generally be divided into three cases:
 \begin{itemize}
@@ -60,8 +42,33 @@ The client behviour can generally be divided into three cases:
 \item the client $C_i$ requests more resources compared to the general behaviour and the request $R_i$ is responded with a problem difficulty harder than the general difficulty.
 \end{itemize}
 
-To prevent an attacker from reusing solutions for multiple requests the problem set $\phi_i$ is stored in memory on the server.
+To prevent an attacker from reusing solutions for multiple requests the problem set $\phi_i$ is chosen by the server and stored in memory.
 [lite mer information om generering av problem. Varje problem är relativt unikt för varje request osv]
 
-\subsection{Reputation System}
+
+\subsection{Software}
+Since one requirement on our Proof of Work system is that it minimises differences between a wide variety of devices; it needs to support both desktop and laptops with different operating systems as well as cellphones and tablets.
+In order to minimise the development effort and maximise maintainability of the code base, a multi platform solution was sought for the client part of the demo application. 
+
+A web based solution makes the application portable, but the web is not inherently stateful nor does emulate a general service greatly. However, the advent of websockets enables a truly multi-platform PoW client in html and javascript while maintaining the generality and plasticity of a natively written socket based application. 
+\begin{comment}
+The javascript implementation for handling the protocol is quite simple:
+\jscode[firstline=57, firstnumber=57, lastline=84]{../pow.js}
+The solution finding part also need to be presented:
+\jscode[firstline=26, firstnumber=26, lastline=49]{../pow.js}
+To trigger a request to be sent to the server we build the following function which is then registered to the onclick event of a button in the web gui:
+\jscode[firstline=100, firstnumber=100, lastline=105]{../pow.js}
+\end{comment}
+
+The server side was implemented in Googles novel programming language go\cite{golang}. The real strengths of golang in this context is actually not performance nor simplicity\footnote{But the expressiveness, clarity and performance of go programs is not to be dismissed.} but rather it's standard libraries, which in other contexts may appear immature. Golang actually has standard libraries for both html template generation, http web serving as well as websockets. This package makes for an ideal platform for an application that needs to deliver the client application\footnote{HTML, CSS, Javascript and all that magic that make stuff happen in the browser} to potential clients as well as servicing clients requests in the model application reachable through the websocket interface. 
+
+Communication is performed over a websocket per client, with a single message type which is (de-)serialised to (from) JSON. JSON is natively supported in the Javascript client, and the golang websocket library supports JSON (de-)serialisation. Thus no byte parsing of specific to our protocol had to be produced.
+\gocode[firstline=35, firstnumber=35, lastline=40]{../conn.go}
+\\
+The client application is initiated by visiting the servers webpage, thus downloading the client\footnote{The client application is built in javascript which is distributed to the computer that shall run the client via a webpage}. 
+
+
+
+
+%\subsection{Reputation System}
 
