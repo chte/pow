@@ -1,4 +1,19 @@
-\newpage
+The reputation based PoW system's architecture and load management mechanism was tested by conducting series of simulated experiments using custom made web-based population-simulation interface. The configuration of our experiments is shown in Figure [NUMMER].
+
+In the experiments, a fixed set of legitimate users was programmed to send requests for a service from a single server. To simulate a legitimate population each client was programmed to send the requests with stochastic based delays and thereby simulating the unpredictible rate of requests. Each request was also programmed to perform a fixed load on the server side to simulate the exectution of a service. As a result a normal work load on the server was simulated. The requests of legitimate users was mixed with a larger population of attackers to mount a DoS attack. The attackers was programmed to have lesser to zero delay inbetween requests, thus forcing the server to service more requests than a legitimate user. 
+
+A custom made web-based monitor was used to investigate how well the RB-PoW system performed under different scenarios. The monitor uses real-time graphs to outline information about CPU utilization, requests rates and the time to solve PoW puzzles. In each run we studied the service time for attacking, legitimate and mobile users to se how the protection system affected each type of behaviour. Control parameters such as number of attackers and the settings for delays was changed between experimental runs, aswell as the parameters for server's internal reputation mechanism.
+
+The goal of the experiments was to examine how well the reputation based PoW architecture performed in mitigating DoS attacks and at the same time serving legitimate users and users with lesser hardware. The degree of effectiveness from the experiments conducted was determined by following observations:
+
+\begin{itemize}
+\item A comparison of how many attackers that was required to launch DoS attacks with comparable levels of performance degradation, with and without reputation based PoW.
+
+\item How much legitimate users and users with lesser hardware was affected by DoS attacks, with and without reputation based PoW protection.
+\end{itemize}
+
+\subsection{Metrics}
+
 \subsection{Attack Model}
 In this section, we describe the attack model of our simulation experiment. We assume a server \emph{Server}, a network with clients \emph{$\{C_i\}$}, and attackers \emph{Attacker}.
 \\
