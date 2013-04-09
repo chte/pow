@@ -49,7 +49,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {6.3}Reputation based on Request Rate Behaviour}{}{subsection.0.6.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {7}Simulation Experiments}{}{section.0.7}
+\contentsline {section}{\numberline {7}Simulation Setup}{}{section.0.7}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {7.1}Attack Model}{}{subsection.0.7.1}
 \defcounter {refsection}{0}\relax 
