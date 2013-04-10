@@ -65,7 +65,13 @@ The server side was implemented in Google's novel programming language go\cite{g
 Communication is performed over a websocket per client, with a single message type which is (de-)serialised to (from) JSON. JSON is natively supported in the Javascript client, and the golang websocket library supports JSON (de-)serialisation. Thus no byte parsing of specific to our protocol had to be produced.
 \gocode[firstline=35, firstnumber=35, lastline=40]{../conn.go}
 \\
-The client application is initiated by visiting the servers webpage, thus downloading the client\footnote{The client application is built in javascript which is distributed to the computer that shall run the client via a webpage}. 
+The client application is initiated by visiting the servers webpage, thus downloading the client\footnote{The client application is built in javascript which is distributed to the computer that shall run the client via a webpage}. If the client wants the server to perform its service it will submit a request with operation code $0$, which means that the client is requesting a problem to solve in order to aquire the servers trust. The server will respond with a set of problems and an operation code $1$, telling the client to solve the problem set. The client will solve the problems and submit the solutions with an operation code $1$ and submit it to the server. The client needs to use a bruteforce approach since no better algorithm is known (this is on purpose):
+\jscode[firstline=26, firstnumber=26, lastline=49]{../pow.js}
+The server will check that the solution is correct with considerable less effort:
+\gocode[firstline=143, firstnumber=143, lastline=159]{../problem.go}
+If the server accepts the solution, it offers the client some meaningless cpu cycles in order to simulate a request:
+\gocode[firstline=95, firstnumber=95, lastline=97]{../conn.go}
+
 
 
 
