@@ -9,6 +9,7 @@
 \usepackage{modifications}
 \usepackage{comment}
 \usepackage{tikz}
+\usepackage{lipsum}
 \usepackage{verbatim}
 \usepackage{listings}
 \usepackage{color}
@@ -20,6 +21,23 @@
 \usepackage[pdfborder={0 0 0}]{hyperref}
 \usepackage[doi=true,url=true]{biblatex}
 \usetikzlibrary{matrix,shapes,arrows,positioning,chains, calc}
+
+\newlength{\RoundedBoxWidth}
+\newsavebox{\GrayRoundedBox}
+\newenvironment{GrayBox}[1][\dimexpr\textwidth-4.5ex]%
+   {\setlength{\RoundedBoxWidth}{\dimexpr#1}
+    \begin{lrbox}{\GrayRoundedBox}
+       \begin{minipage}{\RoundedBoxWidth}}%
+   {   \end{minipage}
+    \end{lrbox}
+    \begin{center}
+    \begin{tikzpicture}%
+       \draw node[draw=black,fill=black!10,rounded corners,%
+             inner sep=2ex,text width=\RoundedBoxWidth]%
+             {\usebox{\GrayRoundedBox}};
+    \end{tikzpicture}
+    \end{center}}
+
 
 \pagenumbering{arabic}
 

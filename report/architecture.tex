@@ -8,28 +8,29 @@ To formalize the Proof of Work protocol a few notations will be introduced. Cons
 \\
 \indent \begin{minipage}{0.9\linewidth}
 \thickmuskip=0mu
-${\textbf M_i} \ = $ to be $i^{th}$ execution of the protocol $\textbf M$ by either a legitimate user or an adversary. 
+${\textbf M_i} \ = $ to be $i^{th}$ execution of the protocol $M$ by either a legitimate user or an adversary. 
 
 ${\textbf g} \ = $ a puzzle generator function.
 
 ${\textbf t} \ = $ timestamp at time of puzzle generation
 
-${\textbf P[j]} \ = $ the $j^{th}$ sub-puzzle in ${\textbf P}$.
+${\textbf P[j]} \ = $ the $j^{th}$ sub-puzzle in $P$.
 
-${\textbf m} \ = $ the number of sub-puzzles, this equals to the size of the set $\textbf P$. 
+${\textbf m} \ = $ the number of sub-puzzles, this equals to the size of the set $P$. 
 
-${\textbf d} \ = $ an integer indicating the difficulty of the problem set $\textbf P$. 
+${\textbf d} \ = $ an integer indicating the difficulty of the problem set $P$. 
 
-${\textbf S[j]} \ = $ the $j^{th}$ solution in $\textbf S$ and a solution to $j^{th}$ sub-puzzle in $\textbf P$. 
+${\textbf S[j]} \ = $ the $j^{th}$ solution in $S$ and a solution to $j^{th}$ sub-puzzle in $P$. 
 
-${\textbf b_j} \ = $ the number of leading bytes in solution ${\textbf S[j]}$ that is zero. 
+${\textbf b_j} \ = $ the number of bytes in solution $S[j]$ that is zero. 
 %\vspace*{-10pt}
 \end{minipage}
 
-\subsubsection{Protocol description}\label{text:protodesc}
-Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $\textbf C_i$ starts by requesting for a service $\textbf R_i$ to the server. The server responds with a packaged set of sub-puzzles $\textbf P_i$ of size $\textbf m$ and a difficutly $\textbf d$. Each sub-puzzle $P[1] \dots P[m]$ is a seed derived by $\textbf g(t,x)$ where $x$ is value generated uniformly-at-random.
 
-The client $\textbf C_i$ must solve each sub-puzzle $\textbf P[j]$ of $\textbf P_i$ by finding the value $\textbf S[j]$, such that the concatenation of the bytestrings $\textbf S[j]$ and $\textbf P[j]$ generates a hash where $\textbf b_j$ is equal to $\textbf d$. The server then verifies each solution of $\textbf S$ by generating hash with a stored copy of $\textbf P$ and confirms that $\textbf b_j$ is equal to $\textbf d$. If all solutions are correctly computed by $\textbf C_i$ the request $\textbf R_i$ will be granted. 
+\subsubsection{Protocol description}\label{text:protodesc}
+Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $P_i$ of size $m$ and a difficutly $d$. Each sub-puzzle $P[1] \dots P[m]$ is a seed derived by $g(t,x)$ where $x$is value generated uniformly-at-random.
+
+The client $C_i$ must solve each sub-puzzle $P[j]$ of $P_i$ by finding the value $S[j]$, such that the concatenation of the bytestrings $S[j]$ and $P[j]$ generates a hash where $b_j$ is equal to $d$. The server then verifies each solution of $S$ by generating hash with a stored copy of $P$ and confirms that $b_j$ is equal to $d$. If all solutions are correctly computed by $C_i$ the request $R_i$ will be granted. 
 
 \begin{figure}
 	\begin{center}

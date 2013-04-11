@@ -1,11 +1,9 @@
-The Internet continues to grow and has since a time back fulfilled it's early promise to enable a single source to be connected to several millions of geographically dispersed computers. However, as a consequence it has introduced security flaws of a new magnitude, allowing a single computer to potentially be attacked by millions of sources at once.
+The Internet continues to grow and has since a time back fulfilled it's early promise to enable a single source to be connected to several millions of geographically dispersed computers. However, as a consequence it has introduced security flaws of a new magnitude, allowing a single computer to potentially be attacked by millions of sources at once. 
 
-A popular attack is the Denial of Service\footnote{For a brief introduction to Denial of Service attacks please see section \ref{text:dos}} (DoS) attack, which aims to restrict or disrupt the availability of the service to its users.
-One attempt to counter DoS attacks and to improve service survivability is a computational approach called Proof of Work (PoW).
-Proof of Work is an economic scheme that requires a service requester to perform some work in order to access a service.
-The concept was originally proposed by \citeauthor{DworkN92}\cite{DworkN92} as a way to counter e-mail spam by increasing the costs of sending spam, thus making e-mail spam economically unfeasible.
-\citeauthor{DworkN92} originally called this a \emph{pricing function} since it effectively puts a price on the service to the client.
-PoW was reinvented by \citeauthor{Back02}, who later proposed it as a DoS preventing method in \citetitle{Back02}. 
+This threat also known as denial-of-service\footnote{For a more indept introduction to Denial of Service attacks please see section \ref{text:dos}} (DoS) attacks is a growing concern as these attacks have shown to disable even well-known services. Unlike other attacks the primary goal of denial of service attacks is to restrict or disrupt the availability of the service to its legitimate users. It is essentially a targeted effort to prevent a service from functioning properly by draining the underlying computer resources. 
+
+One attempt to counter DoS attacks and to improve service survivability is a computational approach called Proof of Work (PoW)\footnote{For a more indept introduction to Proof of Work please see section \ref{text:pow}}. Proof of Work also known as \emph{Client Puzzles}\cite{dosauth, JuelsB99} is cryptographic in flavor and requires the clients to solve an instance of a predefined problem in order to gain access to the server’s resources.
+
 
 In this paper, we examine the use of reputation based scaling of Proof of Work problem difficulties to mitigate various DoS attacks. We propose a new Reputation Based Proof of Work protection protocol (RB-PoW). The protocol was implemented via an experimental architecture and tested with a web-based simulation interface.
 
