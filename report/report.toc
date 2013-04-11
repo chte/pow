@@ -13,7 +13,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.1}Denial-of-Service Attacks}{}{subsection.0.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2}}{}{subsection.0.2.2}
+\contentsline {subsection}{\numberline {2.2}Proof of Work}{}{subsection.0.2.2}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3}Theoretical approach}{}{section.0.3}
 \defcounter {refsection}{0}\relax 
@@ -63,4 +63,4 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {9.3}Suggested Directions for Future Research}{}{subsection.0.9.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{Bibliography}{}{section*.9}
+\contentsline {chapter}{Bibliography}{}{section*.10}
