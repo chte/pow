@@ -22,8 +22,6 @@ var globalSolving *access.Access = access.NewAccess()
 var next_id = 1
 var id_lock = new(sync.Mutex)
 
-// var deadtime, _ = time.ParseDuration("2s")
-
 type connection struct {
 	// The websocket connection.
 	ws *websocket.Conn
