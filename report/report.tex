@@ -16,6 +16,7 @@
 \usepackage{graphicx}
 \usepackage{comment} 
 \usepackage{csquotes}
+\usepackage{wrapfig}
 \usepackage[pdfborder={0 0 0}]{hyperref}
 \usepackage[doi=true,url=true]{biblatex}
 \usetikzlibrary{matrix,shapes,arrows,positioning,chains, calc}
@@ -37,7 +38,9 @@ fontsize=\scriptsize
 \addbibresource{bibfile.bib}
 \counterwithout{section}{chapter}
 \counterwithout{table}{chapter}
+\counterwithout{figure}{chapter}
 \counterwithin{table}{section}
+\counterwithin{figure}{section}
 
 \title{Proof of Work}
 
@@ -92,6 +95,7 @@ Both participated equally in respect to writing, analysis of results and final e
 
 \section{Theoretical approach}
 \input{theory}
+\newpage
 \section{System Architecture}
 \input{architecture}
 \section{Tuning the Reputation System} \label{tab:system}

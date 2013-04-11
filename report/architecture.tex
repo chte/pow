@@ -4,32 +4,45 @@ The architecture of the testing framework may be described in terms of data flow
 
 \subsubsection{Protocol notation}
 To formalize the Proof of Work protocol a few notations will be introduced. Consider the following notations:
+\\
+\\
+\indent \begin{minipage}{0.9\linewidth}
+\thickmuskip=0mu
+${\textbf M_i} \ = $ to be $i^{th}$ execution of the protocol $M$ by either a legitimate user or an adversary. 
 
-\pbox[1.7\width]{
-$P_i =$ to be $i^{th}$ execution of the protocol $P$ by either a legitimate user or an adversary. 
+${\textbf g} \ = $ a puzzle generator function.
 
-$\textbf{s<i>} = $ the $i^{th}$ bit of a bitstring s. 
+${\textbf t} \ = $ timestamp at time of puzzle generation
 
-$s<i,j> = $ the range of bits $s<i>, s<i-1> \dots i<j>$ of a bitstring s. 
+${\textbf P[j]} \ = $ the $j^{th}$ sub-puzzle in $P$.
 
-$h = $ a hash function.
-$\phi\[j\] = $ the $j^{th}$ sub-puzzle in $\phi$. 
-}
+${\textbf m} \ = $ the number of sub-puzzles, this equals to the size of the set $P$. 
+
+${\textbf d} \ = $ an integer indicating the difficulty of the problem set $P$. 
+
+${\textbf S[j]} \ = $ the $j^{th}$ solution in $S$ and a solution to $j^{th}$ sub-puzzle in $P$. 
+
+${\textbf b_j} \ = $ the number of bits in solution $S[j]$ that is zero. 
+\vspace*{-10pt}
+\end{minipage}
+
+\subsubsection{Protocol description}
+ Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $P_i$ of size $m$ and a difficutly $d$. Each sub-puzzle $P[1] \dots P[m]$ is a value derived by $g(t,x)$ where $x$ is value generated uniformly-at-random.
+
+ Each sub-puzzle $P[j]$ of $P_i$ must be solved by client $C_i$ where the solution is a hash generated of the sub-puzzle where $b_j$ is equal to $d$. The server then verifies each solution of $S$ with a stored copy of $P$.The verification step  If all solutions correspondesgranting the request $R_i$. 
 
 
-Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{P} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $\phi_i$. If the reputation system deems the server to not being under attack i.e. under normal server operation this package will be the empty set, indicating that no puzzles are being distributed. Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned. Some might say that the handshaking process with empty sets could bring unneccesary load on the server. However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.} The server will then verify the solution for $\phi_i$ and grant access to $R_i$ of protocol \textbf{P}.
-
-\begin{figure}[H]
 	\begin{center}
+
 		\begin{tikzpicture}
 
-		\footnotesize
+		\scriptsize
 		\matrix (m)[matrix of nodes, column  sep=0mm,row  sep=4mm, nodes={draw=none, anchor=center,text depth=0pt} ]{
 		\textbf{ \underline {\normalsize server}} & & \textbf{\underline {\normalsize client}}\\[0mm]
 		& & \\
-		& Initialisation of protocol \textbf{P}& \\
+		& Initialisation of protocol \textbf{M}& \\
 		& service request $R_i$& \\
-		$f_i:=$ $\{N,prob,nil\}$ \hfill \\
+		$P :=$ $\{P[1 \dots m],,nil\}_{i}$ \hfill \\
 		$\phi_i :=  \{f_1\dots f_N\} $ \hfill \\
 		& send problems & \\
 		& & solve each $f_i \in \phi$ \\
@@ -44,14 +57,18 @@ Now let us describe the details of our proposed reputation based puzzle protocol
 		\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-10-2.south east)--(m-10-2.south west);
 		\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-13-2.south west)--(m-13-2.south east);
 		\end{tikzpicture}
-		\vspace{10pt}
+		% \vspace{10pt}
 		\caption{Diagram of Proof of Work protocol}\label{tab:protocol}
-	\end{center}
-\end{figure}
+	 \end{center}
+
+
+  If the reputation system deems the server to not being under attack i.e. under normal server operation this problem package will be the empty set, indicating that no puzzles are being distributed. Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned. Some might say that the handshaking process with empty sets could bring unneccesary load on the server. However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.} The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
+
 \\
 If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
-\\
-The client behviour can generally be divided into three cases:
+
+
+The client behaviour can generally be divided into three cases:
 \begin{itemize}
 \item the client $C_i$ behaves in a comparable manner to the general behaviour of all users and the request $R_i$ is responded with a problem difficulty suitable to server load.
 \item the client $C_i$ requests lesser resources compared to the general behaviour and the request $R_i$ is responded with a problem difficulty easier than the general difficulty.
