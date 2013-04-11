@@ -1,6 +1,22 @@
 The architecture of the testing framework may be described in terms of data flow (protocol) and control flow (software). On the following pages both data flow and control flow of the application will be thoroughly explained.
 
 \subsection{Protocol}
+
+\subsubsection{Protocol notation}
+To formalize the Proof of Work protocol a few notations will be introduced. Consider the following notations:
+
+\pbox[1.7\width]{
+$P_i =$ to be $i^{th}$ execution of the protocol $P$ by either a legitimate user or an adversary. 
+
+$\textbf{s<i>} = $ the $i^{th}$ bit of a bitstring s. 
+
+$s<i,j> = $ the range of bits $s<i>, s<i-1> \dots i<j>$ of a bitstring s. 
+
+$h = $ a hash function.
+$\phi\[j\] = $ the $j^{th}$ sub-puzzle in $\phi$. 
+}
+
+
 Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{P} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $\phi_i$. If the reputation system deems the server to not being under attack i.e. under normal server operation this package will be the empty set, indicating that no puzzles are being distributed. Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned. Some might say that the handshaking process with empty sets could bring unneccesary load on the server. However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.} The server will then verify the solution for $\phi_i$ and grant access to $R_i$ of protocol \textbf{P}.
 
 \begin{figure}[H]
