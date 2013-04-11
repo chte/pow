@@ -23,7 +23,6 @@ ${\textbf d} \ = $ an integer indicating the difficulty of the problem set $P$.
 ${\textbf S[j]} \ = $ the $j^{th}$ solution in $S$ and a solution to $j^{th}$ sub-puzzle in $P$. 
 
 ${\textbf b_j} \ = $ the number of bytes in solution $S[j]$ that is zero. 
-\vspace*{-10pt}
 \end{minipage}
 
 \subsubsection{Protocol description}
@@ -62,7 +61,7 @@ ${\textbf b_j} \ = $ the number of bytes in solution $S[j]$ that is zero.
 \end{figure}
 
 
-  If the reputation system deems the server to not being under attack i.e. under normal server operation this problem package will be the empty set, indicating that no puzzles are being distributed. Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned. Some might say that the handshaking process with empty sets could bring unneccesary load on the server. However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.} The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
+If the reputation system deems the server to not being under attack i.e. under normal server operation this problem package will be the empty set, indicating that no puzzles are being distributed. Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned. Some might say that the handshaking process with empty sets could bring unneccesary load on the server. However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.} The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
 
 \\
 If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
