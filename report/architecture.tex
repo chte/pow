@@ -26,8 +26,9 @@ ${\textbf b_j} \ = $ the number of bytes in solution $S[j]$ that is zero.
 %\vspace*{-10pt}
 \end{minipage}
 
-\subsubsection{Protocol description}
-Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $P_i$ of size $m$ and a difficutly $d$. Each sub-puzzle $P[1] \dots P[m]$ is a seed derived by $g(t,x)$ where $x$ is value generated uniformly-at-random.
+
+\subsubsection{Protocol description}\label{text:protodesc}
+Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $P_i$ of size $m$ and a difficutly $d$. Each sub-puzzle $P[1] \dots P[m]$ is a seed derived by $g(t,x)$ where $x$is value generated uniformly-at-random.
 
 The client $C_i$ must solve each sub-puzzle $P[j]$ of $P_i$ by finding the value $S[j]$, such that the concatenation of the bytestrings $S[j]$ and $P[j]$ generates a hash where $b_j$ is equal to $d$. The server then verifies each solution of $S$ by generating hash with a stored copy of $P$ and confirms that $b_j$ is equal to $d$. If all solutions are correctly computed by $C_i$ the request $R_i$ will be granted. 
 
@@ -62,17 +63,10 @@ The client $C_i$ must solve each sub-puzzle $P[j]$ of $P_i$ by finding the value
 \end{figure}
 
 If the reputation system deems the server to not being under attack i.e. under normal server operation this problem package will be the empty set, indicating that no puzzles are being distributed.
-Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned.
-Some might say that the handshaking process with empty sets could bring unneccesary load on the server.
-However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.}
+Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This design decision may be questioned, arguing that the handshaking process with empty sets could bring unneccesary load on the server.
+However, empty sets will only be distributed when server load is low thus the extra verification can be afforded.}
 The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
 
-<<<<<<< HEAD
-If the reputation system deems the server to not being under attack i.e. under normal server operation this problem package will be the empty set, indicating that no puzzles are being distributed. Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned. Some might say that the handshaking process with empty sets could bring unneccesary load on the server. However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.} The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
-
-\\
-=======
->>>>>>> aa4d5df6e8d7f6fbb19a59df5d64aa5ee4b86c74
 If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
 
 
@@ -101,17 +95,25 @@ To trigger a request to be sent to the server we build the following function wh
 \jscode[firstline=100, firstnumber=100, lastline=105]{../pow.js}
 \end{comment}
 
-The server side was implemented in Google's novel programming language go\cite{golang}. The real strengths of golang in this context is actually not performance nor simplicity\footnote{But the expressiveness, clarity and performance of go programs is not to be dismissed.} but rather it's standard libraries, which in other contexts may appear immature. Golang actually has standard libraries for both html template generation, http web serving as well as websockets. This package makes for an ideal platform for an application that needs to deliver the client application\footnote{HTML, CSS, Javascript and all that magic that make stuff happen in the browser} to potential clients as well as servicing clients requests in the model application reachable through the websocket interface. 
+The server side was implemented in Google's novel programming language golang\cite{golang}. The real strengths of golang in this context is actually not performance nor simplicity\footnote{But the expressiveness, clarity and performance of go programs is not to be dismissed.} but rather it's standard libraries, which in other contexts may appear immature. Golang includes standard libraries for both html template generation, http web serving as well as websockets. This package makes for an ideal platform for an application that needs to deliver the client application\footnote{HTML, CSS, Javascript and all that magic that make stuff happen in the browser} to potential clients as well as servicing clients requests in the model application reachable through the websocket interface. 
 
 Communication is performed over a websocket per client, with a single message type which is (de-)serialised to (from) JSON. JSON is natively supported in the Javascript client, and the golang websocket library supports JSON (de-)serialisation. Thus no byte parsing of specific to our protocol had to be produced.
-\gocode[firstline=35, firstnumber=35, lastline=40]{../conn.go}
+%\gocode[firstline=35, firstnumber=35, lastline=40]{../conn.go}
+\begin{minted}[fontsize=\footnotesize]{go}
+type message struct {
+	Opcode, SocketId    int
+	Result, Query, Hash string
+	Problems            []problem.Problem
+	Difficulty          problem.Difficulty
+}
+\end{minted}
 \\
-The client application is initiated by visiting the servers webpage, thus downloading the client\footnote{The client application is built in javascript which is distributed to the computer that shall run the client via a webpage}. If the client wants the server to perform its service it will submit a request with operation code $0$, which means that the client is requesting a problem to solve in order to aquire the servers trust. The server will respond with a set of problems and an operation code $1$, telling the client to solve the problem set. The client will solve the problems and submit the solutions with an operation code $1$ and submit it to the server. The client needs to use a bruteforce approach since no better algorithm is known (this is on purpose):
-\jscode[firstline=26, firstnumber=26, lastline=49]{../pow.js}
-The server will check that the solution is correct with considerable less effort:
-\gocode[firstline=143, firstnumber=143, lastline=159]{../problem.go}
-If the server accepts the solution, it offers the client some meaningless cpu cycles in order to simulate a request:
-\gocode[firstline=93, firstnumber=93, lastline=95]{../conn.go}
+The client application is initiated by visiting the servers webpage, thus downloading the client\footnote{The client application is built in javascript which is distributed to the computer that shall run the client via a webpage}. Upon requesting the application web page, the server spawns a goroutine handling the http response writing task to deliver the application to the client.
+When the client application initiates it will open a keep-alive websocket connection to the server upon which communication can occur. 
+If the client wants the server to perform its service it will submit a request with operation code $0$, which means that the client is requesting a problem to solve in order to aquire the servers trust. The server will generate a set of puzzles tied to the specific client and keep the puzzle set in memory. The server will reply to the client with the set of puzzles and an operation code $1$, telling the client to solve the problem set. The client will solve the problems, using a bruteforce approach since no better algorithm is known. The client will submit the solutions with an operation code $1$. Upon receiving a request with operation code 1, the server will verify the solution. If the verification succeeds the server will grant the client  some cpu time, otherwise the connection will be terminated.
+% \jscode[firstline=26, firstnumber=26, lastline=49]{../pow.js}
+% The server will check that the solution is correct with considerable less effort:
+% \gocode[firstline=142, firstnumber=141, lastline=158]{../problem/problem.go}
 
 
 
