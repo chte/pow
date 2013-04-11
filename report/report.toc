@@ -35,7 +35,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {6.3}Reputation based on Request Rate Behaviour}{}{subsection.0.6.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {7}Simulation Setup}{}{section.0.7}
+\contentsline {section}{\numberline {7}Simulation Experiments}{}{section.0.7}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {7.1}Metrics}{}{subsection.0.7.1}
 \defcounter {refsection}{0}\relax 
@@ -46,6 +46,8 @@
 \contentsline {subsubsection}{\numberline {7.1.3}Server Controllables}{}{subsubsection.0.7.1.3}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {7.2}Attack Model}{}{subsection.0.7.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {7.3}Setup}{}{subsection.0.7.3}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {8}Results}{}{section.0.8}
 \defcounter {refsection}{0}\relax 
