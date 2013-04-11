@@ -43,8 +43,12 @@ The server resources is controlled through the Reputation System, generally it h
 \emph{Connection Timeout:}, is used to control the lifetime a connection. This could be a finite duration meaning that if no solution is sent back to the server within lifetime the connection will be closed nevertheless.
 However, in the scope of the simulation experiments this duration is set to infinite, see Attack Model below for explaination of our assumptions about the attacker. 
 \subsection{Attack Model}
-In this section, we describe the attack model of our simulation experiment. The attack model is based on assumptions necessary to make
+In this section, the attack model of the simulation experiment will be described.
+In order to specify an attack model and to simulate an attack, some assumptions regarding the adversary are required.
+Assumptions made enable us to test a DoS mitigation scheme in the application layer; if any assumption does not hold the protection can be circumvented by an attack through a lower abstraction layer. 
+%The attack model is based on assumptions necessary to make any protection scheme in 
 
+\subsubsection{Assumptions}
 We assume a server \emph{Server}, a network with clients \emph{$\{C_i\}$}, and adversary \emph{Ad}.
 \\
 \\
