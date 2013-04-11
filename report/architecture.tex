@@ -23,13 +23,13 @@ ${\textbf d} \ = $ an integer indicating the difficulty of the problem set $P$.
 ${\textbf S[j]} \ = $ the $j^{th}$ solution in $S$ and a solution to $j^{th}$ sub-puzzle in $P$. 
 
 ${\textbf b_j} \ = $ the number of bytes in solution $S[j]$ that is zero. 
-\vspace*{-10pt}
+%\vspace*{-10pt}
 \end{minipage}
 
 \subsubsection{Protocol description}
- Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $P_i$ of size $m$ and a difficutly $d$. Each sub-puzzle $P[1] \dots P[m]$ is a seed derived by $g(t,x)$ where $x$ is value generated uniformly-at-random.
+Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $P_i$ of size $m$ and a difficutly $d$. Each sub-puzzle $P[1] \dots P[m]$ is a seed derived by $g(t,x)$ where $x$ is value generated uniformly-at-random.
 
- The client $C_i$ must solve each sub-puzzle $P[j]$ of $P_i$ by finding the value $S[j]$, such that the concatination of the bytestrings $S[j]$ and $P[j]$ generates a hash where $b_j$ is equal to $d$. The server then verifies each solution of $S$ by generating hash with a stored copy of $P$ and confirms that $b_j$ is equal to $d$. If all solutions are correctly computed by $C_i$ the request $R_i$ will be granted. 
+The client $C_i$ must solve each sub-puzzle $P[j]$ of $P_i$ by finding the value $S[j]$, such that the concatenation of the bytestrings $S[j]$ and $P[j]$ generates a hash where $b_j$ is equal to $d$. The server then verifies each solution of $S$ by generating hash with a stored copy of $P$ and confirms that $b_j$ is equal to $d$. If all solutions are correctly computed by $C_i$ the request $R_i$ will be granted. 
 
 \begin{figure}
 	\begin{center}
@@ -43,7 +43,7 @@ ${\textbf b_j} \ = $ the number of bytes in solution $S[j]$ that is zero.
 		& service request $R_i$& \\
 		generate sub-puzzles \\
 		$P[j] := g(t,x), 1\leq j \leq m$\\
-		$P_i :=$ $\{P[1 \dots m],d\}$ \hfill \\
+		$P_i :=$ $\{\cup_{j=1}^{m}P[j],d\}$ \hfill \\
 		& send puzzles & \\
 		& & solve each $P[j] \in P$ \\
 		& & $S_i := \{S[1 \dots m]\}$ \\
@@ -61,10 +61,12 @@ ${\textbf b_j} \ = $ the number of bytes in solution $S[j]$ that is zero.
 	 \end{center}
 \end{figure}
 
+If the reputation system deems the server to not being under attack i.e. under normal server operation this problem package will be the empty set, indicating that no puzzles are being distributed.
+Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned.
+Some might say that the handshaking process with empty sets could bring unneccesary load on the server.
+However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.}
+The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
 
-  If the reputation system deems the server to not being under attack i.e. under normal server operation this problem package will be the empty set, indicating that no puzzles are being distributed. Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This is a design decision that can be questioned. Some might say that the handshaking process with empty sets could bring unneccesary load on the server. However, empty sets will only be distributed when pressure on the server is low thus the extra verification can be afforded.} The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
-
-\\
 If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
 
 

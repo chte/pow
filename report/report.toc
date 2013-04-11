@@ -72,3 +72,5 @@
 \contentsline {subsection}{\numberline {9.3}Lessons learned}{}{subsection.0.9.3}
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {9.4}Suggested Directions for Future Research}{}{subsection.0.9.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{Bibliography}{}{section*.10}
