@@ -1,83 +1,10 @@
-The architecture of the testing framework may be described in terms of data flow (protocol) and control flow (software). On the following pages both data flow and control flow of the application will be thoroughly explained.
-
-\subsection{Protocol}
-
-\subsubsection{Protocol notation}\label{text:protonot}
-To formalize the Proof of Work protocol a few notations will be introduced. Consider the following notations:
-\\
-\\
-\indent \begin{minipage}{0.9\linewidth}
-\thickmuskip=0mu
-${\textbf M_i} \ = $ to be $i^{th}$ execution of the protocol $M$ by either a legitimate user or an adversary. 
-
-${\textbf h} \ = $ a puzzle generator function.
-
-${\textbf t} \ = $ timestamp at time of puzzle generation
-
-${\textbf P[j]} \ = $ the $j^{th}$ sub-puzzle in $P$.
-
-${\textbf m} \ = $ the number of sub-puzzles, this equals to the size of the set $P$. 
-
-${\textbf d} \ = $ an integer indicating the difficulty of the problem set $P$. 
-
-${\textbf S[j]} \ = $ the $j^{th}$ solution in $S$ and a solution to $j^{th}$ sub-puzzle in $P$. 
-
-${\textbf z} \ = $ a function that return the number of most significant bytes that is zero. 
-%\vspace*{-10pt}
-\end{minipage}
-
-
-\subsubsection{Protocol description}\label{text:protodesc}
-Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $P_i$ of size $m$ and a difficutly $d$. Each sub-puzzle $P[1] \dots P[m]$ is a seed derived by $g(t,x)$ where $x$ is value generated uniformly-at-random.
-
-The client $C_i$ must solve each sub-puzzle $P_i[j]$ of $P_i$ by finding a value $S_i[j]$ so that the computed hash $H(S_i[j] \ || \ P_i[j] )$ has at least $d$ leading zeroes. If such a hash is found then the solution $S[j]$ is a solution to the sub-puzzle $P[j]$.
-
-The server then verifies each solution of $S_i$ by computing $H(S_i[j] \ || \ P_i[j])$ with a stored copy of $P_i[j]$ and confirms that the solution has $d$ leading zeroes. If all solutions are correctly computed the client $C_i$'s request $R_i$ will be granted. 
-
-\begin{figure}[H]
-	\begin{center}
-		\begin{tikzpicture}
-
-		\scriptsize
-		\matrix (m)[matrix of nodes, column  sep=-15mm,row  sep=1.5mm, nodes={draw=none, anchor=center,text depth=0pt} ]{
-		\textbf{\normalsize server} & & \textbf{\hspace*{20pt}\normalsize client}\\[0mm]
-		& & \\
-		& Initialisation of protocol \textbf{M}& \\
-		& service request $R_i$& \\
-		generate sub-puzzles \\
-		$P[j] := g(t,x), 1\leq j \leq m$\\
-		$P_i :=$ $\{\cup_{j=1}^{m}P[j],d\}$ \hfill \\
-		& send puzzles & \\
-		& & solve each $P[j] \in P$ \\
-		& & $S_i := \{S[1 \dots m]\}$ \\
-		& send solutions & \\
-		verify each $S[j] \in S$ && \\ 
-		& grant request $R_i$ & \\
-		};
-		\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-4-2.south east)--(m-4-2.south west);
-		\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-8-2.south west)--(m-8-2.south east);
-		\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-11-2.south east)--(m-11-2.south west);
-		\draw[shorten <=-1cm,shorten >=-1cm,-latex] (m-13-2.south west)--(m-13-2.south east);
-		\end{tikzpicture}
-		 \vspace{10pt}
-		\caption{Diagram of Proof of Work protocol}\label{tab:protocol}
-	 \end{center}
-\end{figure}
-If the reputation system deems the server to not being under attack i.e. under normal server operation the problem package will be the empty set, indicating that no puzzles are being distributed.
-Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This design decision may be questioned, arguing that the handshaking process with empty sets could bring unneccesary load on the server.
-However, empty sets will only be distributed when server load is low thus the extra verification can be afforded.}
-The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
-
-If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
-
-%[lite mer information om generering av problem. Varje problem är relativt unikt för varje request osv]
-
+In this section, the architecture of the testing framework is described in detail. The system implements the RB-PoW protocol as-well as the classical PoW protocol. On the following pages an in detail description of the application will be provided explaining data flow (protocol) as-well as control (software).
 
 \subsection{Software}
 Since one requirement on our Proof of Work system is that it minimises differences between a wide variety of devices; it needs to support both desktop and laptops with different operating systems as well as cellphones and tablets.
 In order to minimise the development effort and maximise maintainability of the code base, a multi platform solution was sought for web-based simulation interface. 
 
-A web based solution makes the application portable, but the web is not inherently stateful thus a emulation of a general service is limited. However, the advent of websockets enables a truly multi-platform proof-of-work client in html and javascript while maintaining the generality and plasticity of a natively written socket based application. 
+A web-based solution makes the application portable, but the web is not inherently stateful thus a emulation of a general service is limited. However, the advent of web-sockets enables a truly multi-platform proof-of-work client in html and javascript while maintaining the generality and plasticity of a natively written socket based application. 
 \begin{comment}
 The javascript implementation for handling the protocol is quite simple:
 \jscode[firstline=57, firstnumber=57, lastline=84]{../pow.js}
@@ -87,9 +14,9 @@ To trigger a request to be sent to the server we build the following function wh
 \jscode[firstline=100, firstnumber=100, lastline=105]{../pow.js}
 \end{comment}
 
-The server side was implemented in Google's novel programming language golang\cite{golang}. The real strengths of golang in this context is actually not performance nor simplicity\footnote{But the expressiveness, clarity and performance of go programs is not to be dismissed.} but rather it's standard libraries, which in other contexts may appear immature. Golang includes standard libraries for both html template generation, http web serving as well as websockets. This package makes for an ideal platform for an application that needs to deliver the client application\footnote{HTML, CSS, Javascript and all that magic that make stuff happen in the browser} to potential clients as well as servicing clients requests in the model application reachable through the websocket interface. 
+The server side was implemented in Google's novel programming language golang\cite{golang}. The real strengths of golang in this context is actually not performance nor simplicity\footnote{But the expressiveness, clarity and performance of go programs is not to be dismissed.} but rather it's standard libraries, which in other contexts may appear immature. Golang includes standard libraries for both html template generation, http web serving as well as web-sockets. This package makes for an ideal platform for an application that needs to deliver the client application\footnote{HTML, CSS, Javascript and all that magic that make stuff happen in the browser} to potential clients as well as servicing clients requests in the model application reachable through the web-socket interface. 
 
-Communication is performed over a websocket per client, with a single message type which is (de-)serialised to (from) JSON. JSON is natively supported in the Javascript client, and the golang websocket library supports JSON (de-)serialisation. Thus no byte parsing of specific to our protocol had to be produced.
+Communication is performed over a web-socket per client, with a single message type which is (de-)serialised to (from) JSON. JSON is natively supported in the Javascript client, and the golang web-socket library supports JSON (de-)serialisation. Thus no byte parsing of specific to our protocol had to be produced.
 %\gocode[firstline=35, firstnumber=35, lastline=40]{../conn.go}
 \begin{minted}[fontsize=\footnotesize]{go}
 type message struct {
@@ -100,9 +27,9 @@ type message struct {
 }
 \end{minted}
 \\
-The client application is initiated by visiting the servers webpage which initiates download of the client application\footnote{The client application is built in javascript which is distributed to the client via a webpage.}. Upon requesting the application web page, the server spawns a goroutine\footnote{Goroutines are golangs built in multithreading primitive.} handling the http response writing task to deliver the application to the client.
-When the client application initiates it will open a keep-alive websocket connection to the server where communication can occur. 
-If the client wants the server to perform its service it will submit a request with operation code $0$, which means that the client is requesting a problem to solve in order to aquire the servers trust. The server will generate a set of puzzles tied to the specific client. To prevent an attacker from reusing solutions for multiple requests or forging problem sets the problem set $\phi_i$ is chosen by the server and stored in memory. The server will reply with the set of puzzles and an operation code $1$, telling the client to solve the problem set. The client will solve the puzzles, using a bruteforce approach since no better algorithm is known. The client will submit the solutions with an operation code $1$. Upon receiving a request with operation code 1, the server will verify the solution. If the verification succeeds the server will grant the client some cpu time, otherwise the connection will be terminated.
+The client application is initiated by visiting the servers web-page which initiates download of the client application\footnote{The client application is built in javascript which is distributed to the client via a web-page.}. Upon requesting the application web-page, the server spawns a goroutine\footnote{Goroutines are golangs built in multi-threading primitive.} handling the http response writing task to deliver the application to the client.
+When the client application initiates it will open a keep-alive web-socket connection to the server where communication can occur. 
+If the client wants the server to perform its service it will submit a request with operation code $0$, which means that the client is requesting a problem to solve in order to acquire the servers trust. The server will generate a set of puzzles tied to the specific client. To prevent an attacker from reusing solutions for multiple requests or forging problem sets the problem set $\phi_i$ is chosen by the server and stored in memory. The server will reply with the set of puzzles and an operation code $1$, telling the client to solve the problem set. The client will solve the puzzles, using a brute-force approach since no better algorithm is known. The client will submit the solutions with an operation code $1$. Upon receiving a request with operation code 1, the server will verify the solution. If the verification succeeds the server will grant the client some cpu time, otherwise the connection will be terminated.
 % \jscode[firstline=26, firstnumber=26, lastline=49]{../pow.js}
 % The server will check that the solution is correct with considerable less effort:
 % \gocode[firstline=142, firstnumber=141, lastline=158]{../problem/problem.go}

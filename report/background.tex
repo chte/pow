@@ -1,7 +1,7 @@
 
 %\subsection{Proof-of-Work and Related Works}\label{text:pow}
 
-The fundamental property of Proof of Work is that its \emph{puzzles} are moderately hard to compute but easy to verify. This concept was originally proposed by \citeauthor{DworkN92} 1992 in \citetitle{DworkN92} as a way to counter e-mail spam by increasing the costs of sending spam, thus making e-mail spam economically unfeasible. \citeauthor{DworkN92} originally called this a \emph{pricing function} since it effectively puts a price on using a service.
+The fundamental property of Proof of Work is that its \emph{puzzles} are moderately hard to compute but easy to verify. This concept was originally proposed by \citeauthor{DworkN92} 1992 in \citetitle{DworkN92} as a way to counter e-mail spam by increasing the costs of sending spam, thus making e-mail spam economically infeasible. \citeauthor{DworkN92} originally called this a \emph{pricing function} since it effectively puts a price on using a service.
 
 The concept of proof-of-work was reinvented by \citeauthor{Back02}, who later proposed ''hashcash'' as a DoS preventing method in \citetitle{Back02}. Back's idea was to require the requester of a service to compute a cryptographic hash in which the most significant bits start with a certain number of zeroes. \footnote{In the first scheme of \emph{hashcash} the initial bits of two hashes had to match - what mentioned in the text is actually a recent improvement.} Consequently, the average work to solve a ''hashcash'' puzzle is exponential to number of zero bits required vis-à-vis computing a single hash to verify\cite{bitcoin}.
 

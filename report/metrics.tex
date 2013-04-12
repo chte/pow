@@ -1,7 +1,7 @@
 \subsection{Metrics}
 %\footnote{See section \ref{tab:system}} %\footnote{See section \ref{tab:reputation} and \ref{tab:behaviourmodel}}
-In order to to establish a quantitive description of metrics required by the difficulty scaling model as well as simulation experiments
- this section will outline three sets of parameters refered as quantifiers, observables and controllables. 
+In order to to establish a quantitative description of metrics required by the difficulty scaling model as well as simulation experiments
+ this section will outline three sets of parameters referred as quantifiers, observables and controllables. 
 
 \subsubsection{Attack Quantifiers}
 In our Reputation Based Proof of Work system an DoS attack can be quantified by following sets of measurements: 
@@ -20,12 +20,12 @@ The difficulty of PoW problems handed out as a response to requests are based a 
 \end{enumerate}
 If the server has four CPUs running and the reported load average is 4.00 then the CPUs are perfectly utilized\cite{cpu}.
 
-\emph{Request rate:} is the quantified amount of requests for a service that a single \emph{client} or a \emph{group of clients} asks for. This measurement is slightly modified to measure the average time between requests to show the amount servicing required by each client and the average of all clients in a given timeframe. By introducing a rating scheme that weights the individual requesting rate of a client with the average request rate of all clients the Reputation System can hand out problems scaled to the behaviour of each client. Thereby limiting the amount of service to a client with malicious behaviour and furthermore giving a natural limit to a DoS attack.
+\emph{Request rate:} is the quantified amount of requests for a service that a single \emph{client} or a \emph{group of clients} asks for. This measurement is slightly modified to measure the average time between requests to show the amount servicing required by each client and the average of all clients in a given time-frame. By introducing a rating scheme that weights the individual requesting rate of a client with the average request rate of all clients the Reputation System can hand out problems scaled to the behaviour of each client. Thereby limiting the amount of service to a client with malicious behaviour and furthermore giving a natural limit to a DoS attack.
 
 
 \subsubsection{Server Controllables}
 The server resources is controlled through the Reputation System, generally it has two settings that is used to regulate.
 \emph{Puzzle Difficulty:} the difficulty of a puzzle is based on parameters in Server Observables. However, the scaling of puzzles can be tuned to respond more harshly or forgiving based on the parameters.
 
-\emph{Connection Timeout:} is used to control the lifetime a connection. This could be a finite duration meaning that if no solution is sent back to the server within lifetime the connection will be closed nevertheless.
-However, in the scope of the simulation experiments this duration is set to infinite, see Attack Model below for explaination of our assumptions about the attacker. 
+\emph{Connection Time-out:} is used to control the lifetime a connection. This could be a finite duration meaning that if no solution is sent back to the server within lifetime the connection will be closed nevertheless.
+However, in the scope of the simulation experiments this duration is set to infinite, see Attack Model below for explanation of our assumptions about the attacker. 

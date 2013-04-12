@@ -1,56 +1,45 @@
-In this paper, we have explored the possibilites of a reputation based proof-of-work protocol in mitigating DoS attacks. We have presented the RB-PoW protocol, an experimental architecture and tested the protocol with a web-based simulation interface. Furthermore, we presented results of two simulation experiments, server flooding and server draining with two types of implementations; classical proof-of-work and the proposed reputation based proof-of-work. The results from these simulation experiments will be brought to discussion in following paragraphs with the goal of answering the initial problem statements:
+In this paper, we have explored the possibilities of a reputation based proof-of-work protocol in mitigating DoS attacks. We have presented the RB-PoW protocol, an experimental architecture and tested the protocol with a web-based simulation interface. Furthermore, we presented results of two simulation experiments, server flooding and server draining with two types of implementations; classical proof-of-work and the proposed reputation based proof-of-work. The results are the average milliseconds of our simulation data with a confidence level of 99\%, see Appendix \ref{tab:confidence} for detailed explanation in the significance of our results. Furthermore, the results from these simulation experiments will be brought to discussion in following paragraphs with the goal of answering the initial problem statements:
 
 \subsection{Server Flooding}
-The results of simulating server flooding, see table \ref{tab:flooding}, shows that the RB-PoW protocol is a vast improvement to mitigating DoS flooding attacks in comparision the the classical PoW. It is interesting to note that the RB-PoW perform better in all three user-type cases. The most significant improvement was to the mobile users where the service time was improved of approximately 9 times\%. 
+The results of simulating server flooding, see table \ref{tab:flooding}, shows that the RB-PoW protocol is a vast improvement to mitigating DoS flooding attacks in comparison the the classical PoW. It is interesting to note that the RB-PoW perform better in all three user-type cases. The most significant improvement was to the mobile users where the service time was improved of approximately 9 times. 
 
 This finding was unexpected and suggests that PoW in its classical implementation is very primitive.
-There are several possible explanations for this result and the most orenous reason is likely to be the fact that the classical PoW does not in any way seperate legitimate users from adversaries.
-There are, however, other possible explainations. It may in fact be the result of inadequate tuning of the PoW protocol. 
+There are several possible explanations for this result and the most significant reason is likely to be the fact that the classical PoW does not in any way separate legitimate users from adversaries.
+There are, however, other possible explanations. It may in fact be the result of inadequate tuning of the PoW protocol. 
 
 \subsection{Server Draining}
 
 Contrary to expectations, the results of simulating server draining in table \ref{tab:draining} show that classical PoW is slightly better at servicing legitimate users with a service time approximately 1.4 times better than RB-PoW. However, RB-PoW still performs significantly better than classical PoW regarding mobile users, with a almost 2 times faster service time. Although, the performance of servicing mobile users in both protocols would in a real world context be far from acceptable.
 
-Even though the results was quite contradictory to our expectation the explaination for this result is rather reasonable. The proposed RB-PoW system is based on differentiating malicious behaviour from legitimate behaviour. However, in this simulation experiment the adversaries are programmed to fake themselves as legitimate user, defeating the core concept of RB-PoW.
+Even though the results was quite contradictory to our expectations the explanation for this result is rather reasonable. The proposed RB-PoW system is based on differentiating malicious behaviour from legitimate behaviour. However, in the simulation experiment the adversaries was programmed to fake themselves as legitimate users, thus defeating the core concept of RB-PoW.
 
 
+\subsection{Concluding Remarks and Feasibility}
+The present results are significant in two major respects. First and foremost, the results show that existing proof-of-work protocols can be improved by using clever and adaptive scaling of problem difficulties. Reputation based scaling is a feasible approach in improving the dynamics of the proof-of-work concept and has shown to improve the taxing impact on adversaries while having a less effect on legitimate users during denial-of-service attacks with flooding characteristics. 
 
-
-\subsection{Feasibility}
-så rb pow är bra för flooding men dåligt mot draining. Om en attackerare kan ip spoofa så kan detta vara dåligt. (men det är och vanlig pow). kan attackerare inte ip spoofa måste man då alltså ha MÅÅÅÅNGA datorer, betydligt fler än för utan skydd eller vanlig pow för att sätta detta ur spel. vanlig pow kan man ``enkelt'' sätta ur spel genom att försvåra problemen istället för att sagga nwer server. rb pow gör det (vad vi uppmätt) aldrig sämre gentemot vanliig pow eller utan skydd, men i vissa fall är det jättebra, så det är vettigt att använda
-
-man kan ta upp lite kring gpu att det ger en inflation. men att vi kan låta legitima användare också använda gpu... eller kanske en exponentiell eller iaf högre polynoms skalning av svårighet istället för linjär....
-
-
-
-\subsection{Statistical Confidence}
-An important question of our study is, \emph{when do we trust our data?} The results presented in Section \ref{result} was collected from the simulation experiments run through the web-based simulation interface. The data was collected as samples during a certain time-frame during the experiments, dividing data into the categories of \emph{adversaries}, \emph{legitimate users} and \emph{mobile device users}. However,  can we be certain that the calculated averages of our samples represent the average of the whole population?
-
-The answer lies in statistical mathematics. To bring confidence in the presented results it is important that a average of the sample data can, with a certain propability, be found within a interval of confidence, also known as confidence interval. Hence, knowing this interval enables the possiblity to infer that the average of one sample is significantly different from another, as long as the confidence interval of the averages do not overlap.
-
-One fundamental requirement of finding these confidence intervals is that the distrubution of the samples is known. However, the distribution of our the result data in our simulation experiments is likely a sum of pascal and unknown distributed variables. Because of the uncertainty a bit of magic is required to solve this problem. 
-
-\subsubsection{Arithmetic Averages Have a Bit of Magic}
-That bit of magic is the \emph{Central Limit Theorem}. The theorem states that, given a sufficiently large sample of indentically distributed independent variables,\footnote{The central limit theorem generally takes effect when samples is larger than 30.}, each with a well-defined mean and well-defined variance\footnote{This implies that both the mean the variance should be finite.}, will be approximately normally distributed\cite{gunnar}.
-
-From this theorem two implications can be drawn that is relevant for our test data:
-\begin{itemize}
-\item A random sample scan be taken from any population, in our case samples of the simulation experiments, even if the simulation data is not normally distributed and assume it to be approximately normally distributed.
-
-\item The theorem also allows assumptions to be made about the sample data of the simulation regardless of the entire simulation data. Thereby, an interval estimation can be made about the true average of the simulation data with only sample data.
-\end{itemize}
-
- \subsubsection{Confidence in Test Results}
-The probability that the average of whole population falls within the interval of the result data is either 1 or 0 - the interval captures the average or it doesn't\cite{gunnar}. However, with a 99\% confidence it is safe to assume that the average of the whole population actually falls within the confidence interval of the result data. 
-
+Another result of significance is that the RB-PoW protocol during draining type of denial-of-service attacks at worst performed like a classical PoW protocol implementation. The result is very valuable in the aspect that it clearly shows the drawbacks the current RB-PoW implementation and also that there is room for improvement. Moreover, it proves that it could work as an effective substitute to current proof-of-work schemes. 
 
 \subsection{Lessons learned}
+During the our implementation of the RB-PoW protocol and the observations made during simulation experiments we have conducted:
+\begin{itemize}
+\item That moving costs of services onto the clients help in mitigating denial-of-service attacks. The RB-PoW protocol show a potential way of maintaining server stability even under changing conditions.
+
+\item An adaptive implementation of proof-of-work schemes effectively puts high impact on adversaries and low impact on legitimate users during server flooding.
+
+\item Tuning of server controllable parameters and choice of reputation system have very strong effects of effectiveness regarding RB-PoW protocols. The mathematical model of the reputation system is a major parameter when scaling problem difficulties based on the behaviour of the users.
+
+\item The protocol could be improved by using bit-strings instead of byte-strings to make the difficulty levels more fine grained. 
+
+\item A non-linear difficulty model could potentially be more effective against large scale flooding type of denial-of-service attacks.
+
+\end{itemize}
 \subsection{Suggested Directions for Future Research}
+The investigation presented in this paper is experimental in its nature. For further research we suggest the following two possible extensions of the current protocol.
 
-Optimise parameters used in scaling model
+\subsubsection{Non-linear difficulty scaling}
+ \citeauthor{Green} in \citetitle{Green} demonstrates that hash-reversal schemes based server load would be ineffective when under attack by GPU utilizing adversaries. On the contrary it was shown that, schemes which adapts accordingly to client behaviour could be effective against such an attack. Therefore a direction for further research would be to explore the possibilities of improving our proposed protocol with a non-linear difficulty scaling as improvement to cope with potential GPU-based DoS attacks. 
 
-Explore the possiblities of non-linear difficulty scaling based on client behaviour. 
+\subsubsection{Token-based reputation system}
+The current implementation of RB-PoW have fixed parameters such as CPU-threshold, load average threshold and lifetime of connections. However, a protocol in which these parameters as-well as problem difficulty  dynamically change based on server's amount of resource tokens contra tokens available to a requesting client. This might prove to be effective during draining type of denial-of-service attacks and could be a future research to improve the current reputation system we presented.
+ 
 
-In future investigations it might be possible to use a different X in which ...... 
-
-Further studies, which take these variables into account, will need to be undertaken.
