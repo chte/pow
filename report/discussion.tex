@@ -7,14 +7,17 @@ The answer lies in statistical mathematics. To bring confidence in the presented
 One fundamental requirement of finding these confidence intervals is that the distrubution of the samples is known. However, the distribution of our the result data in our simulation experiments is likely a sum of pascal and unknown distributed variables. Because of the uncertainty a bit of magic is required to solve this problem. 
 
 \subsubsection{Arithmetic Averages Have a Bit of Magic}
-That bit of magic is the \emph{Central Limit Theorem}. The theorem states that, given certain conditions, the mean of a sufficiently large number\footnote{The central limit theorem generally takes effect when samples is larger than 30.} of independent random variables, each with a well-defined mean and well-defined variance, will be approximately normally distributed\cite{gunnar}.
+That bit of magic is the \emph{Central Limit Theorem}. The theorem states that, given a sufficiently large sample of indentically distributed independent variables,\footnote{The central limit theorem generally takes effect when samples is larger than 30.}, each with a well-defined mean and well-defined variance\footnote{This implies that both the mean the variance should be finite.}, will be approximately normally distributed\cite{gunnar}.
 
+From this theorem two implications can be drawn that is relevant for our test data:
+\begin{itemize}
+\item A random sample scan be taken from any population, in our case samples of the simulation experiments, even if the simulation data is not normally distributed and assume it to be approximately normally distributed.
 
-adversiares
-However, it is more rational to assume that the one confidence interval that you took is one of the 95% that capture the population mean than to assume it doesn't. So you would tend to believe, with 95% confidence, that the interval is one of those that captures the population mean.
+\item The theorem also allows assumptions to be made about the sample data of the simulation regardless of the entire simulation data. Thereby, an interval estimation can be made about the true average of the simulation data with only sample data.
+\end{itemize}
 
  \subsubsection{Confidence in Test Results}
-The probability that the average of whole population falls within the interval of the result data is either 1 or 0 - the interval captures the average or it doesn't. However, realistically with a 99\% confidence it is safe to assume that average of the whole population actually falls within the confidence interval of result data.
+The probability that the average of whole population falls within the interval of the result data is either 1 or 0 - the interval captures the average or it doesn't\cite{gunnar}. However, with a 99\% confidence it is safe to assume that the average of the whole population actually falls within the confidence interval of the result data. 
 
 
 \subsection{Lessons learned}
