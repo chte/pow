@@ -1,7 +1,19 @@
 \subsection{Feasibility}
 \subsection{Confidence in Test Results}
+An important question of our study is, \emph{when do we trust our data?} The results presented in Section \ref{result} was collected from the simulation experiments run through the web-based simulation interface. The data was collected as samples during a certain time-frame during the experiments, dividing data into the categories of \emph{adversaries}, \emph{legitimate users} and \emph{mobile device users}. However,  can we be certain that the calculated averages of our samples represent the average of the whole population?
+
+The answer lies in statistical mathematics. To bring confidence in the presented results it is important that a average of the sample data can, with a certain propability, be found within a interval of confidence, also known as confidence interval. Hence, knowing this interval enables the possiblity to infer that the average of one sample is significantly different from another, as long as the confidence interval of the averages do not overlap.
+
+One fundamental requirement of finding these confidence intervals is that the distrubution of the samples is known. However, the distribution of our the result data in our simulation experiments is likely a sum of pascal and unknown distributed variables. Because of the uncertainty a bit of magic is required to solve this problem. 
+
 \subsubsection{Arithmetic Averages Have a Bit of Magic}
-That bit of magic is the \emph{Central Limit Theorem}. In our case the result data will be based of samples of test data with an unknown distribution. The central limit theorem tells us that no matter how the data is distributed the sampled distribution to estimate our means will not matter if the sample size is large $(n > 30)$.
+That bit of magic is the \emph{Central Limit Theorem}. The theorem states that, given certain conditions, the mean of a sufficiently large number\footnote{The central limit theorem generally takes effect when samples is larger than 30.} of independent random variables, each with a well-defined mean and well-defined variance, will be approximately normally distributed\cite{gunnar}.
+
+The probability that the average of whole population falls within the interval of the result data is either 1 or 0 - the interval captures the average or it doesn't. However, realistically with a 99\% confidence it is safe to assume that average of the whole population actually falls within the confidence interval of result data.
+
+However, it is more rational to assume that the one confidence interval that you took is one of the 95% that capture the population mean than to assume it doesn't. So you would tend to believe, with 95% confidence, that the interval is one of those that captures the population mean.
+
+ \subsubsection{Confident in our confidence intervals}
 
 \subsection{Lessons learned}
 \subsection{Suggested Directions for Future Research}
