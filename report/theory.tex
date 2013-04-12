@@ -29,14 +29,15 @@ Every client has equal right to the server's resources.
 \end{GrayBox}
 \caption{RB-PoW Reputation Model Statement}
 \end{figure}
-Assumption 4 implies that the demands of a client can be measured by the number of connections concerned makes in a given timeframe, or the inverse: how long time is passed between each request. The behaviour model does not reason about users as legitimate or malicious in a boolean meaning, it regards each user as a potential evil-doer with varying malicousness. A ``good'' user is thus a user that is less taxing on the system whereas an adversary is a user that is more taxing on the system than the global average.  
+The behaviour model does not reason about users as legitimate or malicious in a boolean meaning, it regards each user as a potential evil-doer with varying malicousness. A ``good'' user is thus a user that is less taxing on the system whereas an adversary is a user that is more taxing on the system than the global average.  
 
-To quantify the behaviour of a user we measure average time between request instead of average request rate per time unit. The quantification of behaviour is at every request recalculated as:
+Assumption 4 implies that the demands of a client can be measured by the number of connections concerned makes in a given timeframe, or the inverse: how long time is passed between each request. 
+To quantify the behaviour of a user we measure average time between request instead of average request rate per time unit. It is calculated as an exponential moving average and is recalculated at every request the client performs:
  $$ b_{i+1} = \alpha\cdot\delta + (1-\alpha)b_i} $$
 where $\delta$ is the time difference since the last request. At every request, the global average behaviour is also recalculated:
 $$ B_{i+1} = \beta\cdot\Delta + (1-\beta)*B_i} $$
 where $\Delta = \delta * n$, $n$ is number of users currently connected to the system. The multiplication averages the time between request and enables us to compare the value to local values. 
-One advantage of measuring the time between request versus counting requests during a sampling period is that it can be implemented more efficient and is thus less taxing on the server. However, a more interesting property is how it affects behaviour change rate. Sampling number of request during a period and averaging over $n$ last periods means that a client is considered ``good'' again after being ``bad'' just as fast (in time) as vice versa if a client changes behaviour pattern.
+One advantage of measuring the time between request versus counting requests during a sampling period is that it can be implemented more efficient and is thus less taxing on the server. However, a more interesting property is the effect on behaviour change rate. Sampling number of request during a period and averaging over $n$ last periods means that a client is considered ``good'' again after being ``bad'' just as fast (in time) as vice versa if a client changes behaviour pattern.
 Averaging over the last $n$ requests instead will cause the system to respond faster (in time) if a client start acting malicously (suddenly increasing request rate) and demanding a longer time for the client to redeem her behaviour.
 
 
