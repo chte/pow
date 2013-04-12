@@ -2,6 +2,13 @@
 %
 %https://www.ideals.illinois.edu/bitstream/handle/2142/17372/TechReport.pdf?sequence=3
 %
+% Puzzle-based defense mechanisms such as [41, 9, 20, 35, 26] try to correct the imbalance between the cost to the attacker for generating a request and cost to the server for processing a request by demanding a payment, in the form of a puzzle solution, from each client. In a typical puzzle-based scheme, a request must be accompanied by a proof of payment from the client. The payment may be in the form of computation or memory accesses that the client needs to perform to solve the puzzle. Since the amount of resources available to the attacker is limited (even if it is much more than that of the legitimate clients), the attacker will not be able to trivially amplify his attack. There are different kinds of schemes that build on this general principle. Laurie et al. [31] have analyzed proof-of-work schemes in the context of a spam deterrent mechanism and conclude that proof-of-work schemes do not work, because the cost involved for legitimate senders would be too high. However, their economic estimation contains a miscalculation. More importantly, their analysis considers fixed-cost puzzle schemes and does not analyze adaptive proof-of-work schemes proposed by recent DoS counter-measures.
+
+Denial of Service attacks are often possible due to the relative price of a request, for an adversary often a single network packet\cite{gunter}. Puzzle-based proof-of-work limit an attacker's possibilities to impose a high work load on a server from a sole client by increasing the cost of each request. 
+
+The RB-PoW scheme utilises a hash-reversal puzzle very similair to hashcash. The problem definition is a seed $P_i[j]$\footnote{For a precise definition of $P_i[j]$, $i$ and $j$, please see section \ref{text:protonot}}. The client needs to find $S_i[j]$ such that the computed hash $ h = H(S_i[j]||P_i[j])$ holds the property that the leading $d$ (issued difficulty) digits in the hex representation of $h$ are all equal to zero. The difference to hashcash is that RB-PoW uses SHA2 in place of SHA1, since it is a cryptographically stronger hash.
+
+
 The following sections will present server-side metrics needed to define client behaviour and explain assumptions made for a target application. 
 We will precisely define the meaning of client behaviour in our model and finally carry on to develop and describe the reputation based proof-of-work model.
 

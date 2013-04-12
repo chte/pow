@@ -50,3 +50,4 @@ report/*.fls
 report/*log
 report/*.aux
 report/report.pdf
+report/report.toc
