@@ -1,11 +1,18 @@
-LINKZÄ http://conferences.sigcomm.org/co-next/2007/papers/studentabstracts/paper46.pdf se 2. THE PROOF-OF-WORK APPROACH
+%LINKZÄ http://conferences.sigcomm.org/co-next/2007/papers/studentabstracts/paper46.pdf se 2. THE PROOF-OF-WORK APPROACH
+%
+%https://www.ideals.illinois.edu/bitstream/handle/2142/17372/TechReport.pdf?sequence=3
+%
+The following sections will present server-side metrics needed to define client behaviour and explain assumptions made for a target application. 
+We will precisely define the meaning of client behaviour in our model and finally carry on to develop and describe the reputation based proof-of-work model.
 
-https://www.ideals.illinois.edu/bitstream/handle/2142/17372/TechReport.pdf?sequence=3
-
-\section{Proof of Work combined with a Reputation Function}\label{tab:reputation}
-We propose conceptually an extremely simple yet in practice effective reputation system. A client is rated based on historical and current behaviour. The reputation mechanism distributes proof of work problems that is scaled harder or easier depending on how well or bad the individual client is rated compared to the global behaviour of all clients. 
-
+\input{metrics}
+\input{atk_model}
 \subsection{Behaviour model}\label{tab:behaviourmodel}
 In the context of our reputation system, behaviour is defined as the measured time between requests sent to the server. Furthermore, both historical data and close to real-time data are taken into account by the use of a rolling average. However, there is two fundamental differences in the way that global behaviour is computed in comparison to the individual behaviour of a client. The first and most important difference is that the individual client behaviour is rated based on it's own frequency of requests, while the global behaviour is based on the frequency between the requests of all clients. 
 
 A perhaps a more subtle difference is how much weight the historical behaviour should have. The weight of historical behaviour impacts the rate of change. Thus a higher weight gives a more stable and slower moving measurement of the behaviour. Hence, more fitting for the defining the general behaviour of clients on the server. While a lower weight tend to be closer to real-time measurement thus befitting the individual behaviour of a client.
+
+\subsection{Reputation Based Proof of Work Difficulty Scaler}
+We propose a conceptually simple yet in practice effective reputation system. A client is rated based on historical and current behaviour. The reputation mechanism distributes proof of work problems with a difficulty dependant on the individual client behaviour compared to the global average behaviour as well as server load. 
+
+The basic idea of the RB-PoW scheme is that the server is dimensioned to handle normal load. If the server load is beneath \emph{cpu\_thres}, the server is in a normal state and no PoW scheme needs to be applied. If server load is above {\em cpu\_thres}, PoW may be activated, suspecting all clients as possible adversaries [SOURCE HÄR]. Another foundation of the RB-PoW model is an assumption that legitimate clients utlises a lower request rate than a malicious user. so if the server is under attack we compare the behaviour ( access time ) of the client against global average. If extremely favourable, client may get a free ticket to the zoo, and if extremely taxing on the server client gets an extremely hard problem.  ;)

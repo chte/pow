@@ -19,64 +19,9 @@ The goal of the experiments was to examine how well the reputation based PoW arc
 \item How much legitimate users and users with lesser hardware was affected by DoS attacks, with and without reputation based PoW protection.
 \end{itemize}
 
-\subsection{Metrics}
-
-In order to to establish a quantitive description of our simulation experiments\footnote{See section \ref{tab:system}} and the step function of the reputation system\footnote{See section \ref{tab:reputation} and \ref{tab:behaviourmodel}}, this section will outline three sets of parameters refered as quantifiers, observables and controllables. 
-
-\subsubsection{Attack Quantifiers}
-In our Reputation Based Proof of Work system an DoS attack can be quantified by following sets of measurements: 
-
-\emph{Service time} reflects measurement in the quality of a requested service by a client. Assuming that the service is web browsing the service time could be the time until a web page is completely rendered. If an adversary aims mount a DoS attack the service quality during the attack can be measured by the average service latency for legitimate users. 
-
-\subsubsection{Server Observables}
-The difficulty of PoW problems handed out as a response to requests are based a set of selected parameters that in different ways reflects the server's resource consumption.
-
-\emph{Number of established connections:} keeps track of how many clients\footnote{This is actually the number of web sockets open on the server side.} in real-time that is currently connected to the server.
-
-\emph{CPU load averages:} tell us whether the physical CPU utilization is over or under saturated. A perfect utilization is when the CPU is busy but no process is stalled. In general load average differ from CPU usage in two significant ways:
-\begin{enumerate}
-\item the CPU usage measures the instantaneous snapshot while load averages measure the trend in CPU utilization.
-\item the CPU usage only measures how much was active during measured timeframe while load averages take all demands for CPU into account.
-\end{enumerate}
-If the server has four CPUs running and the reported load average is 4.00 then the CPUs are perfectly utilized\cite{cpu}.
-
-\emph{Request rate:} is the quantified amount of requests for a service that a single \emph{client} or a \emph{group of clients} asks for. This measurement is slightly modified to measure the average time between requests to show the amount servicing required by each client and the average of all clients in a given timeframe. By introducing a rating scheme that weights the individual requesting rate of a client with the average request rate of all clients the Reputation System can hand out problems scaled to the behaviour of each client. Thereby limiting the amount of service to a client with malicious behaviour and furthermore giving a natural limit to a DoS attack.
-
-
-\subsubsection{Server Controllables}
-The server resources is controlled through the Reputation System, generally it has two settings that is used to regulate.
-\emph{Puzzle Difficulty:} the difficulty of a puzzle is based on parameters in Server Observables. However, the scaling of puzzles can be tuned to respond more harshly or forgiving based on the parameters.
-
-\emph{Connection Timeout:} is used to control the lifetime a connection. This could be a finite duration meaning that if no solution is sent back to the server within lifetime the connection will be closed nevertheless.
-However, in the scope of the simulation experiments this duration is set to infinite, see Attack Model below for explaination of our assumptions about the attacker. 
-\subsection{Attack Model}
-In this section, the attack model of the simulation experiment will be described.
-In order to specify an attack model and to simulate an attack, some assumptions regarding the adversary are required.
-Assumptions made enable us to test a DoS mitigation scheme in the application layer; if any assumption does not hold the protection can be circumvented by an attack through a lower abstraction layer\footnote{Abstraction layer in the OSI model}. 
 %The attack model is based on assumptions necessary to make any protection scheme in 
 
-\subsubsection{Assumptions}
-We assume a server \emph{Server}, a network with clients \emph{$\{C_i\}$}, and adversary \emph{Ad}.
-\\
-\\
-\noindent \textbf{Assumption 1} \indent \emph{Ad} cannot modify any packets sent between \emph{$C_i$} and \emph{Server}.
-\\
-\\
-This is necessary to assume, in particular that it cannot modify legitimate users packets. If Assumption 1 does not hold and packets can be modified then a denial-of-service attack can be initiated simply by corrupting all packages thus rendering any PoW protocol ineffective.
-\\
-\\
-\\
-\noindent \textbf{Assumption 2} \indent \emph{Ad} cannot delay any packets sent between \emph{$C_i$} and \emph{Server}.
-\\
-\\
-By similar reasons as Assumption 1 we must assume that the adversary cannot delay other clients' packets. If Assumption 2 does not hold and an adversary can delay packets arbitarily then the she can mount a denial-of-service attack without draining the resources of the server itself.
-\\
-\\
-\\
-\noindent \textbf{Assumption 3} \indent \emph{Ad} cannot oversaturate the transfer layer\footnote{Transfer layer of the OSI model} or network layer\footnote{Network layer of the OSI model} of the \emph{Server}.
-\\
-\\
-An adversary must be able to initiate a denial-of-service attack by large amount of requests to the server. However, we must also assume that the adversary cannot bring down the server by simply oversaturating the server ports or network with sheer volume of the adversary's requests.
+%\subsection{Assumptions}
 
 \subsection{Setup}
 The simulation experiments resulted in benchmarking the Reputation Based Proof of Work with the initially proposed Proof of Work protocol. Furthermore, to deduce the effectiveness of these, a setup with no protection was included in the benchmark. In this section, the setup of the benchmarks will be presented.

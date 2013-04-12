@@ -107,14 +107,14 @@ func rp_scale_model(p Param) Difficulty {
 		return ZeroDifficulty
 	}
 	if p.Local.LongMean > 2*max(p.Global.ShortMean, p.Global.LongMean) {
-		if p.Local.ShortMean > 3*p.Global.ShortMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
+		if p.Local.ShortMean > 3*p.Global.LongMean && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
 			return ZeroDifficulty
 		}
 
 		return BaseDifficulty
 	}
 	diff := BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres) - cpu_thres)))
-	return *diff.multiply(1 + int(5*max(0, (p.Global.LongMean)/(p.Local.LongMean+1))))
+	return *diff.multiply(1 + int(5*max(0, (p.Global.LongMean)/(p.Local.ShortMean+1))))
 }
 
 func cpu_equal(p Param) Difficulty {
