@@ -9,12 +9,16 @@ The results of simulating server flooding, see table \ref{tab:flooding}, shows t
 
 This finding was unexpected and suggests that PoW in its classical implementation is very primitive.
 There are several possible explanations for this result and the most orenous reason is likely to be the fact that the classical PoW does not in any way seperate legitimate users from adversaries.
-There are, however, other possible explanations. It may in fact be the result of inadequate tuning of the PoW protocol. Although, it does not explain the much lesser impact on legitimate clients in which RB-PoW had approximately a 130\% improvement over the classical protocol.
+There are, however, other possible explanations. It may in fact be the result of inadequate tuning of the PoW protocol. 
 \\
 \\
-\textbf{Server flooding}
+\textbf{Server draining}
 \vspace{7pt}
 \\
+Contrary to expectations, the results of simulating server draining in table \ref{tab:draining} show that classical PoW is slightly better at servicing legitimate users with a service time \% better than RB-PoW. However, RB-PoW still performs significantly better than classical PoW regarding mobile users, with a \% faster service time. Although, the performance of servicing mobile users in both protocols would in a real world context be far from acceptable.
+
+Even though the results was rather contradictory to our expectation the explaination for this result is rather reasonable. The proposed RB-PoW system is based on differentiating malicious behaviour from legitimate behaviour. However, in this simulation experiment the adversaries are programmed to fake themselves as legitimate user,  
+
 
 
 
