@@ -4,7 +4,7 @@
 %
 % Puzzle-based defense mechanisms such as [41, 9, 20, 35, 26] try to correct the imbalance between the cost to the attacker for generating a request and cost to the server for processing a request by demanding a payment, in the form of a puzzle solution, from each client. In a typical puzzle-based scheme, a request must be accompanied by a proof of payment from the client. The payment may be in the form of computation or memory accesses that the client needs to perform to solve the puzzle. Since the amount of resources available to the attacker is limited (even if it is much more than that of the legitimate clients), the attacker will not be able to trivially amplify his attack. There are different kinds of schemes that build on this general principle. Laurie et al. [31] have analyzed proof-of-work schemes in the context of a spam deterrent mechanism and conclude that proof-of-work schemes do not work, because the cost involved for legitimate senders would be too high. However, their economic estimation contains a miscalculation. More importantly, their analysis considers fixed-cost puzzle schemes and does not analyze adaptive proof-of-work schemes proposed by recent DoS counter-measures.
 
-Denial of Service attacks are often possible due to the low price of a request, for an adversary often a single network packet\cite{gunter}, compared to the work the service provider performs. Puzzle-based proof-of-work limits an attacker's possibilities to impose a high work load on a server from a sole client by increasing the cost of each request.  \Citeauthor{LaurieC04} argued that Proof of Work assuming a fixed cost proof-of-work pricing function, would not work. The following section present an alternate interpretation of proof-of-work incorporating problem scaling and individual adaptation, that may in fact be a practically viable scheme to considerably attenuate the effects of a denial-of-service attack.
+Denial of Service attacks are often possible due to the low price of a request, for an adversary often a single network packet\cite{gunter}, compared to the work the service provider performs. Puzzle-based proof-of-work limits an attacker's possibilities to impose a high work load on a server from a sole client by increasing the cost of each request.  \Citeauthor{LaurieC04} argued that Proof of Work, assuming a fixed cost proof-of-work pricing function, would not work. I this section we present an alternate interpretation of proof-of-work incorporating problem scaling and individual adaptation, that may in fact be a practically viable scheme to considerably attenuate the effects of a denial-of-service attack.
 
 The RB-PoW scheme utilises a hash-reversal puzzle very similair to hashcash. The difference to hashcash is that RB-PoW uses SHA2 in place of SHA1, since it is a cryptographically stronger hash.
 The problem definition is a seed $P_i[j]$\footnote{For a precise definition of $P_i[j]$, $i$ and $j$, please see section \ref{text:protonot}}.
@@ -16,17 +16,39 @@ The reputation based proof-of-work model uses subpuzzles to normalise expected s
 
 
 
-The following sections will present server-side metrics needed to define client behaviour and explain assumptions made for a target application. 
+The following sections will present server-side metrics needed to define client behaviour and explain assumptions made for the test environment. 
 We will precisely define the meaning of client behaviour in our model and finally carry on to develop and describe the reputation based proof-of-work model.
 
 \input{metrics}
 \input{atk_model}
 \subsection{Behaviour model}\label{tab:behaviourmodel}
-In the context of our reputation system, behaviour is defined as the measured time between requests sent to the server. Furthermore, both historical data and close to real-time data are taken into account by the use of a rolling average. However, there is two fundamental differences in the way that global behaviour is computed in comparison to the individual behaviour of a client. The first and most important difference is that the individual client behaviour is rated based on it's own frequency of requests, while the global behaviour is based on the frequency between the requests of all clients. 
+An essential principle of RB-PoW is the RB-PoW definition of fairness:
+\begin{figure}[H]
+\begin{GrayBox}[0.65\textwidth]
+Every client has equal right to the server's resources.
+\end{GrayBox}
+\caption{RB-PoW Reputation Model Statement}
+\end{figure}
+Assumption 4 implies that the demands of a client can be measured by the number of connections concerned makes in a given timeframe, or the inverse: how long time is passed between each request. The behaviour model does not reason about users as legitimate or malicious in a boolean meaning, it regards each user as a potential evil-doer with varying malicousness. A ``good'' user is thus a user that is less taxing on the system whereas an adversary is a user that is more taxing on the system than the global average.  
 
-A perhaps a more subtle difference is how much weight the historical behaviour should have. The weight of historical behaviour impacts the rate of change. Thus a higher weight gives a more stable and slower moving measurement of the behaviour. Hence, more fitting for the defining the general behaviour of clients on the server. While a lower weight tend to be closer to real-time measurement thus befitting the individual behaviour of a client.
+To quantify the behaviour of a user we measure average time between request instead of average request rate per time unit. The quantification of behaviour is at every request recalculated as:
+ $$ b_{i+1} = \alpha\cdot\delta + (1-\alpha)b_i} $$
+where $\delta$ is the time difference since the last request. At every request, the global average behaviour is also recalculated:
+$$ B_{i+1} = \beta\cdot\Delta + (1-\beta)*B_i} $$
+where $\Delta = \delta * n$, $n$ is number of users currently connected to the system. The multiplication averages the time between request and enables us to compare the value to local values. 
+One advantage of measuring the time between request versus counting requests during a sampling period is that it can be implemented more efficient and is thus less taxing on the server. However, a more interesting property is how it affects behaviour change rate. Sampling number of request during a period and averaging over $n$ last periods means that a client is considered ``good'' again after being ``bad'' just as fast (in time) as vice versa if a client changes behaviour pattern.
+Averaging over the last $n$ requests instead will cause the system to respond faster (in time) if a client start acting malicously (suddenly increasing request rate) and demanding a longer time for the client to redeem her behaviour.
+
+
+% In the context of our reputation system, behaviour is defined as the measured time between requests sent to the server. Furthermore, both historical data and close to real-time data are taken into account by the use of a rolling average. However, there is two fundamental differences in the way that global behaviour is computed in comparison to the individual behaviour of a client. The first and most important difference is that the individual client behaviour is rated based on it's own frequency of requests, while the global behaviour is based on the frequency between the requests of all clients. 
+
+% A perhaps a more subtle difference is how much weight the historical behaviour should have. The weight of historical behaviour impacts the rate of change. Thus a higher weight gives a more stable and slower moving measurement of the behaviour. Hence, more fitting for the defining the general behaviour of clients on the server. While a lower weight tend to be closer to real-time measurement thus befitting the individual behaviour of a client.
 
 \subsection{Reputation Mechanism as a Difficulty Scaler}\label{text:diffscaler}
+
+Assumption 5 implies that the DoS protection functionality is unlikely to be activated during normal operation. It also implies that if the server is under attack, the average adversary is likely more taxing on the system than the average legitimate user, unless the offender has access to orders of magnitude more adversaries than the normal user base. 
+
+
 We propose a conceptually simple yet in practice effective reputation system. A client is rated based on historical and current behaviour. The reputation mechanism distributes proof of work problems with a difficulty dependant on the individual client behaviour compared to the global average behaviour as well as server load. 
 
 The basic idea of the RB-PoW scheme is that the server is dimensioned to handle normal load. If the server load is beneath \emph{cpu\_thres}, the server is in a normal state and no PoW scheme needs to be applied. If server load is above {\em cpu\_thres}, PoW may be activated, suspecting all clients as possible adversaries [SOURCE HÄR]. Another foundation of the RB-PoW model is an assumption that legitimate clients utlises a lower request rate than a malicious user. so if the server is under attack we compare the behaviour ( access time ) of the client against global average. If extremely favourable, client may get a free ticket to the zoo, and if extremely taxing on the server client gets an extremely hard problem.  ;)
@@ -38,7 +60,6 @@ However, empty sets will only be distributed when server load is low thus the ex
 The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
 
 If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
-
 
 The client behaviour can generally be divided into three cases:
 \begin{itemize}
