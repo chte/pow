@@ -20,6 +20,8 @@
 \usepackage{wrapfig}
 \usepackage[pdfborder={0 0 0}]{hyperref}
 \usepackage[doi=true,url=true]{biblatex}
+
+%Tikz settings
 \usetikzlibrary{matrix,shapes,arrows,positioning,chains, calc}
 
 \newlength{\RoundedBoxWidth}
@@ -94,7 +96,7 @@ Both participated equally in respect to writing, analysis of results and final e
 \newpage
 \section{Introduction}
 \input{introduction}
-\section*{Background and Related Work}
+\subsection*{Proof of Work and Related Work}
 \input{background}
 \subsection*{Problem definition}
 \input{problemdefinition}
@@ -115,8 +117,6 @@ Both participated equally in respect to writing, analysis of results and final e
 \newpage
 \section{System Architecture}
 \input{architecture}
-\section{Tuning the Reputation System} \label{tab:system}
-\input{tuning}
 \newpage
 \section{Simulation Experiments}
 \input{experiments}
