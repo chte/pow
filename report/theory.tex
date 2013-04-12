@@ -4,7 +4,7 @@
 %
 % Puzzle-based defense mechanisms such as [41, 9, 20, 35, 26] try to correct the imbalance between the cost to the attacker for generating a request and cost to the server for processing a request by demanding a payment, in the form of a puzzle solution, from each client. In a typical puzzle-based scheme, a request must be accompanied by a proof of payment from the client. The payment may be in the form of computation or memory accesses that the client needs to perform to solve the puzzle. Since the amount of resources available to the attacker is limited (even if it is much more than that of the legitimate clients), the attacker will not be able to trivially amplify his attack. There are different kinds of schemes that build on this general principle. Laurie et al. [31] have analyzed proof-of-work schemes in the context of a spam deterrent mechanism and conclude that proof-of-work schemes do not work, because the cost involved for legitimate senders would be too high. However, their economic estimation contains a miscalculation. More importantly, their analysis considers fixed-cost puzzle schemes and does not analyze adaptive proof-of-work schemes proposed by recent DoS counter-measures.
 
-Denial of Service attacks are often possible due to the low price of a request, for an adversary often a single network packet\cite{gunter}, compared to the work the service provider performs. Puzzle-based proof-of-work limits an attacker's possibilities to impose a high work load on a server from a sole client by increasing the cost of each request. 
+Denial of Service attacks are often possible due to the low price of a request, for an adversary often a single network packet\cite{gunter}, compared to the work the service provider performs. Puzzle-based proof-of-work limits an attacker's possibilities to impose a high work load on a server from a sole client by increasing the cost of each request.  
 
 The RB-PoW scheme utilises a hash-reversal puzzle very similair to hashcash. The difference to hashcash is that RB-PoW uses SHA2 in place of SHA1, since it is a cryptographically stronger hash.
 The problem definition is a seed $P_i[j]$\footnote{For a precise definition of $P_i[j]$, $i$ and $j$, please see section \ref{text:protonot}}.
@@ -30,3 +30,20 @@ A perhaps a more subtle difference is how much weight the historical behaviour s
 We propose a conceptually simple yet in practice effective reputation system. A client is rated based on historical and current behaviour. The reputation mechanism distributes proof of work problems with a difficulty dependant on the individual client behaviour compared to the global average behaviour as well as server load. 
 
 The basic idea of the RB-PoW scheme is that the server is dimensioned to handle normal load. If the server load is beneath \emph{cpu\_thres}, the server is in a normal state and no PoW scheme needs to be applied. If server load is above {\em cpu\_thres}, PoW may be activated, suspecting all clients as possible adversaries [SOURCE HÄR]. Another foundation of the RB-PoW model is an assumption that legitimate clients utlises a lower request rate than a malicious user. so if the server is under attack we compare the behaviour ( access time ) of the client against global average. If extremely favourable, client may get a free ticket to the zoo, and if extremely taxing on the server client gets an extremely hard problem.  ;)
+
+
+If the reputation system deems the server to not being under attack i.e. under normal server operation this problem package will be the empty set, indicating that no puzzles are being distributed.
+Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This design decision may be questioned, arguing that the handshaking process with empty sets could bring unneccesary load on the server.
+However, empty sets will only be distributed when server load is low thus the extra verification can be afforded.}
+The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
+
+If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
+
+
+The client behaviour can generally be divided into three cases:
+\begin{itemize}
+\item the client $C_i$ behaves in a comparable manner to the general behaviour of all users and the request $R_i$ is responded with a problem difficulty suitable to server load.
+\item the client $C_i$ requests lesser resources compared to the general behaviour and the request $R_i$ is responded with a problem difficulty easier than the general difficulty.
+\item the client $C_i$ requests more resources compared to the general behaviour and the request $R_i$ is responded with a problem difficulty harder than the general difficulty.
+\end{itemize}
+
