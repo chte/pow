@@ -85,9 +85,9 @@ To prevent an attacker from reusing solutions for multiple requests the problem 
 
 \subsection{Software}
 Since one requirement on our Proof of Work system is that it minimises differences between a wide variety of devices; it needs to support both desktop and laptops with different operating systems as well as cellphones and tablets.
-In order to minimise the development effort and maximise maintainability of the code base, a multi platform solution was sought for the client part of the evaluation application. 
+In order to minimise the development effort and maximise maintainability of the code base, a multi platform solution was sought for web-based simulation interface. 
 
-A web based solution makes the application portable, but the web is not inherently stateful nor does emulate a general service greatly. However, the advent of websockets enables a truly multi-platform PoW client in html and javascript while maintaining the generality and plasticity of a natively written socket based application. 
+A web based solution makes the application portable, but the web is not inherently stateful thus a emulation of a general service is limited. However, the advent of websockets enables a truly multi-platform proof-of-work client in html and javascript while maintaining the generality and plasticity of a natively written socket based application. 
 \begin{comment}
 The javascript implementation for handling the protocol is quite simple:
 \jscode[firstline=57, firstnumber=57, lastline=84]{../pow.js}
@@ -110,7 +110,7 @@ type message struct {
 }
 \end{minted}
 \\
-The client application is initiated by visiting the servers webpage, thus downloading the client\footnote{The client application is built in javascript which is distributed to the computer that shall run the client via a webpage}. Upon requesting the application web page, the server spawns a goroutine handling the http response writing task to deliver the application to the client.
+The client application is initiated by visiting the servers webpage, thus downloading the client\footnote{The client application is built in javascript which is distributed to the computer that shall run the client via a webpage}. Upon requesting the application web page, the server spawns a goroutine\footnote{this is golangs built in support for multithreading} handling the http response writing task to deliver the application to the client.
 When the client application initiates it will open a keep-alive websocket connection to the server upon which communication can occur. 
 If the client wants the server to perform its service it will submit a request with operation code $0$, which means that the client is requesting a problem to solve in order to aquire the servers trust. The server will generate a set of puzzles tied to the specific client and keep the puzzle set in memory. The server will reply to the client with the set of puzzles and an operation code $1$, telling the client to solve the problem set. The client will solve the problems, using a bruteforce approach since no better algorithm is known. The client will submit the solutions with an operation code $1$. Upon receiving a request with operation code 1, the server will verify the solution. If the verification succeeds the server will grant the client  some cpu time, otherwise the connection will be terminated.
 % \jscode[firstline=26, firstnumber=26, lastline=49]{../pow.js}
