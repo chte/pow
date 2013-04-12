@@ -63,6 +63,12 @@ The server then verifies each solution of $S_i$ by computing $H(S_i[j] \ || \ P_
 		\caption{Diagram of Proof of Work protocol}\label{tab:protocol}
 	 \end{center}
 \end{figure}
+If the reputation system deems the server to not being under attack i.e. under normal server operation the problem package will be the empty set, indicating that no puzzles are being distributed.
+Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This design decision may be questioned, arguing that the handshaking process with empty sets could bring unneccesary load on the server.
+However, empty sets will only be distributed when server load is low thus the extra verification can be afforded.}
+The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
+
+If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
 
 %[lite mer information om generering av problem. Varje problem är relativt unikt för varje request osv]
 
