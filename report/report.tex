@@ -5,7 +5,7 @@
 \usepackage{textcomp}
 \usepackage{lmodern}
 \usepackage[utf8]{inputenc}
-\usepackage[swedish,english]{babel}
+\usepackage[english,swedish]{babel}
 \usepackage{modifications}
 \usepackage{comment}
 \usepackage{tikz}
@@ -20,7 +20,7 @@
 \usepackage{wrapfig}
 \usepackage{tabularx}
 \usepackage[pdfborder={0 0 0}]{hyperref}
-\usepackage[doi=true,url=true]{biblatex}
+\usepackage[doi=true,url=true,sorting=none]{biblatex}
 
 %Tikz settings
 \usetikzlibrary{matrix,shapes,arrows,positioning,chains, calc}
@@ -87,6 +87,13 @@ fontsize=\scriptsize
 Denial of Service (DoS) aims to drain the underlying resources of a service and is a increasing problem for today's service providers. In this paper, we propose a novel reputation based proof-of-work (RB-PoW)  protocol based on adaptive scaling of puzzle difficulties to mitigate various denial-of-service attacks. A testing framework was developed to examine RB-PoW's effectiveness against classical PoW protocols in simulated DoS attacks. We concluded that in flooding type of denial-of-service attacks the RB-PoW model is superior to the classical PoW that is based solely on server load. Both offer similar performance when exposed to drain-type denial-of-service attacks. 
 \end{abstract} 
 \newpage
+
+\renewcommand*\abstractname{Abstrakt}
+\begin{abstract}
+Ändamålet med Denial of Service (DoS) är att dränera en tjänsts underliggande resurser vilket är ett växande problem för dagens tjänsteförmedlare. I detta papper föreslår vi en ny ryktesbaserad Proof of Work (RB-PoW)protokoll som bygger på anpassningsbar skalning av pusselsvårigheter för att dämpa diverse denial-of-service-attacker. Ett testramverk utvecklades för att undersöka RB-PoWs effektivitet i jämförelse med den klassiska implementationen av PoW protokoll i en simulerad DoS-attack. Våra slutsatser är att RB-PoW är överlägsen i översvämmnings-DoS-attacker i jämförelse med den klassiska PoW varianten som är enbart är baserad på serverbelastning. Modellerna har likvärdig prestanda när de blir exponerade av uttorknings-DoS-attacker.  
+\end{abstract} 
+\newpage
+\selectlanguage{english}
 \section*{Statement of Collaboration} 
 Fredrik initiated the programming work build the basis of a framework for developement. The protocol was decided in collaboration while Fredrik implemented the protocol, general server structure and a ``normal service''- interface.
 Christopher continued the work with an web-based simulation interface, able to control an attack behaviour against the site. A monitor page was developed by Fredrik and then improved by Christopher. Further improvements where developed in conjunction as need arose.
