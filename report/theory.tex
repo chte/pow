@@ -46,20 +46,7 @@ Averaging over the last $n$ requests instead will cause the system to respond fa
 % A perhaps a more subtle difference is how much weight the historical behaviour should have. The weight of historical behaviour impacts the rate of change. Thus a higher weight gives a more stable and slower moving measurement of the behaviour. Hence, more fitting for the defining the general behaviour of clients on the server. While a lower weight tend to be closer to real-time measurement thus befitting the individual behaviour of a client.
 
 \subsection{Reputation Mechanism as a Difficulty Scaler}\label{text:diffscaler}
-Assumption 5 implies that the DoS protection functionality is unlikely to be activated during normal operation. It also implies that if the server is under attack, the average adversary is likely more taxing on the system than the average legitimate user, unless the offender has access to orders of magnitude more adversaries than the normal user base. This indicates the soundness of the behaviour model introduced in the previous paragraph.
-
-
-% We propose a conceptually simple yet in practice effective reputation system. A client is rated based on historical and current behaviour. The reputation mechanism distributes proof of work problems with a difficulty dependant on the individual client behaviour compared to the global average behaviour as well as server load. 
-
-% The basic idea of the RB-PoW scheme is that the server is dimensioned to handle normal load. If the server load is beneath \emph{cpu\_thres}, the server is in a normal state and no PoW scheme needs to be applied. If server load is above {\em cpu\_thres}, PoW may be activated, suspecting all clients as possible adversaries [SOURCE HÄR]. Another foundation of the RB-PoW model is an assumption that legitimate clients utlises a lower request rate than a malicious user. so if the server is under attack we compare the behaviour ( access time ) of the client against global average. If extremely favourable, client may get a free ticket to the zoo, and if extremely taxing on the server client gets an extremely hard problem.  ;)
-
-
-If the reputation system deems the server to not being under attack i.e. under normal server operation this problem package will be the empty set, indicating that no puzzles are being distributed.
-Hence, the client will ''solve'' this empty set with no effort and then respond back to the server.\footnote{This design decision may be questioned, arguing that the handshaking process with empty sets could bring unneccesary load on the server.
-However, empty sets will only be distributed when server load is low thus the extra verification can be afforded.}
-The server will then verify the solution for $P_i$ and grant access to $R_i$ of protocol \textbf{M}.
-
-If the reputation system deems the server to be under attack the difficulty of the problem set of request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
+Assumption 5 implies that the DoS protection functionality is unlikely to be activated during normal operation. It also implies that if the server is under attack, the average adversary is likely more taxing on the system than the average legitimate user, unless the offender has access to orders of magnitude more adversaries than the normal user base. This is an indicator of the soundness of the behaviour model introduced in the previous paragraph. 
 
 The client behaviour can generally be divided into three cases:
 \begin{itemize}
@@ -67,4 +54,30 @@ The client behaviour can generally be divided into three cases:
 \item the client $C_i$ requests lesser resources compared to the general behaviour and the request $R_i$ is responded with a problem difficulty easier than the general difficulty.
 \item the client $C_i$ requests more resources compared to the general behaviour and the request $R_i$ is responded with a problem difficulty harder than the general difficulty.
 \end{itemize}
+Implementation of RB-PoW model:
+\begin{minted}[fontsize=\footnotesize]{go}
+func rb_scale_model(p Param) Difficulty {
+	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
+		return ZeroDifficulty
+	}
+	if p.Local.LongMean > 2*max(p.Global.ShortMean, p.Global.LongMean) {
+		if p.Local.ShortMean > 3*p.Global.LongMean 
+		   && math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres+20 {
+		    	return ZeroDifficulty
+		   }
+
+		return BaseDifficulty
+	}
+	diff := BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres) - cpu_thres)))
+	return *diff.multiply(1 + int(5*max(0, (p.Global.LongMean)/(p.Local.ShortMean+1))))
+}
+\end{minted}
+
+
+% We propose a conceptually simple yet in practice effective reputation system. A client is rated based on historical and current behaviour. The reputation mechanism distributes proof of work problems with a difficulty dependant on the individual client behaviour compared to the global average behaviour as well as server load. 
+
+% The basic idea of the RB-PoW scheme is that the server is dimensioned to handle normal load. If the server load is beneath \emph{cpu\_thres}, the server is in a normal state and no PoW scheme needs to be applied. If server load is above {\em cpu\_thres}, PoW may be activated, suspecting all clients as possible adversaries [SOURCE HÄR]. Another foundation of the RB-PoW model is an assumption that legitimate clients utlises a lower request rate than a malicious user. so if the server is under attack we compare the behaviour ( access time ) of the client against global average. If extremely favourable, client may get a free ticket to the zoo, and if extremely taxing on the server client gets an extremely hard problem.  ;)
+
+
+
 

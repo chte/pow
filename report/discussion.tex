@@ -23,6 +23,12 @@ Even though the results was rather contradictory to our expectation the explaina
 
 
 \subsection{Feasibility}
+så rb pow är bra för flooding men dåligt mot draining. Om en attackerare kan ip spoofa så kan detta vara dåligt. (men det är och vanlig pow). kan attackerare inte ip spoofa måste man då alltså ha MÅÅÅÅNGA datorer, betydligt fler än för utan skydd eller vanlig pow för att sätta detta ur spel. vanlig pow kan man ``enkelt'' sätta ur spel genom att försvåra problemen istället för att sagga nwer server. rb pow gör det (vad vi uppmätt) aldrig sämre gentemot vanliig pow eller utan skydd, men i vissa fall är det jättebra, så det är vettigt att använda
+
+man kan ta upp lite kring gpu att det ger en inflation. men att vi kan låta legitima användare också använda gpu... eller kanske en exponentiell eller iaf högre polynoms skalning av svårighet istället för linjär....
+
+
+
 \subsection{Statistical Confidence}
 An important question of our study is, \emph{when do we trust our data?} The results presented in Section \ref{result} was collected from the simulation experiments run through the web-based simulation interface. The data was collected as samples during a certain time-frame during the experiments, dividing data into the categories of \emph{adversaries}, \emph{legitimate users} and \emph{mobile device users}. However,  can we be certain that the calculated averages of our samples represent the average of the whole population?
 
@@ -46,6 +52,10 @@ The probability that the average of whole population falls within the interval o
 
 \subsection{Lessons learned}
 \subsection{Suggested Directions for Future Research}
+
+Optimise parameters used in scaling model
+
+Explore the possiblities of non-linear difficulty scaling based on client behaviour. 
 
 In future investigations it might be possible to use a different X in which ...... 
 
