@@ -39,7 +39,10 @@ The investigation presented in this paper is experimental in its nature. For fur
 \subsubsection{Non-linear difficulty scaling}
  \citeauthor{Green} in \citetitle{Green} demonstrates that hash-reversal schemes based server load would be ineffective when under attack by GPU utilizing adversaries. On the contrary it was shown that, schemes which adapts accordingly to client behaviour could be effective against such an attack. Therefore a direction for further research would be to explore the possibilities of improving our proposed protocol with a non-linear difficulty scaling as improvement to cope with potential GPU-based DoS attacks. 
 
-\subsubsection{Token-based reputation system}
-The current implementation of RB-PoW have fixed parameters such as CPU-threshold, load average threshold and lifetime of connections. However, a protocol in which these parameters as-well as problem difficulty  dynamically change based on server's amount of resource tokens contra tokens available to a requesting client. This might prove to be effective during draining type of denial-of-service attacks and could be a future research to improve the current reputation system we presented.
+\subsubsection{IP-address spoofing mitigation}
+The RB-PoW model may be susceptible to ip-address spoofing attacks, where an attacker tries to appear as many different clients with low computational capabilities, if the adversary is able to read packages sent to other addresses. Example: Alice sends messages to Bob, posing as Charles and Darth in excess to herself. The server's responses to Charles and Darth may only be used to continue an attack if Alice can read messages sent to Charles and Darth. This scenario is plausible of Alice is on the same network as Bob, or if Alice has access to some large subnet which she can use to fake clients. Explore methods to mitigate this type of attack. 
+
+%\subsubsection{Token-based reputation system}
+%The current implementation of RB-PoW have fixed parameters such as CPU-threshold, load average threshold and lifetime of connections. However, a protocol in which these parameters as-well as problem difficulty  dynamically change based on server's amount of resource tokens contra tokens available to a requesting client. This might prove to be effective during draining type of denial-of-service attacks and could be a future research to improve the current reputation system we presented.
  
 
