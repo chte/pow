@@ -18,13 +18,14 @@
 \usepackage{comment} 
 \usepackage{csquotes}
 \usepackage{wrapfig}
+\usepackage{tabularx}
 \usepackage[pdfborder={0 0 0}]{hyperref}
 \usepackage[doi=true,url=true]{biblatex}
 
 %Tikz settings
 \usetikzlibrary{matrix,shapes,arrows,positioning,chains, calc}
 
-\newlength{\RoundedBoxWidth}
+\newlength{\RoundedBoxWidth} 
 \newsavebox{\GrayRoundedBox}
 \newenvironment{GrayBox}[1][\dimexpr\textwidth-4.5ex]%
    {\setlength{\RoundedBoxWidth}{\dimexpr#1}
@@ -61,17 +62,19 @@ fontsize=\scriptsize
 \counterwithout{figure}{chapter}
 \counterwithin{table}{section}
 \counterwithin{figure}{section}
-
-\title{Proof of Work}
+ 
+\title{Proof of Work} 
 
 %\subtitle{An evaluation of proof of work as a DOS prevention method}
 %\subtitle{A load measure approach to cryptographic mitigation of denial-of-service attacks}
 \subtitle{A reputation based approach to cryptographic mitigation of denial-of-service attacks}
 %\foreigntitle{Lorem ipsum dolor sit amet, sed diam nonummy nibh eui
- %             mod tincidunt ut laoreet dol}
+ %             mod tincidunt ut laoreet dol} 
 \author{Fredrik Lilkaer, Christopher Teljstedt}
+\authoremail{\{{lilkaer, chte\}@kth.se}
 \date{Februari 2013}
 \blurb{Bachelor's Thesis\\Supervisor: Douglas Wikström}
+ 
 \trita{} %TRITA xxx yyyy-nn
 \begin{document}
 %\frontmatter
