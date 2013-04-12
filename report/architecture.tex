@@ -10,7 +10,7 @@ To formalize the Proof of Work protocol a few notations will be introduced. Cons
 \thickmuskip=0mu
 ${\textbf M_i} \ = $ to be $i^{th}$ execution of the protocol $M$ by either a legitimate user or an adversary. 
 
-${\textbf g} \ = $ a puzzle generator function.
+${\textbf h} \ = $ a puzzle generator function.
 
 ${\textbf t} \ = $ timestamp at time of puzzle generation
 
@@ -22,15 +22,17 @@ ${\textbf d} \ = $ an integer indicating the difficulty of the problem set $P$.
 
 ${\textbf S[j]} \ = $ the $j^{th}$ solution in $S$ and a solution to $j^{th}$ sub-puzzle in $P$. 
 
-${\textbf b_j} \ = $ the number of bytes in solution $S[j]$ that is zero. 
+${\textbf z} \ = $ a function that return the number of most significant bytes that is zero. 
 %\vspace*{-10pt}
 \end{minipage}
 
 
 \subsubsection{Protocol description}\label{text:protodesc}
-Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $P_i$ of size $m$ and a difficutly $d$. Each sub-puzzle $P[1] \dots P[m]$ is a seed derived by $g(t,x)$ where $x$is value generated uniformly-at-random.
+Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $C_i$ starts by requesting for a service $R_i$ to the server. The server responds with a packaged set of sub-puzzles $P_i$ of size $m$ and a difficutly $d$. Each sub-puzzle $P[1] \dots P[m]$ is a seed derived by $g(t,x)$ where $x$ is value generated uniformly-at-random.
 
-The client $C_i$ must solve each sub-puzzle $P[j]$ of $P_i$ by finding the value $S[j]$, such that the concatenation of the bytestrings $S[j]$ and $P[j]$ generates a hash where $b_j$ is equal to $d$. The server then verifies each solution of $S$ by generating hash with a stored copy of $P$ and confirms that $b_j$ is equal to $d$. If all solutions are correctly computed by $C_i$ the request $R_i$ will be granted. 
+The client $C_i$ must solve each sub-puzzle $P_i[j]$ of $P_i$ by finding a value $S_i[j]$ so that the computed hash $H(S_i[j] \ || \ P_i[j] )$ has at least $d$ leading zeroes. If such a hash is found then the solution $S[j]$ is a solution to the sub-puzzle $P[j]$.
+
+The server then verifies each solution of $S_i$ by computing $H(S_i[j] \ || \ P_i[j])$ with a stored copy of $P_i[j]$ and confirms that the solution has $d$ leading zeroes. If all solutions are correctly computed the client $C_i$'s request $R_i$ will be granted. 
 
 \begin{figure}
 	\begin{center}
