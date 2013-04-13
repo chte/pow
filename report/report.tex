@@ -5,7 +5,7 @@
 \usepackage{textcomp}
 \usepackage{lmodern}
 \usepackage[utf8]{inputenc}
-\usepackage[english,swedish]{babel}
+\usepackage[swedish,english]{babel}
 \usepackage{modifications}
 \usepackage{comment}
 \usepackage{tikz}
@@ -88,12 +88,11 @@ Denial of Service (DoS) aims to drain the underlying resources of a service and 
 \end{abstract} 
 \newpage
 
-\renewcommand*\abstractname{Abstrakt}
+\renewcommand*\abstractname{Sammanfattning}
 \begin{abstract}
-Ändamålet med Denial of Service (DoS) är att dränera en tjänsts underliggande resurser vilket är ett växande problem för dagens tjänsteförmedlare. I detta papper föreslår vi en ny ryktesbaserad Proof of Work (RB-PoW)protokoll som bygger på anpassningsbar skalning av pusselsvårigheter för att dämpa diverse denial-of-service-attacker. Ett testramverk utvecklades för att undersöka RB-PoWs effektivitet i jämförelse med den klassiska implementationen av PoW protokoll i en simulerad DoS-attack. Våra slutsatser är att RB-PoW är överlägsen i översvämmnings-DoS-attacker i jämförelse med den klassiska PoW varianten som är enbart är baserad på serverbelastning. Modellerna har likvärdig prestanda när de blir exponerade av uttorknings-DoS-attacker.  
+Ändamålet med Denial of Service(DoS) attacker är att dränera en tjänsts underliggande resurser. Attacktypen är ett växande problem för dagens tjänsteförmedlare. I detta kandidatexamensarbete föreslår vi en ny ryktesbaserad Proof of Work (RB-PoW)protokoll som bygger på anpassningsbar skalning av pusselsvårigheter för att dämpa diverse denial-of-service-attacker. Ett testramverk utvecklades för att undersöka RB-PoWs effektivitet i jämförelse med den klassiska implementationen av PoW protokoll i en simulerad DoS-attack. Våra slutsatser är att RB-PoW är överlägsen i översvämmningsattacker i jämförelse med den klassiska PoW varianten som är enbart är baserad på serverbelastning. Modellerna har likvärdig prestanda när de blir exponerade av dräneringsattacker.  
 \end{abstract} 
 \newpage
-\selectlanguage{english}
 \section*{Statement of Collaboration} 
 Fredrik initiated the programming work build the basis of a framework for developement. The protocol was decided in collaboration while Fredrik implemented the protocol, general server structure and a ``normal service''- interface.
 Christopher continued the work with an web-based simulation interface, able to control an attack behaviour against the site. A monitor page was developed by Fredrik and then improved by Christopher. Further improvements where developed in conjunction as need arose.
@@ -124,10 +123,8 @@ Both participated equally in respect to writing, analysis of results while Chris
 
 \section{Adapting Proof of Work}
 \input{theory}
-\newpage
 \section{System Architecture}
 \input{architecture}
-\newpage
 \section{Simulation Experiments}
 \input{experiments}
 \section{Results}\label{result}
