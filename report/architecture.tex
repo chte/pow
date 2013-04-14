@@ -1,17 +1,18 @@
-In this section, the architecture of the testing framework is described in detail. The system implements the RB-PoW protocol as-well as the classical PoW protocol. On the following pages an in detail description of the application will be provided explaining data flow (protocol) as-well as control (software).
+% In this section, the architecture of the testing framework is described in detail. The system implements the RB-PoW protocol as-well as the classical PoW protocol. On the following pages an in detail description of the application will be provided explaining data flow (protocol) as-well as control (software).
 
-\subsection{Software}
+% \subsection{Software}
 Since one requirement on our Proof of Work system is that it minimises differences between a wide variety of devices; it needs to support both desktop and laptops with different operating systems as well as cellphones and tablets.
 In order to minimise the development effort and maximise maintainability of the code base, a multi platform solution was sought for web-based simulation interface. 
 
 A web-based solution makes the application portable, but the web is not inherently stateful thus a emulation of a general service is limited. However, the advent of web-sockets enables a truly multi-platform proof-of-work client in html and javascript while maintaining the generality and plasticity of a natively written socket based application. 
 \begin{comment}
 The javascript implementation for handling the protocol is quite simple:
-\jscode[firstline=57, firstnumber=57, lastline=84]{../pow.js}
+%\jscode[firstline=57, firstnumber=57, lastline=84]{../pow.js}
 The solution finding part also need to be presented:
-\jscode[firstline=26, firstnumber=26, lastline=49]{../pow.js}
+%\jscode[firstline=26, firstnumber=26, lastline=49]{../pow.js}
 To trigger a request to be sent to the server we build the following function which is then registered to the onclick event of a button in the web gui:
-\jscode[firstline=100, firstnumber=100, lastline=105]{../pow.js}
+%\jscode[firstline=100, firstnumber=100, lastline=105]{../pow.js}
+
 \end{comment}
 
 The server side was implemented in Google's novel programming language golang\cite{golang}. The real strengths of golang in this context is actually not performance nor simplicity\footnote{But the expressiveness, clarity and performance of go programs is not to be dismissed.} but rather it's standard libraries, which in other contexts may appear immature. Golang includes standard libraries for both html template generation, http web serving as well as web-sockets. This package makes for an ideal platform for an application that needs to deliver the client application\footnote{HTML, CSS, Javascript and all that magic that make stuff happen in the browser} to potential clients as well as servicing clients requests in the model application reachable through the web-socket interface. 

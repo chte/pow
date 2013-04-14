@@ -2,8 +2,8 @@
 \subsection{Assumptions}
 \subsubsection{Attack model}
 In this section, the attack model of the simulation experiment will be described.
-In order to specify an attack model and to simulate an attack, some assumptions regarding the adversary are required.
-Assumptions made enable us to test a DoS mitigation scheme in the application layer; if any assumption does not hold the protection can be circumvented by an attack through a lower abstraction layer\footnote{Abstraction layer in the OSI model}. 
+In order to specify an attack model and to simulate an attack, some assumptions regarding the adversary are made.
+Assumptions enable us to test a DoS mitigation scheme in the application layer; if any assumption does not hold the protection can be circumvented by an attack through a lower abstraction layer\footnote{Abstraction layer in the OSI model}. 
 We assume a server \emph{Server}, a network with clients \emph{$\{C_i\}$}, and adversary \emph{Ad}.
 \\
 \\
@@ -24,11 +24,11 @@ By similar reasons as Assumption 1 we must assume that the adversary cannot dela
 \noindent \textbf{Assumption 3} \indent \emph{Ad} cannot oversaturate the transfer layer\footnote{Transfer layer of the OSI model} or network layer\footnote{Network layer of the OSI model} of the \emph{Server}.
 \\
 \\
-An adversary must be able to initiate a denial-of-service attack by large amount of requests to the server. However, we must also assume that the adversary cannot bring down the server by simply over-saturating the server ports or network with sheer volume of the adversary's requests.
+An adversary must be able to perform a denial-of-service attack by sending large amount of requests to the server. However, we must also assume that the adversary cannot bring down the server by simply over-saturating the server ports or network with sheer volume of the adversary's requests.
 \\
 \\
 \subsubsection{Environment}
 \noindent \textbf{Assumption 4} \indent We will assume that every action the server performs have unit cost, the assumption does not lessen generality, since an external difficulty scaler could be added to each action the server performs.
 \\
 \\
-\noindent \textbf{Assumption 5} \indent We will assume that the server is dimensioned to handle normal load.
+\noindent \textbf{Assumption 5}\label{ass:5} \indent We will assume that the server is dimensioned to handle load under normal operation.

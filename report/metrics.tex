@@ -1,17 +1,17 @@
 \subsection{Metrics}
 %\footnote{See section \ref{tab:system}} %\footnote{See section \ref{tab:reputation} and \ref{tab:behaviourmodel}}
-In order to to establish a quantitative description of metrics required by the difficulty scaling model as well as simulation experiments
- this section will outline three sets of parameters referred as quantifiers, observables and controllables. 
+In order to establish a quantitative description of metrics required by the difficulty scaling model as well as simulation experiments
+ this section will outline three sets of parameters referred to as quantifiers, observables and controllables. 
 
 \subsubsection{Attack Quantifiers}
-In our Reputation Based Proof of Work system an DoS attack can be quantified by following sets of measurements: 
+%In our Reputation Based Proof of Work system a DoS attack can be quantified by following sets of measurements: 
 
-\emph{Service time} reflects measurement in the quality of a requested service by a client. Assuming that the service is web browsing the service time could be the time until a web page is completely rendered. If an adversary aims mount a DoS attack the service quality during the attack can be measured by the average service latency for legitimate users. 
+\emph{Service time} reflects measurement in the quality of a requested service by a client. Assuming that the service is web browsing the service time could be the time until a web page is completely transfered. If an adversary aims to mount a DoS attack the service quality during the attack can be measured by the average service latency for legitimate users. 
 
 \subsubsection{Server Observables}
 The difficulty of PoW problems handed out as a response to requests are based a set of selected parameters that in different ways reflects the server's resource consumption.
 
-\emph{Number of established connections:} keeps track of how many clients\footnote{This is actually the number of web sockets open on the server side.} in real-time that is currently connected to the server.
+\emph{Number of established connections:} keeps track of how many clients\footnote{This is actually the number of web sockets open on the server side.} that is currently connected to the server.
 
 \emph{CPU load averages:} tell us whether the physical CPU utilization is over or under saturated. A perfect utilization is when the CPU is busy but no process is stalled. In general load average differ from CPU usage in two significant ways:
 \begin{enumerate}
@@ -20,12 +20,12 @@ The difficulty of PoW problems handed out as a response to requests are based a 
 \end{enumerate}
 If the server has four CPUs running and the reported load average is 4.00 then the CPUs are perfectly utilized\cite{cpu}.
 
-\emph{Request rate:} is the quantified amount of requests for a service that a single \emph{client} or a \emph{group of clients} asks for. This measurement is slightly modified to measure the average time between requests to show the amount servicing required by each client and the average of all clients in a given time-frame. By introducing a rating scheme that weights the individual requesting rate of a client with the average request rate of all clients the Reputation System can hand out problems scaled to the behaviour of each client. Thereby limiting the amount of service to a client with malicious behaviour and furthermore giving a natural limit to a DoS attack.
+\emph{Request rate} is the quantified amount of requests for a service that a single \emph{client} or a \emph{group of clients} asks for. This measurement is slightly modified to measure the average time between requests to show the amount servicing required by each client and the average of all clients in a given time-frame. By introducing a rating scheme that weights the individual requesting rate of a client with the average request rate of all clients the Reputation System can hand out problems scaled to the behaviour of each client. Thereby limiting the amount of service to a client with malicious behaviour and furthermore giving a natural limit to a DoS attack.
 
 
 \subsubsection{Server Controllables}
-The server resources is controlled through the Reputation System, generally it has two settings that is used to regulate.
-\emph{Puzzle Difficulty:} the difficulty of a puzzle is based on parameters in Server Observables. However, the scaling of puzzles can be tuned to respond more harshly or forgiving based on the parameters.
+The server resources is managed by the reputation behaviour model, generally it has two settings that can be regulated.
+Firstly, \emph{Puzzle Difficulty}, the difficulty of a puzzle is based on parameters in Server Observables. However, the scaling of puzzles can be tuned to respond more harshly or forgiving based on the parameters.
 
-\emph{Connection Time-out:} is used to control the lifetime a connection. This could be a finite duration meaning that if no solution is sent back to the server within lifetime the connection will be closed nevertheless.
-However, in the scope of the simulation experiments this duration is set to infinite, see Attack Model below for explanation of our assumptions about the attacker. 
+Secondly, \emph{Connection Time-out} is used to control the lifetime a connection. This could be a finite duration meaning that if no solution is sent back to the server within the connection lifetime the connection will be closed.
+However, in the scope of the simulation experiments this duration is set to infinite. %, see Attack Model below for explanation of our assumptions about the attacker. 

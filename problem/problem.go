@@ -22,7 +22,7 @@ type Param struct {
 
 var BaseDifficulty = Difficulty{1, 64}
 var ZeroDifficulty = Difficulty{0, 0}
-var GetDifficulty = rp_scale_model
+var GetDifficulty = rb_scale_model
 
 const cpu_thres = 70.0
 
@@ -100,9 +100,9 @@ func secondmodel(p Param) Difficulty {
 
 		return BaseDifficulty
 	}
-	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10+float64(5*max(0, (p.Global.LongMean)/(p.Local.LongMean+1)))))
+	return *BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)/10+float64(5*p.Global.LongMean/p.Local.LongMean)))
 }
-func rp_scale_model(p Param) Difficulty {
+func rb_scale_model(p Param) Difficulty {
 	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
 		return ZeroDifficulty
 	}
@@ -113,8 +113,8 @@ func rp_scale_model(p Param) Difficulty {
 
 		return BaseDifficulty
 	}
-	diff := BaseDifficulty.multiply(1 + int((math.Max(p.Cpu.Avg, cpu_thres) - cpu_thres)))
-	return *diff.multiply(1 + int(5*max(0, (p.Global.LongMean)/(p.Local.ShortMean+1))))
+	diff := BaseDifficulty.multiply(1 + 4*int((math.Max(p.Cpu.Avg, cpu_thres)-cpu_thres)))
+	return *diff.multiply(1 + int(5*p.Global.LongMean/p.Local.ShortMean))
 }
 
 func cpu_equal(p Param) Difficulty {
