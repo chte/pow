@@ -4,7 +4,7 @@
 Since one requirement on our Proof of Work system is that it minimises differences between a wide variety of devices; it needs to support both desktop and laptops with different operating systems as well as cellphones and tablets.
 In order to minimise the development effort and maximise maintainability of the code base, a multi platform solution was sought for web-based simulation interface. 
 
-A web-based solution makes the application portable, but the web is not inherently stateful thus a emulation of a general service is limited. However, the advent of web-sockets enables a truly multi-platform proof-of-work client in html and javascript while maintaining the generality and plasticity of a natively written socket based application. 
+A web-based solution makes the application portable, but the web is not inherently stateful thus an emulation of a general service is limited. However, the advent of web-sockets enables a truly multi-platform proof-of-work client in html and javascript while maintaining the generality and plasticity of a natively written socket based application. 
 \begin{comment}
 The javascript implementation for handling the protocol is quite simple:
 %\jscode[firstline=57, firstnumber=57, lastline=84]{../pow.js}
@@ -15,11 +15,11 @@ To trigger a request to be sent to the server we build the following function wh
 
 \end{comment}
 
-The server side was implemented in Google's novel programming language golang\cite{golang}. The real strengths of golang in this context is actually not performance nor simplicity\footnote{But the expressiveness, clarity and performance of go programs is not to be dismissed.} but rather it's standard libraries, which in other contexts may appear immature. Golang includes standard libraries for both html template generation, http web serving as well as web-sockets. This package makes for an ideal platform for an application that needs to deliver the client application\footnote{HTML, CSS, Javascript and all that magic that make stuff happen in the browser} to potential clients as well as servicing clients requests in the model application reachable through the web-socket interface. 
+The server side was implemented in Google's novel programming language golang\cite{golang}. The real strengths of golang in this context is actually not performance nor simplicity\footnote{But the expressiveness, clarity and performance of go programs is not to be dismissed.} but rather it's standard libraries, which in other contexts may appear immature. Golang includes standard libraries for both html template generation, http web serving as well as web-sockets. This package makes for an ideal platform for an application that needs to deliver the client application\footnote{HTML, CSS, Javascript and all that magic that make stuff happen in the browser} to potential clients as well as servicing client requests in the model application reachable through the web-socket interface. 
 
-Communication is performed over a web-socket per client, with a single message type which is (de-)serialised to (from) JSON. JSON is natively supported in the Javascript client, and the golang web-socket library supports JSON (de-)serialisation. Thus no byte parsing of specific to our protocol had to be produced.
+Communication is performed over a web-socket per client, with a single message type which is (de-)serialised to (from) JSON. JSON is natively supported in the Javascript client, and the golang web-socket library supports JSON (de-)serialisation. Thus no byte parsing specific to our protocol had to be developed.
 %\gocode[firstline=35, firstnumber=35, lastline=40]{../conn.go}
-\begin{minted}[fontsize=\footnotesize]{go}
+\begin{minted}[fontsize=\footnotesize, samepage=true]{go}
 type message struct {
 	Opcode, SocketId    int
 	Result, Query, Hash string
@@ -28,9 +28,9 @@ type message struct {
 }
 \end{minted}
 \\
-The client application is initiated by visiting the servers web-page which initiates download of the client application\footnote{The client application is built in javascript which is distributed to the client via a web-page.}. Upon requesting the application web-page, the server spawns a goroutine\footnote{Goroutines are golangs built in multi-threading primitive.} handling the http response writing task to deliver the application to the client.
+The client application is initiated by visiting the servers web-page which download the client application\footnote{The client application is built in javascript which is distributed to the client via a web-page.}. Upon requesting the application web-page, the server spawns a goroutine\footnote{Goroutines are golangs built in multi-threading primitive.} handling the http response writing task to deliver the application to the client.
 When the client application initiates it will open a keep-alive web-socket connection to the server where communication can occur. 
-If the client wants the server to perform its service it will submit a request with operation code $0$, which means that the client is requesting a problem to solve in order to acquire the servers trust. The server will generate a set of puzzles tied to the specific client. To prevent an attacker from reusing solutions for multiple requests or forging problem sets the problem set $\phi_i$ is chosen by the server and stored in memory. The server will reply with the set of puzzles and an operation code $1$, telling the client to solve the problem set. The client will solve the puzzles, using a brute-force approach since no better algorithm is known. The client will submit the solutions with an operation code $1$. Upon receiving a request with operation code 1, the server will verify the solution. If the verification succeeds the server will grant the client some cpu time, otherwise the connection will be terminated.
+If the client wants the server to perform its service it will submit a request with operation code $0$, which means that the client is requesting a problem to solve in order to acquire the servers trust. The server will generate a set of puzzles tied to the specific client. To prevent an attacker from reusing solutions for multiple requests or forging problem sets the problem set $\phi_i$ is chosen by the server and stored in memory. The server will reply with the set of puzzles and operation code $1$, telling the client to solve the problem set. The client will solve the puzzles, using a brute-force approach since no better algorithm is known. The client will submit the solutions with operation code $1$. Upon receiving a request with operation code 1, the server will verify the solution. If the verification succeeds the server will grant the client some cpu time, otherwise the connection will be terminated.
 % \jscode[firstline=26, firstnumber=26, lastline=49]{../pow.js}
 % The server will check that the solution is correct with considerable less effort:
 % \gocode[firstline=142, firstnumber=141, lastline=158]{../problem/problem.go}

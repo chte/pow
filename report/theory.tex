@@ -4,14 +4,9 @@
 %
 % Puzzle-based defense mechanisms such as [41, 9, 20, 35, 26] try to correct the imbalance between the cost to the attacker for generating a request and cost to the server for processing a request by demanding a payment, in the form of a puzzle solution, from each client. In a typical puzzle-based scheme, a request must be accompanied by a proof of payment from the client. The payment may be in the form of computation or memory accesses that the client needs to perform to solve the puzzle. Since the amount of resources available to the attacker is limited (even if it is much more than that of the legitimate clients), the attacker will not be able to trivially amplify his attack. There are different kinds of schemes that build on this general principle. Laurie et al. [31] have analyzed proof-of-work schemes in the context of a spam deterrent mechanism and conclude that proof-of-work schemes do not work, because the cost involved for legitimate senders would be too high. However, their economic estimation contains a miscalculation. More importantly, their analysis considers fixed-cost puzzle schemes and does not analyze adaptive proof-of-work schemes proposed by recent DoS counter-measures.
 
-Denial of Service attacks are often possible due to the low price of a request, for an adversary often a single network packet\cite{gunter}, compared to the work the service provider performs. Puzzle-based proof-of-work limits an attacker's possibilities to impose a high work load on a server from a sole client by increasing the cost of each request. \Citeauthor{LaurieC04} argued that Proof of Work, assuming a fixed cost proof-of-work pricing function, would not work. In this section we present an alternate interpretation of proof-of-work incorporating problem scaling and individual adaptation, that may in fact be a practically viable scheme to considerably attenuate the effects of a denial-of-service attack.
+Denial of Service attacks are often possible due to the low price of a request, for an adversary often a single network packet\cite{gunter}, compared to the work the service provider performs. Puzzle-based proof-of-work limits an attacker's possibilities to impose a high work load on a server from a sole client by increasing the cost of each request. \Citeauthor{LaurieC04} argued that Proof of Work, assuming a fixed cost proof-of-work pricing function, would not work.
 
-The RB-PoW scheme utilises a hash-reversal puzzle very similar to hashcash. The difference to hashcash is that RB-PoW uses SHA2 in place of SHA1, since it is a cryptographically stronger hash\cite{nistsha1}.
-The puzzle is a seed $P_i[j]$\footnote{For a precise definition of $P_i[j]$, $i$ and $j$, please see section \ref{text:protonot}.}. The client needs to find an $S_i[j]$ such that the computed hash $ h = H(S_i[j]||P_i[j])$ holds the property that the leading $d$ (issued difficulty) digits in the hex representation of $h$ are all equal to zero. 
-It is computationally infeasible to find $x$  for a given $h$ such that $ h = \mbox{sha2}(x)$\cite{sha2}, consequently the only way to find $S_i[i]$ is by sequential trial. For $d_{l+1} = d_l + 1 $, only $\frac{1}{16}$ of solutions accepted for difficulty $d_l$ are accepted.
-The complexity of finding $S_i[j]$ is thus $O(16^d)$. This is however an amortized complexity, since one can be lucky and find a solution in the first hash test, or be forced to seek nearly the complete solution space.
-The actual running time is in fact geometrically distributed with an expected outcome of $16^d$ trials before finding the solution, but the running time may be improved to approach a normal distribution with the introduction of sub-puzzles\cite{subpuzzles}. 
-The reputation based proof-of-work model uses subpuzzles to normalise expected solving times but also to scale problem difficulties. To harvest the almost normalised run times we use a minimum of 16 sub-puzzles, as suggested by \citeauthor{subpuzzles}. A (sub-)puzzle set may have a cardinality as large as 256 to enable integer scaling of problem difficulty. The central difficulty scaling model of RB-PoW will be further addressed in section \ref{text:diffscaler}.
+In this section we present an alternate interpretation of proof-of-work incorporating problem scaling and individual adaptation, that may in fact be a practically viable scheme to considerably attenuate the effects of a denial-of-service attack. In the following sections we present a proof-of-work protocol and a difficulty scaling model. We call the entire scheme\footnote{The protocol and the difficulty scaling model.} RB-PoW.
 
 \subsection{RB-PoW Protocol}
 
@@ -23,7 +18,7 @@ To formalize the Proof of Work protocol a few notations will be introduced. Cons
 \thickmuskip=0mu
 ${\textbf M_i} \ = $ to be $i^{th}$ execution of the protocol $M$ by either a legitimate user or an adversary. 
 
-${\textbf h} \ = $ a puzzle generator function.
+${\textbf g} \ = $ a puzzle generator function.
 
 %${\textbf t} \ = $ time of puzzle generation. %timestamp at 
 
@@ -42,9 +37,9 @@ ${\textbf z} \ = $ a function that return the number of most significant bytes t
 \subsubsection{Protocol description}\label{text:protodesc}
 Now let us describe the details of our proposed reputation based puzzle protocol between client and server. Prior to initiating protocol \textbf{M} the client $C_i$ starts by requesting($R_i$) a service from the server. The server responds with a packaged set of sub-puzzles $P_i$ of size $m$ and a difficulty $d$. Each sub-puzzle $P[1] \dots P[m]$ is a seed derived by $g(t,x)$ where $x$ is value generated uniformly-at-random.
 
-The client $C_i$ must solve each sub-puzzle $P_i[j]$ of $P_i$ by finding a value $S_i[j]$ so that the computed hash $H(S_i[j] \ || \ P_i[j] )$ has at least $d$ leading zeroes. If such a hash is found then the solution $S[j]$ is a solution to the sub-puzzle $P[j]$.
+The client $C_i$ must solve each sub-puzzle $P_i[j]$ of $P_i$ by finding a value $S_i[j]$ so that the computed hash $\mbox{SHA2}(S_i[j] \ || \ P_i[j] )$ has at least $d$ leading zeroes. If such a hash is found then the solution $S[j]$ is a solution to the sub-puzzle $P[j]$. The puzzle solving routine is further explored in section \ref{puzzlesolv}.
 
-The server then verifies each solution of $S_i$ by computing $H(S_i[j] \ || \ P_i[j])$ with a stored copy of $P_i[j]$ and confirms that the solution has $d$ leading zeroes. If all solutions are correctly computed the client $C_i$'s request $R_i$ will be granted. 
+The server then verifies each solution of $S_i$ by computing $\mbox{SHA2}(S_i[j] \ || \ P_i[j])$ with a stored copy of $P_i[j]$ and confirms that the solution has $d$ leading zeroes. If all solutions are correctly computed the client $C_i$'s request $R_i$ will be granted. 
 
 \begin{figure}[H]
 	\begin{center}
@@ -82,6 +77,14 @@ The server will then verify the solution for $P_i$ and grant access to $R_i$ of 
 
 If the reputation system deems the server to be under attack the difficulty of the problem set for request $R_i$ will be decided by the historical and current behaviour of client $C_i$. 
 
+\subsection{Puzzle Solving}\label{puzzlesolv}
+The RB-PoW scheme utilises a hash-reversal puzzle very similar to hashcash. The difference to hashcash is that RB-PoW uses SHA2 in place of SHA1, since it is a cryptographically stronger hash\cite{nistsha1}.
+The puzzle is a seed $P_i[j]$\footnote{For a precise definition of $P_i[j]$, $i$ and $j$, please see section \ref{text:protonot}.}. The client needs to find an $S_i[j]$ such that the computed hash $ h = \mbox{SHA2}(S_i[j]||P_i[j])$ holds the property that the leading $d$ (issued difficulty) digits in the hex representation of $h$ are all equal to zero. 
+It is computationally infeasible to find $x$  for a given $h$ such that $ h = \mbox{SHA2}(x)$\cite{sha2}, consequently the only way to find $S_i[i]$ is by sequential trial. For $d_{l+1} = d_l + 1 $, only $\frac{1}{16}$ of solutions accepted for difficulty $d_l$ are accepted.
+The complexity of finding $S_i[j]$ is thus $O(16^d)$. This is however an amortized complexity, since one can be lucky and find a solution in the first hash test, or be forced to seek nearly the complete solution space.
+The actual running time is in fact geometrically distributed with an expected outcome of $16^d$ trials before finding the solution, but the running time may be improved to approach a normal distribution with the introduction of sub-puzzles\cite{subpuzzles}. 
+The reputation based proof-of-work model uses subpuzzles to normalise expected solving times but also to scale problem difficulties. To harvest the almost normalised run times we use a minimum of 16 sub-puzzles, as suggested by \citeauthor{subpuzzles}. A (sub-)puzzle set may have a cardinality as large as 256 to enable integer scaling of problem difficulty. The central difficulty scaling model of RB-PoW will be further addressed in section \ref{text:diffscaler}.
+
 The following sections will present server-side metrics needed to define client behaviour and explain assumptions made for the test environment. 
 We will precisely define the meaning of client behaviour in our model and finally carry on to develop and describe the reputation based proof-of-work model.
 
@@ -93,7 +96,7 @@ We will precisely define the meaning of client behaviour in our model and finall
 An essential principle of RB-PoW is the RB-PoW definition of fairness:
 \begin{figure}[H]
 \begin{GrayBox}[0.65\textwidth]
-Every client has equal right to the server's resources.
+Every client has equal rights to the server's resources.
 \end{GrayBox}
 \caption{RB-PoW Reputation Model Statement}
 \end{figure}
@@ -104,8 +107,8 @@ To quantify the behaviour of a user we measure average time between request inst
  $$ b_{i} = \alpha\cdot\delta + (1-\alpha)b_{i-1} $$
 where $\delta$ is the time difference since the last request. At every request, the global average behaviour $B_i$ is also recalculated:
 $$ B_{i} = \beta\cdot\Delta + (1-\beta)B_{i-1} $$
-where $\Delta = \delta \cdot n$, $n$ is number of users currently connected to the system. The multiplication averages the time between request and enables us to compare the value to local values. 
-One advantage of measuring the time between request versus counting requests during a sampling period is that it can be implemented more efficient and is thus less taxing on the server. However, a more interesting property is the effect on behaviour change rate. Sampling number of request during a period and averaging over $n$ last periods means that a client is considered ``good'' again after being ``bad'' just as fast (in time) as vice versa if a client changes behaviour pattern.
+where $\Delta = \delta \cdot n$, $n$ is the number of users currently connected to the system. The multiplication averages the time between request and enables us to compare the value to local values. 
+One advantage of measuring the time between request versus counting requests during a sampling period is that it can be implemented more efficient. An even more interesting property is the effect on behaviour change rate. Sampling number of request during a period and averaging over $n$ last periods means that a client is considered ``good'' again after previously considered ``bad'' just as fast (in time) as the opposite if concerned client changes behaviour pattern.
 Averaging over the last $n$ requests instead will cause the system to respond faster (in time) if a client start acting maliciously (suddenly increasing request rate) and demanding a longer time for the client to redeem her behaviour.
 
 
@@ -116,20 +119,20 @@ Averaging over the last $n$ requests instead will cause the system to respond fa
 
 \subsection{Reputation Mechanism as a Difficulty Scaler}\label{text:diffscaler}
 The RB-PoW Behaviour model is essential to the RB-PoW adaptive denial-of-service mitigation scheme. The behaviour model provides a metric describing the individual client's load on the service, as well as the global average load per client. 
-With the introduction of the behaviour model, the difficulty scaling model is simple, as it can be described by the following three cases:
+With the introduction of the behaviour model, the puzzle difficulty scaling model becomes simple to describe:
 \begin{itemize}
 \item The client $C_i$ behaves in a manner comparable to $B_i$\\
- - The request $R_i$ is responded with a problem difficulty suitable to server load.
-\item The client $C_i$ requests lesser resources compared to the general behaviour ($b_i > B_i$).\\
- - The request $R_i$ is responded with a problem difficulty easier than the general difficulty.
-\item The client $C_i$ requests more resources compared to the general behaviour ($b_i < B_i$).\\
-- The request $R_i$ is responded with a problem difficulty harder than the general difficulty.
+ - The request $R_i$ is assigned a problem difficulty suitable to server load.
+\item The client $C_i$ demands less resources compared to the general behaviour ($b_i > B_i$).\\
+ - The request $R_i$ is assigned a problem difficulty easier than the general difficulty.
+\item The client $C_i$ demands more resources compared to the general behaviour ($b_i < B_i$).\\
+- The request $R_i$ is assigned a problem difficulty harder than the general difficulty.
 \end{itemize}
-Assumption 5 implies that the DoS protection functionality is unlikely to be activated during normal operation. It also implies that if the server is under attack, the average adversary is likely more taxing on the system than the average legitimate user, unless the offender has access to orders of magnitude more adversaries than the normal user base. The RB-PoW model leverages these assumptions to maintain service to legitimate desktop and mobile users: if the number of attackers is low in compared to number of legitimate clients the global average will represent the legitimate user base. In this case the adversaries will have a faster request rate than the average population and will thus receive harder problems. If the number of attackers are more than the number of legitimate users, the average will instead represent the adversaries. If legitimate users access the service less frequently they will receive easier problems compared to the problems received by the opposers.
+Assumption 5 implies that the DoS protection functionality is unlikely to be activated during normal operation. It also implies that if the server is under attack, the average adversary is likely more taxing on the system than the average legitimate user, unless the offender has access to orders of magnitude more adversaries than the normal user base. The RB-PoW model leverages these assumptions to maintain service to legitimate desktop and mobile users: if the number of attackers is low in compared to number of legitimate clients the global average will represent the legitimate user base. In this case the adversaries will have a faster request rate than the average population and will be alotted harder problems. If the number of attackers are more than the number of legitimate users, the average will instead represent the adversaries. If legitimate users access the service less frequently they will receive easier problems compared to the problems received by the opposers.
 
-The RB-PoW model further defines a client's relative behaviour as $b_{r_i} = \frac{b_i}{B_i}$, which is used as a difficulty multiplier. The RB-PoW is a conceptual model that should be adapted to the specific application. Our implementation contains more than a few arbitrary constants, implementation follows:
+The RB-PoW model further defines a client's relative behaviour as $b_{r_i} = \frac{b_i}{B_i}$, which is used as a difficulty multiplier. The RB-PoW is a conceptual model that should be adapted to the specific application. Our implementation, which contains more than a few arbitrary constants, follows:
 
-\begin{minted}[fontsize=\footnotesize]{go}
+\begin{minted}[fontsize=\footnotesize, samepage=true]{go}
 func rp_scale_model(p Param) Difficulty {
 	if math.Max(p.Cpu.Load, p.Cpu.Avg) < cpu_thres {
 		return ZeroDifficulty
@@ -152,7 +155,7 @@ type Difficulty struct {
 	Problems int
 }
 \end{minted}
-Multiplication of a difficulty with an integer is defined as multiplication with number of subpuzzles. The number of subpuzzles is divided by 16 as the number of zeroes is incremented by one to not generate excessive amounts of easu subpuzzles. 16 puzzles is the minimum amount of subpuzzles to normalise the solving time of a particular difficulty\cite{subpuzzles}.
+Multiplication of a difficulty with an integer is defined as multiplication with number of subpuzzles. The number of subpuzzles is divided by 16 as the number of zeroes is incremented by one to not generate excessive amounts of easy subpuzzles. 16 puzzles is the minimum amount of subpuzzles to normalise the solving time for a particular difficulty\cite{subpuzzles}.
 \begin{minted}[fontsize=\footnotesize]{go}
 func (d *Difficulty) multiply(f int) *Difficulty {
 	r := *d

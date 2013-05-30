@@ -1,7 +1,7 @@
-In this paper, we have explored the possibilities of a reputation based proof-of-work protocol in mitigating DoS attacks. We have presented the RB-PoW protocol, an experimental architecture and tested the protocol with a web-based simulation interface. Furthermore, we presented results of two simulation experiments, server flooding and server draining with two types of implementations; classical proof-of-work and the proposed reputation based proof-of-work. The results are the average milliseconds of our simulation data with a confidence level of 99\%, see Appendix \ref{tab:confidence} for detailed explanation in the significance of our results. Furthermore, the results from these simulation experiments will be brought to discussion in following paragraphs with the goal of answering the initial problem statements:
+In this paper, we have explored the possibilities of a reputation based proof-of-work protocol in mitigating DoS attacks. We have presented the RB-PoW protocol, an experimental architecture and tested the protocol with a web-based simulation interface. We presented results of two simulation experiments, server flooding and server draining with two types of implementations; classical proof-of-work and the proposed reputation based proof-of-work. The results are the average milliseconds of our simulation data with a confidence level of 99\%, see Appendix \ref{tab:confidence} for detailed explanation in the significance of our results. Furthermore, the results from these simulation experiments will be brought to discussion in following paragraphs with the goal of answering the initial problem statements:
 
 \subsection{Server Flooding}
-The results of simulating server flooding, see table \ref{tab:flooding}, shows that the RB-PoW protocol is a vast improvement to mitigating DoS flooding attacks in comparison the the classical PoW. It is interesting to note that the RB-PoW perform better in all three user-type cases. The most significant improvement was to the mobile users where the service time was improved of approximately 9 times. 
+The results of simulating server flooding, see table \ref{tab:flooding}, shows that the RB-PoW protocol is a vast improvement to mitigating DoS flooding attacks in comparison the the classical PoW. It is interesting to note that the RB-PoW perform better in all three user-type cases. The most significant improvement was to the mobile users where the service time was reduced approximately 9 folds. 
 
 This finding was unexpected and suggests that PoW in its classical implementation is very primitive.
 There are several possible explanations for this result and the most significant reason is likely to be the fact that the classical PoW does not in any way separate legitimate users from adversaries.
@@ -15,9 +15,13 @@ Even though the results was quite contradictory to our expectations the explanat
 
 
 \subsection{Concluding Remarks and Feasibility}
-The present results are significant in two major respects. First and foremost, the results show that existing proof-of-work protocols can be improved by using clever and adaptive scaling of problem difficulties. Reputation based scaling is a feasible approach in improving the dynamics of the proof-of-work concept and has shown to improve the taxing impact on adversaries while having a less effect on legitimate users during denial-of-service attacks with flooding characteristics. 
+The present results are significant in two major aspects. First and foremost, the results show that existing proof-of-work protocols can be improved by using clever and adaptive scaling of problem difficulties. Reputation based scaling is a feasible approach in improving the dynamics of the proof-of-work concept and has shown to improve the taxing impact on adversaries while having a less effect on legitimate users during denial-of-service attacks with flooding characteristics. 
 
-Another result of significance is that the RB-PoW protocol during draining type of denial-of-service attacks at worst performed like a classical PoW protocol implementation. The result is very valuable in the aspect that it clearly shows the drawbacks the current RB-PoW implementation and also that there is room for improvement. Moreover, it proves that it could work as an effective substitute to current proof-of-work schemes. 
+Another result of significance is that the RB-PoW protocol during our simulation of draining type of denial-of-service attacks at worst performed like the cpu-scaling PoW implementation. 
+
+The findings are very valuable in the aspect that they show that RB-PoW could work as an effective substitute to current proof-of-work schemes, since it provides a vast improvement in protection against some attacks while at the same time does not seem to perform significantly worse in situations less than ideal to RB-PoW. 
+
+%t clearly shows the drawbacks the current RB-PoW implementation and also that there is room for improvement. Moreover,
 
 \subsection{Lessons learned}
 During the our implementation of the RB-PoW protocol and the observations made during simulation experiments we have conducted:
@@ -40,7 +44,7 @@ The investigation presented in this paper is experimental in its nature. For fur
  \citeauthor{Green} in \citetitle{Green} demonstrates that hash-reversal schemes based server load would be ineffective when under attack by GPU utilizing adversaries. On the contrary it was shown that, schemes which adapts accordingly to client behaviour could be effective against such an attack. Therefore a direction for further research would be to explore the possibilities of improving our proposed protocol with a non-linear difficulty scaling as improvement to cope with potential GPU-based DoS attacks. 
 
 \subsubsection{IP-address spoofing mitigation}
-The RB-PoW model may be susceptible to ip-address spoofing attacks, where an attacker tries to appear as many different clients with low computational capabilities, if the adversary is able to read packages sent to other ip-addresses.  This scenario is plausible if an adversasry Alice is on the same network as Bob providing the service, or if Alice has access to some large subnet which she can use to fake clients. Explore methods to mitigate this type of attack. 
+The RB-PoW model may be susceptible to ip-address spoofing attacks, where an attacker tries to appear as many different clients with low computational capabilities, if the adversary is able to read packages sent to other ip-addresses.  This scenario is plausible if an adversary Alice is on the same network as Bob providing the service, or if Alice has access to some large subnet which she can use to fake clients. Explore methods to mitigate this type of attack. 
 
 %Example: Alice sends messages to Bob, posing as Charles and Darth in excess to herself. The server's responses to Charles and Darth may only be used to continue an attack if Alice can read messages sent to Charles and Darth.
 

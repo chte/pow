@@ -1,7 +1,7 @@
-The reputation based PoW system's architecture and load management mechanism was tested by conducting series of simulated experiments using custom made web-based population-simulation interface. The configuration parameters of the experiments are described in detail in section \ref{text:setup}.
+The reputation based PoW system's architecture and load management mechanism was tested by conducting a series of simulated experiments using custom made web-based population-simulation interface. The configuration parameters of the experiments are described in detail in section \ref{text:setup}.
 % is shown in Figure [NUMMER].
 
-In the experiments, a fixed set of legitimate users was programmed to send requests for a service from a single server. To simulate a legitimate population each client was programmed to send the requests with stochastic based delays and thereby simulating the unpredictable rate of requests. Each request was also programmed to perform a fixed load on the server side to simulate the execution of a service. As a result a normal work load on the server was simulated. 
+In the experiments, a fixed set of legitimate users was programmed to send requests to a single server. To simulate a legitimate population each client was programmed to send the requests with stochastic based delays and thereby simulating the unpredictable rate of requests. Each request was also programmed to perform a fixed load on the server side to simulate the execution of a service. As a result a normal work load on the server was simulated. 
 %If the server accepts the solution, it offers the client some meaningless cpu cycles in order to simulate a request:
 \begin{minted}[fontsize=\footnotesize]{go}	
 for i := int64(0); i < 250000000; i++ {
@@ -10,7 +10,9 @@ for i := int64(0); i < 250000000; i++ {
 \end{minted}
 The requests of legitimate users was mixed with a larger population of adversaries to mount a DoS attack. The adversaries was programmed to have lesser to zero delay in-between requests, thus forcing the server to service more requests than a legitimate user. 
 
-A custom made web-based monitor was used to investigate how well the RB-PoW system performed under different scenarios. The monitor uses real-time graphs to outline information about CPU utilization, requests rates and the time to solve PoW puzzles. In each run we studied the service time for adversaries, legitimate and mobile users to see how the protection system affected each type of behaviour. Control parameters such as number of attacking connections and settings for delays was changed between experimental runs, as-well as the parameters for server's internal reputation mechanism.
+A custom made web-based monitor was used to aid the understanding well the RB-PoW system performed under different scenarios. The monitor uses real-time graphs to outline information about CPU utilization, requests rates and the time to solve PoW puzzles. In each run we studie the service time for adversaries, legitimate and mobile users to see how the protection system affected each type of behaviour. Control parameters such as number of attacking connections and settings for delays was changed between experimental runs, as-well as the parameters for server's internal reputation mechanism.
+
+A logging web service was developed. The client sends data containing response, solving and granting time as well as at tag describing if the data came from a mobile, legitimate desktop user or from an adversary,  for every request made to the server, to the logging service. The datalogger compile the data to human readable format, enabling us to examine results and compute statistics.
 
 The goal of the experiments was to examine how well the reputation based PoW architecture performed in mitigating DoS attacks and at the same time serving legitimate users and users with lesser hardware. The degree of effectiveness from the experiments conducted was determined by following observations:
 
@@ -28,7 +30,7 @@ The goal of the experiments was to examine how well the reputation based PoW arc
 The simulation experiments resulted in benchmarking the Reputation Based Proof of Work with the initially proposed Proof of Work protocol. In this section, the set-up of the benchmarks will be presented.
 \label{text:setup}
 \subsubsection{The legitimate users} 
-The legitimate users had to be set fixed amount. By being consequent, a fair comparison could be done simulating the same normal work load on the server through all the simulations. The benchmarks was run with 100 legitimate users, each being set to having a normally distributed access times expected to ten seconds with a fifteen second standard deviation. Consequently, the most probable delays would vary between between zero to forty seconds.
+The legitimate users had to be fixed. By being consequent, a fair comparison could be done simulating the same normal work load on the server through all the simulations. The benchmarks was run with 100 legitimate users, each being set to having a normally distributed access times expected to ten seconds with a fifteen second standard deviation. Consequently, the most probable delays would vary between between zero to forty seconds.
 \\
 \subsubsection{Mobile user}
 The mobile users where set to have the same behaviour as the legitimate users in respect to request rate. Due to a relative lack of testing hardware the cellphones clients where only four by number, running on a single device. 
