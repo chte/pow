@@ -6,10 +6,10 @@ import (
 	"code.google.com/p/go.net/websocket"
 	"fmt"
 	"log"
-	"time"
+	//"time"
 	// "os/exec"
 	// "math"
-	"strings"
+	//"strings"
 	"sync"
 )
 
@@ -63,10 +63,13 @@ func (c *connection) reader() {
 		if err != nil {
 			break
 		}
-		log.Printf("RECEIVED: %v\n", msg)
+		fmt.Printf("%d\n", msg.Opcode)
+		/*log.Printf("RECEIVED: %v\n", msg)
 		// c.ws.SetDeadline(time.Now().Add(deadtime))
 		var response message
 		if msg.Opcode == 0 {
+
+
 			c.difficulty = problem.GetDifficulty(problem.Param{Local: *c.access, Global: *globalAccess, Cpu: CPU_STAT, LSolve: *c.solving, GSolve: *globalSolving}) // math.Max(CPU_LOAD, CPU_AVG)
 			response.Difficulty = c.difficulty
 			c.problems = problem.ConstructProblemSet(c.difficulty)
@@ -101,9 +104,9 @@ func (c *connection) reader() {
 				response.Query = "Your query was ignored since you did not solve the puzzle."
 				conn_ok = false
 			}
-		}
-		log.Printf(" SENDING: %v\n", response)
-		websocket.JSON.Send(c.ws, response)
+		}*/
+		//log.Printf(" SENDING: %v\n", response)
+		//websocket.JSON.Send(c.ws, response)
 	}
 	c.ws.Close()
 	conn_lock.Lock()

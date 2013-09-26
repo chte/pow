@@ -97,11 +97,23 @@ $(document).ready(function(){
     /* 
      * This search function is protected by proof-of-work.
      */
-    $("#search").click(function(){	
-	    var request = {"Opcode": 0, "Query": $('#search_field').val()};
+   /* $("input").click(function(e){	
+	    var request = {"Opcode": e.data, "Query": $('#search_field').val()};
 	    $("#search").attr("disabled", "disabled");
 	    startTime = Number(new Date().getTime());
 	    conn.send(JSON.stringify(request));  // log("Sending " + JSON.stringify(request));
-    });
-});
+    });*/
+	$("input#b1").click(function(e){
+  var request = {"Opcode": 1, "Query": ""};
+  conn.send(JSON.stringify(request));  // log("Sending " + JSON.stringify(request));
+ });
+	$("input#b2").click(function(e){
+  var request = {"Opcode": 2, "Query": ""};
+  conn.send(JSON.stringify(request));  // log("Sending " + JSON.stringify(request));
+ });
+	$("input#b3").click(function(e){
+  var request = {"Opcode": 3, "Query": ""};
+  conn.send(JSON.stringify(request));  // log("Sending " + JSON.stringify(request));
+ });
+});	
 

@@ -5,13 +5,13 @@ import (
 	"./problem"
 	"code.google.com/p/go.net/websocket"
 	"flag"
-	"fmt"
+	//"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
 	"os/signal"
-	"runtime"
+	//"runtime"
 	"text/template"
 	"time"
 )
@@ -61,8 +61,8 @@ func serveStatic(file string) {
 
 func main() {
 	flag.Parse()
-	cpu := runtime.GOMAXPROCS(runtime.NumCPU())
-	log.Printf("PoW server started on %s server at %s, threads: %d -> %d\n", runtime.GOOS, *addr, cpu, runtime.NumCPU())
+	//cpu := runtime.GOMAXPROCS(runtime.NumCPU())
+	//log.Printf("PoW server started on %s server at %s, threads: %d -> %d\n", runtime.GOOS, *addr, cpu, runtime.NumCPU())
 	rand.Seed(time.Now().UTC().UnixNano())
 	go h.run()
 	dataminer.Run()
@@ -70,14 +70,14 @@ func main() {
 	signal.Notify(c, os.Interrupt)
 	go func() {
 		defer func() {
-			fmt.Println("hallo")
+			//fmt.Println("hallo")
 		}()
-		for sig := range c {
-			fmt.Printf("sig: %v", sig)
+		/*for sig := range c {
+			//fmt.Printf("sig: %v", sig)
 			os.Exit(0)
 			// return
 			// sig is a ^C, handle it
-		}
+		}*/
 	}()
 	http.HandleFunc("/", homeHandler)
 	//http.HandleFunc("/pow.js", jsHandl	er)
